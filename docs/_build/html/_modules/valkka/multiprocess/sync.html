@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>valkka.multiprocess.sync &mdash; Valkka_multiprocess  documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <!-- as per https://stackoverflow.com/questions/23211695/modifying-content-width-of-the-sphinx-theme-read-the-docs -->
+    <link href="../../../_static/rtd_override.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body class="wy-body-for-nav">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+  <a href="../../../index.html"><img src="../../../_static/valkka.png" class="logo" alt="Logo"/>
+</a>
+    <div class="version">
+      1.0.0
+    </div>
+
+
+<!-- font awesome comes with the rtd package.. use like this:-->
+<a href="https://github.com/elsampsa/valkka_multiprocess" class="icon icon-github"> Valkka_multiprocess @ github</a>
+<a href="https://github.com/elsampsa/valkka_multiprocess/issues" class="fa fa-bug"> Issue Tracker @ github</a>
+
+<!-- don't even think about subclassing searchbox.html .. will never work!-->
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html">Intro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../requirements.html">Installing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../submodules.html">API documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../article.html">Article</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../license.html">Licenses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../authors.html">Authors</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Valkka_multiprocess</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">valkka.multiprocess.sync</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for valkka.multiprocess.sync</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">traceback</span>
+<span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="kn">import</span> <span class="n">Event</span>
+<span class="c1"># from valkka import core # nopes</span>
+
+<span class="k">class</span> <span class="nc">NotEnoughEvents</span><span class="p">(</span><span class="ne">BaseException</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<div class="viewcode-block" id="EventGroup"><a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.sync.EventGroup">[docs]</a><span class="k">class</span> <span class="nc">EventGroup</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Creates a group of multiprocessing events</span>
+
+<span class="sd">    :param n: number of events to be instantiated and cached</span>
+<span class="sd">    :param event_class: a multiprocessing event class that has ``set`` and ``clear`` methods.</span>
+<span class="sd">                        default: python ``multiprocessing.Event``.  Can also be ``EventFd`` from libValkka.</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">event_class</span> <span class="o">=</span> <span class="n">Event</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">events</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1"># list of cached events: immutable</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1"># list of indexes of available events: mutable</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">event_class</span><span class="p">())</span> 
+            <span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> 
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">st</span> <span class="o">=</span> <span class="s2">&quot;&lt;EventGroup: &quot;</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="p">:</span>
+                <span class="n">st</span> <span class="o">+=</span> <span class="s2">&quot;f&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot; &quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">st</span> <span class="o">+=</span> <span class="s2">&quot;R&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot; &quot;</span>
+        <span class="n">st</span> <span class="o">+=</span> <span class="s2">&quot;&gt;&quot;</span>
+        <span class="k">return</span> <span class="n">st</span>
+
+    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="p">)</span>
+    
+<div class="viewcode-block" id="EventGroup.set"><a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.sync.EventGroup.set">[docs]</a>    <span class="k">def</span> <span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set / trigger an event at index i.  Used typically at multiprocessing backend.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="EventGroup.reserve"><a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.sync.EventGroup.reserve">[docs]</a>    <span class="k">def</span> <span class="nf">reserve</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Reserve and return an Event instance together with its index: ``index, Event``</span>
+
+<span class="sd">        Use typically at process frontend / python main process</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">IndexError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">NotEnoughEvents</span>
+        <span class="n">event</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+        <span class="n">event</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span> <span class="c1"># clear event before using it</span>
+        <span class="k">return</span> <span class="n">index</span><span class="p">,</span> <span class="n">event</span></div>
+        
+<div class="viewcode-block" id="EventGroup.release"><a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.sync.EventGroup.release">[docs]</a>    <span class="k">def</span> <span class="nf">release</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Release an EventFd sync primitive.  </span>
+<span class="sd">        Use typically at process frontend / python main process</span>
+
+<span class="sd">        :param event: event to be released / returned</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span> <span class="c1"># trying to return an event that&#39;s not in this EventGroup</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;event not in this Eventgroup&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">index</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="EventGroup.release_ind"><a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.sync.EventGroup.release_ind">[docs]</a>    <span class="k">def</span> <span class="nf">release_ind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Release an EventFd sync primitive, based on the index.</span>
+<span class="sd">        Use typically at process frontend / python main process</span>
+
+<span class="sd">        :param index: event&#39;s index</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">index</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">fromIndex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get an event, based on the event index.</span>
+<span class="sd">        Use typically at multiprocessing backend to get the corresponding event as in the frontend.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+<div class="viewcode-block" id="EventGroup.asIndex"><a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.sync.EventGroup.asIndex">[docs]</a>    <span class="k">def</span> <span class="nf">asIndex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return index corresponding to an event</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">event</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="SyncIndex"><a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.sync.SyncIndex">[docs]</a><span class="k">class</span> <span class="nc">SyncIndex</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;A context manager for synchronizing between multiprocessing front- and backend.</span>
+
+<span class="sd">    :param event_group: an EventGroup instance</span>
+
+<span class="sd">    Wait&#39;s and releases an event at context manager exit</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event_group</span><span class="p">:</span> <span class="n">EventGroup</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eg</span> <span class="o">=</span> <span class="n">event_group</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">event</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">i</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">event</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eg</span><span class="o">.</span><span class="n">reserve</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">i</span>
+
+    <span class="k">def</span> <span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">tb</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">tb</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;SyncIndex failed with:&quot;</span><span class="p">)</span>
+            <span class="n">traceback</span><span class="o">.</span><span class="n">print_tb</span><span class="p">(</span><span class="n">tb</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span> <span class="c1"># wait until the event has been set</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eg</span><span class="o">.</span><span class="n">release</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">event</span><span class="p">)</span> <span class="c1"># recycle the event</span></div>
+    
+
+
+<span class="k">def</span> <span class="nf">main1</span><span class="p">():</span>
+    <span class="c1"># raise(NotEnoughEvents)</span>
+    <span class="c1"># eg = EventGroup(0)</span>
+    <span class="n">eg</span> <span class="o">=</span> <span class="n">EventGroup</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">SyncIndex</span><span class="p">(</span><span class="n">eg</span><span class="p">)</span> <span class="k">as</span> <span class="n">i</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;waiting &quot;</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">eg</span><span class="p">)</span>
+        <span class="c1"># kokkelis</span>
+
+<span class="k">def</span> <span class="nf">main2</span><span class="p">():</span>
+    <span class="c1"># g = EventFdGroup(10)</span>
+    <span class="n">g</span> <span class="o">=</span> <span class="n">EventFdGroup</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+    <span class="n">ind1</span><span class="p">,</span> <span class="n">e1</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">reserve</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&gt;&gt;&quot;</span><span class="p">,</span><span class="n">ind1</span><span class="p">,</span> <span class="n">e1</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+    <span class="n">ind2</span><span class="p">,</span> <span class="n">e2</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">reserve</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&gt;&gt;&quot;</span><span class="p">,</span><span class="n">ind2</span><span class="p">,</span> <span class="n">e2</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-&gt;&quot;</span><span class="p">,</span><span class="n">g</span><span class="o">.</span><span class="n">fromIndex</span><span class="p">(</span><span class="n">ind2</span><span class="p">))</span>
+    <span class="n">g</span><span class="o">.</span><span class="n">release</span><span class="p">(</span><span class="n">e1</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="c1"># main1()</span>
+    <span class="n">main2</span><span class="p">()</span>
+
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2017-2023 Sampsa Riikonen.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

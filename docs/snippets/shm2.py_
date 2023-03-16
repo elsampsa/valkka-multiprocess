@@ -1,0 +1,132 @@
+
+:: 
+
+    import time, math
+    import logging
+    import numpy as np
+    from valkka.multiprocess import MessageProcess, MessageObject, \
+        EventGroup, SyncIndex
+    from multiprocessing import shared_memory
+    
+    class MyProcess(MessageProcess):
+
+Create "server-side" shared memory first in the frontend with the unique name ``my-shm-1``
+
+:: 
+
+        def __init__(self, name):
+            super().__init__(name)
+            self.eg = EventGroup(10)
+    
+
+Backend methods: create, modify and close shared memory at the forked process
+
+:: 
+
+        def c__create(self, name: str = None, 
+                dtype: np.dtype = None, 
+                shape: tuple = None,
+                sync_index: int = None):
+            # create backend-side shared memory array "on-demand"
+            n_bytes = len(np.array(1, dtype=dtype).tobytes())*math.prod(shape)
+            self.shmem_name = name
+            self.shmem__ = shared_memory.SharedMemory(
+                name=self.shmem_name, create=False, size=n_bytes
+            )
+            self.array__ = np.ndarray(
+                shape, dtype=dtype, buffer=self.shmem__.buf
+            )
+            self.eg.set(sync_index)
+            
+        def c__close(self, sync_index = None):
+            self.shmem__.unlink()
+            self.logger.info("c__close: client side shmem unlinked")
+            self.eg.set(sync_index)
+    
+        def c__readWrite(self, sync_index: int =None):
+            self.logger.info("c__readWrite: will change array values from %s to %s",
+                self.array__[0,0], 3.0)
+            self.array__[:,:] = 3.0
+            self.logger.info("c__readWrite: ..did that!")
+            self.eg.set(sync_index) # tell frontend that it's done
+    
+
+Frontend methods: create and close shared memory in the main python process and tell backend
+to do the same.
+
+:: 
+
+        def create(self, shape: tuple = (100, 100)):
+            name = "my-shm-1"
+            dtype = np.float16
+            n_bytes = len(np.array(1, dtype=dtype).tobytes())*math.prod(shape)
+            self.shmem = shared_memory.SharedMemory(
+                name=name, create=True, size=n_bytes
+            )
+            self.array = np.ndarray(
+                shape, dtype=dtype, buffer=self.shmem.buf
+            )
+            self.array[:,:] = 0.0
+            # send data to backend so that it can create the client side shmem
+            with SyncIndex(self.eg) as i:
+                self.sendMessageToBack(MessageObject(
+                    "create",
+                    name = name,
+                    dtype = dtype,
+                    shape = shape,
+                    sync_index = i
+                ))
+    
+        def getArray(self):
+            return self.array
+    
+        def readWrite(self):
+            with SyncIndex(self.eg) as i:
+                self.sendMessageToBack(MessageObject(
+                    "readWrite", 
+                    sync_index = i
+                ))
+            self.logger.info("readWrite: array values now %s", self.array[0,0])
+        
+        def close(self):
+            with SyncIndex(self.eg) as i:
+                self.sendMessageToBack(MessageObject(
+                    "close", 
+                    sync_index = i
+                ))
+            self.logger.info("close: closing server side shmem")
+            self.shmem.close()
+            
+
+Run the process:
+
+:: 
+
+    p = MyProcess(name="my-process")
+    p.formatLogger()
+    p.start()
+    time.sleep(1)
+    p.create(shape=(200,200))
+    p.readWrite()
+    print("main: array values now", p.getArray()[0,0])
+    p.close()
+    time.sleep(0.1)
+    p.stop()
+    print("main: bye!")
+
+
+Resulting output:
+
+.. code:: text
+
+    MyProcess.my-process - INFO - c__readWrite: will change array values from 0.0 to 3.0
+    MyProcess.my-process - INFO - c__readWrite: ..did that!
+    MyProcess.my-process - INFO - readWrite: array values now 3.0
+    main: array values now 3.0
+    MyProcess.my-process - INFO - c__close: client side shmem unlinked
+    MyProcess.my-process - INFO - close: closing server side shmem
+    main: bye!
+    
+
+:: 
+

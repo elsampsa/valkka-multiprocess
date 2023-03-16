@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Article &mdash; Valkka_multiprocess  documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Licenses" href="license.html" />
+    <link rel="prev" title="API documentation" href="submodules.html" />
+    <!-- as per https://stackoverflow.com/questions/23211695/modifying-content-width-of-the-sphinx-theme-read-the-docs -->
+    <link href="_static/rtd_override.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body class="wy-body-for-nav">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+  <a href="index.html"><img src="_static/valkka.png" class="logo" alt="Logo"/>
+</a>
+    <div class="version">
+      1.0.0
+    </div>
+
+
+<!-- font awesome comes with the rtd package.. use like this:-->
+<a href="https://github.com/elsampsa/valkka_multiprocess" class="icon icon-github"> Valkka_multiprocess @ github</a>
+<a href="https://github.com/elsampsa/valkka_multiprocess/issues" class="fa fa-bug"> Issue Tracker @ github</a>
+
+<!-- don't even think about subclassing searchbox.html .. will never work!-->
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Intro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="requirements.html">Installing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="submodules.html">API documentation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Article</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#doing-python-mutiprocessing-the-right-way">Doing Python Mutiprocessing The Right Way</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#forking-vs-threading">Forking vs. Threading</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#let-s-ping-pong">Let’s Ping Pong</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#one-more-pitfall">One more pitfall</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#some-testing-and-debugging-tips">Some Testing and debugging tips</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#finally">Finally</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">Licenses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="authors.html">Authors</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Valkka_multiprocess</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Article</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/article.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="article">
+<span id="id1"></span><h1>Article<a class="headerlink" href="#article" title="Permalink to this headline">¶</a></h1>
+<p><em>Appeared originally in Medium</em> <a class="reference external" href="https://medium.com/&#64;sampsa.riikonen/doing-python-multiprocessing-the-right-way-a54c1880e300">[link]</a></p>
+<div class="section" id="doing-python-mutiprocessing-the-right-way">
+<h2>Doing Python Mutiprocessing The Right Way<a class="headerlink" href="#doing-python-mutiprocessing-the-right-way" title="Permalink to this headline">¶</a></h2>
+<p><em>Learn how to combine multiprocessing- and threading, and how to organize your multiprocessing classes in the right way</em></p>
+<a class="reference internal image-reference" href="_images/stranger.jpeg"><img alt="_images/stranger.jpeg" src="_images/stranger.jpeg" style="width: 80%;" /></a>
+<p><em>A posix fork has taken place</em></p>
+<p>Not a day goes by in Medium articles without someone complaining that Python is not the future of machine learning.</p>
+<p>For example, things like “I can write a GPU kernel in Julia but not in Python”.  However, most of us data scientists/engineers are just dummy <em>engineers</em> who use ready-made libraries.
+95% of us are not interested in “writing a GPU kernel”.</p>
+<p>Another complain is about multiprocessing: on many occasions, you need to use multiprocessing instead of multithreading.  People find this cumbersome (especially because of interprocess communication). Also, multiprocessing is very prone to errors if you’re not carefull.</p>
+<p>Although cumbersome at first sight, multiprocessing does have several advantages.</p>
+<p>Keeping processes separated in their own (virtual memory) “cages” can actually help in debugging and avoids confusion.  Once you sort out the intercommunication problem in a systematic way and avoid
+some common pitfalls, programming with python multiprocesses becomes a joy.</p>
+<p>One frequent error is to mix multithreading and multiprocessing together, creating a crashy/leaky program and then conclude that python sucks.  More on this later.</p>
+<p>Some beginners prefer, instead of writing a proper multiprocessing class, to do things like this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">p</span> <span class="o">=</span> <span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">foo</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This obfuscates completely what you are doing with processes and threads (see below).</p>
+<p>I have even seen people using <code class="docutils literal notranslate"><span class="pre">multiprocessing.Pool</span></code> to spawn single-use-and-dispose multiprocesses at high frequency and then complaining that “python multiprocessing is inefficient”.</p>
+<p>After this article you should be able to avoid some common pitfalls and write well-structured, efficient and rich python multiprocessing programs.</p>
+<p>This is going to be different what you learned in that <a class="reference external" href="https://docs.python.org/3/library/multiprocessing.html">python multiprorcessing tutorial</a>.
+No Managers, Pools or Queues, but more of an under-the-hood approach.</p>
+<p>Let’s start with the basics of posix fork.</p>
+</div>
+<div class="section" id="forking-vs-threading">
+<h2>Forking vs. Threading<a class="headerlink" href="#forking-vs-threading" title="Permalink to this headline">¶</a></h2>
+<p>Forking/multiprocessing means that you “spawn” a new process into your system.  It runs in its own (virtual) memory space.
+Imagine that after a fork, a copy of your code is now running “on the other side of the fork”.  Think of “Stranger Things”.</p>
+<p>On the contrary, threading means you are creating a new running instance/thread, toiling around in the same memory space with your current python process.
+They can access the same variables and objects.</p>
+<p>Confusing bugs arise when you mix forking and threading together, as creating threads first and then forking, leaves “dangling”/”confused” threads in the spawned multiprocesses.
+Talk about mysterious freezes, segfaults and all that sort of nice things.  But combining forking and threading can be done, if it’s done in the right order: fork first and then threading.</p>
+<p>This problem is further aggravated by the fact that many libraries which you use in your python programs may start threads sneakily in the background
+(many times, directly in their C source code), while you are completely unaware of it.</p>
+<p>Said all that, this is the correct order of doing things:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>0. import libraries that do not use multithreading
+
+1. create interprocess communication primitives and shared resources that are
+shared between multiprocesses (however, not considered in this tutorial)
+
+2. create interprocess communication primitives and shared resources that
+are shared with the main process and your current multiprocess
+
+3. fork (=create multiprocesses)
+
+4. import libraries that use multithreading
+
+5. if you use asyncio in your multiprocess, create a new event loop
+</pre></div>
+</div>
+<p>Let’s take a closer look on these steps:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>0. import libraries that do not use multithreading
+    - say, standard libraries
+
+(1. create interprocess communication primitives and shared resources that are
+shared between multiprocesses
+    - This is the subject of another tutorial)
+
+2. create interprocess communication primitives and shared resources that
+are shared with the main process and your current multiprocess
+    - Multiprocess&#39; intercommunication pipes
+    - These will be visible to your current process and
+    also to the code running &quot;on the other-side of the fork&quot;
+
+3. fork (=create multiprocesses)
+    - Creates that process running &quot;on the other side&quot;
+    - Triggered when you call your multiprocessing.Process classes
+    start() method
+
+4. import libraries that use multithreading
+    - As mentioned, quite many libraries _might_ use multithreading under-the-hood.
+    Even your belowed tensorflow and pytorch.
+    - Instantiate objects from those libraries
+
+5. if you use asyncio, remember to create a new event loop
+</pre></div>
+</div>
+<p>Next, let’s blend these steps with an actual code:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># 0. import libraries that do not use multithreading:</span>
+<span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="kn">import</span> <span class="n">Process</span><span class="p">,</span> <span class="n">Pipe</span>
+
+<span class="k">class</span> <span class="nc">MyProcess</span><span class="p">(</span><span class="n">Process</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="c1"># 2. create interprocess communication primitives and shared resources used by the current multiprocess:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">front_pipe</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">back_pipe</span> <span class="o">=</span> <span class="n">Pipe</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># 4. import libraries that use multithreading:</span>
+        <span class="c1">#from SomeLibrary import Analyzer</span>
+        <span class="c1">#self.analyzer = Analyzer()</span>
+        <span class="o">...</span>
+        <span class="c1"># 5. if you use asyncio, remember to create a new event loop</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;MyProcess: run&quot;</span><span class="p">)</span>
+        <span class="c1">#</span>
+        <span class="c1"># start running an infinite loop</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
+
+<span class="n">p</span> <span class="o">=</span> <span class="n">MyProcess</span><span class="p">()</span>
+<span class="c1"># 3. fork (=create multiprocesses)</span>
+<span class="n">p</span><span class="o">.</span><span class="n">start</span><span class="p">()</span> <span class="c1"># this performs fork &amp; starts p.run() &quot;on the other side&quot; of the fork</span>
+</pre></div>
+</div>
+<p>Remember that concept of code running “on the other side of the fork”?  That “other side” with demogorgons (and the like) which is isolated
+from our universe is created when you say <code class="docutils literal notranslate"><span class="pre">p.start()</span></code>.</p>
+<p>The stuff that runs in that parallel universe is <em>defined</em> in the method <code class="docutils literal notranslate"><span class="pre">run()</span></code>.</p>
+<p>When creating complex multiprocess programs, you will have several multiprocesses (parallel universes) each one with a large codebase.</p>
+<p>So, we’ll be needing a “mental guideline” to keep our mind in check.  Let’s introduce a concept for that purpose.</p>
+<p>Our multiprocess class shall have a <strong>frontend</strong> and a <strong>backend</strong> (not to be confused with web development!!)</p>
+<p><strong>Frontend</strong> is the scope of your current running python interpreter.  The normal world.</p>
+<p><strong>Backend</strong> is the part of the code that runs “on the other side of the fork”.
+It’s a different process in its own memory space and universe.  Frontend needs to communicate with the backend in some way (think again of Stranger Things).</p>
+<p>Let’s once more emphasize that <em>everything that’s inside/originates from method “run()”, runs in the backend</em>.</p>
+<p>From now on, we’ll stop talking about demogorgons, parallel realities and stick strictly to <strong>frontend</strong> and <strong>backend</strong>.  Hopefully, you have made the idea by now.</p>
+<p>The only things happening at the frontend in the current example are:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">p</span> <span class="o">=</span> <span class="n">MyProcess</span><span class="p">()</span> <span class="c1"># code that is executed in MyProcess.__init__</span>
+<span class="n">p</span><span class="o">.</span><span class="n">start</span><span class="p">()</span> <span class="c1"># performs the fork</span>
+</pre></div>
+</div>
+<p>In order to avoid confusion, we need to differentiate between frontend and backend methods.  We need a naming convention.  Let’s use this one:</p>
+<p><strong>All backend methods shall have a double-underscore in their name</strong></p>
+<p>Like this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="c1"># 4. import libraries that use multithreading:</span>
+    <span class="c1">#from SomeLibrary import Analyzer</span>
+    <span class="c1">#self.analyzer = Analyzer()</span>
+    <span class="o">...</span>
+    <span class="c1"># 5. if you use asyncio, remember to create a new event loop</span>
+    <span class="o">...</span>
+    <span class="c1"># everything started from within run() is at the backend</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">listenFront__</span><span class="p">()</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">listenFront__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+<p>Before we move on, one extra observation: multiprocesses are not supposed to be single-use-and-dispose.
+You don’t want to create and start them at high frequency since creating them has considerable overhead.
+You should try to spawn your multiprocesses only once (or at <em>very</em> low frequency).</p>
+</div>
+<div class="section" id="let-s-ping-pong">
+<h2>Let’s Ping Pong<a class="headerlink" href="#let-s-ping-pong" title="Permalink to this headline">¶</a></h2>
+<p>Next, let’s demonstrate the frontend/backend scheme in more detail.</p>
+<p>We do a classical multiprocessing example: sending a ping to the multiprocess, which then responds with a pong.</p>
+<p>The frontend methods are <code class="docutils literal notranslate"><span class="pre">ping()</span></code> and <code class="docutils literal notranslate"><span class="pre">stop()</span></code>.  You call these methods in your main python program (aka frontend).  Under-the-hood, these methods do seamless intercommunication between front- and backend.</p>
+<p>Backend methods <code class="docutils literal notranslate"><span class="pre">listenFront__()</span></code> and <code class="docutils literal notranslate"><span class="pre">ping__()</span></code> run at the backend and they originate from the <code class="docutils literal notranslate"><span class="pre">run()</span></code> method.</p>
+<p>Here is the code:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># 0. import libraries that do not use multithreading:</span>
+<span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="kn">import</span> <span class="n">Process</span><span class="p">,</span> <span class="n">Pipe</span>
+
+<span class="k">class</span> <span class="nc">MyProcess</span><span class="p">(</span><span class="n">Process</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="c1"># 2. create interprocess communication primitives and shared resources used by the current multiprocess:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">front_pipe</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">back_pipe</span> <span class="o">=</span> <span class="n">Pipe</span><span class="p">()</span>
+
+    <span class="c1"># BACKEND</span>
+
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># 4. import libraries that use multithreading:</span>
+        <span class="c1">#from SomeLibrary import Analyzer</span>
+        <span class="c1">#self.analyzer = Analyzer()</span>
+        <span class="o">...</span>
+        <span class="c1"># 5. if you use asyncio, remember to create a new event loop</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;MyProcess: run&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">active</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">active</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">active</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">listenFront__</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;bye from multiprocess!&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">listenFront__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">back_pipe</span><span class="o">.</span><span class="n">recv</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">message</span> <span class="o">==</span> <span class="s2">&quot;stop&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">elif</span> <span class="n">message</span> <span class="o">==</span> <span class="s2">&quot;ping&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ping__</span><span class="p">()</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;listenFront__ : unknown message&quot;</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="k">def</span> <span class="nf">ping__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;backend: got ping from frontend&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">back_pipe</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s2">&quot;pong&quot;</span><span class="p">)</span>
+
+    <span class="c1"># FRONTEND</span>
+
+    <span class="k">def</span> <span class="nf">ping</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">front_pipe</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s2">&quot;ping&quot;</span><span class="p">)</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">front_pipe</span><span class="o">.</span><span class="n">recv</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;frontend: got a message from backend:&quot;</span><span class="p">,</span> <span class="n">msg</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">front_pipe</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s2">&quot;stop&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Here is how you use it in the frontend (i.e. in your main python process):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">p</span> <span class="o">=</span> <span class="n">MyProcess</span><span class="p">()</span>
+<span class="c1"># 3. fork (=create multiprocesses)</span>
+<span class="n">p</span><span class="o">.</span><span class="n">start</span><span class="p">()</span> <span class="c1"># this performs fork &amp; start p.run() &quot;on the other side&quot; of the fork</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;front: sleepin 5 secs&quot;</span><span class="p">)</span>
+<span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">p</span><span class="o">.</span><span class="n">ping</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;front: sleepin 5 secs&quot;</span><span class="p">)</span>
+<span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">p</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Note that we use only the frontend methods (start, ping and stop).</p>
+<p>Note that we have successfully eliminated the mental load of needing to think about the fork at all.
+At the same time, the code has a clear distinction to and intercommunication with the forked process. We just need to think in terms of the front- and backend and their corresponding methods.</p>
+</div>
+<div class="section" id="one-more-pitfall">
+<h2>One more pitfall<a class="headerlink" href="#one-more-pitfall" title="Permalink to this headline">¶</a></h2>
+<p>Consider the following situations as your codebase grows:</p>
+<ul class="simple">
+<li><p>You have several fairly complex multiprocessing classes</p></li>
+<li><p>Several different multiprocesses are called and invoked within your main program</p></li>
+</ul>
+<p>Then your main python code might look like this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">SomeLibrary</span>
+<span class="kn">from</span> <span class="nn">YourLibrary</span> <span class="kn">import</span> <span class="n">MyProcessClass1</span><span class="p">,</span> <span class="n">MyProcessClass2</span>
+<span class="o">...</span>
+<span class="n">obj</span> <span class="o">=</span> <span class="n">SomeLibrary</span><span class="o">.</span><span class="n">SomeClass</span><span class="p">()</span>
+<span class="o">...</span>
+<span class="n">obj</span><span class="o">.</span><span class="n">call1</span><span class="p">()</span>
+
+<span class="n">p1</span> <span class="o">=</span> <span class="n">MyProcessClass1</span><span class="p">()</span>
+<span class="n">p1</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+<span class="n">p2</span> <span class="o">=</span> <span class="n">MyProcessClass2</span><span class="p">()</span>
+<span class="n">p2</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+<span class="o">...</span>
+<span class="n">obj</span><span class="o">.</span><span class="n">call2</span><span class="p">()</span>
+<span class="o">...</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">SomeLibrary</span></code> is just some library that you need in your code but is not used/related to your multiprocesses in any way.</p>
+<p>However, if that <code class="docutils literal notranslate"><span class="pre">SomeLibrary</span></code> uses multithreading under-the-hood (without you knowing about it), you have created yourself a big problem.</p>
+<p>Still remember what we said earlier?</p>
+<p><strong>No threads before fork!</strong></p>
+<p>As even just importing a library might silenty starts threads, to be <em>absolutely</em> on the safe side, do this instead:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">YourLibrary</span> <span class="kn">import</span> <span class="n">MyProcessClass1</span><span class="p">,</span> <span class="n">MyProcessClass2</span>
+<span class="n">p1</span> <span class="o">=</span> <span class="n">MyProcessClass1</span><span class="p">()</span>
+<span class="n">p1</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+<span class="n">p2</span> <span class="o">=</span> <span class="n">MyProcessClass2</span><span class="p">()</span>
+<span class="n">p2</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+<span class="kn">import</span> <span class="nn">SomeLibrary</span> <span class="c1"># could start threads?</span>
+<span class="o">...</span>
+<span class="n">obj</span> <span class="o">=</span> <span class="n">SomeLibrary</span><span class="o">.</span><span class="n">SomeClass</span><span class="p">()</span>
+<span class="o">...</span>
+<span class="n">obj</span><span class="o">.</span><span class="n">call</span><span class="p">()</span>
+<span class="o">...</span>
+<span class="n">obj</span><span class="o">.</span><span class="n">call</span><span class="p">()</span>
+<span class="o">...</span>
+</pre></div>
+</div>
+<p>i.e. instantiate and start your multiprocesses before anything else.</p>
+<p>If the logic in your program requires using multiprocesses “on-demand”, consider this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">YourLibrary</span> <span class="kn">import</span> <span class="n">MyProcessClass1</span><span class="p">,</span> <span class="n">MyProcessClass2</span>
+<span class="o">...</span>
+<span class="n">processes_1</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="c1"># start and cache processes</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+    <span class="n">p1</span> <span class="o">=</span> <span class="n">MyProcessClass1</span><span class="p">()</span>
+    <span class="n">p1</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+    <span class="n">processes_1</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">p1</span><span class="p">)</span>
+<span class="o">...</span>
+<span class="kn">import</span> <span class="nn">SomeLibrary</span> <span class="c1"># could start threads?</span>
+<span class="o">...</span>
+<span class="n">obj</span> <span class="o">=</span> <span class="n">SomeLibrary</span><span class="o">.</span><span class="n">SomeClass</span><span class="p">()</span>
+<span class="o">...</span>
+<span class="n">obj</span><span class="o">.</span><span class="n">call</span><span class="p">()</span>
+<span class="o">...</span>
+<span class="c1"># program needs a multiprocess</span>
+<span class="n">p</span><span class="o">=</span><span class="n">processes_1</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+<span class="c1"># call some frontend method of the multiprocess</span>
+<span class="n">p</span><span class="o">.</span><span class="n">activate</span><span class="p">()</span>
+<span class="n">p</span><span class="o">.</span><span class="n">doSomething</span><span class="p">()</span>
+<span class="o">...</span>
+<span class="c1"># return multiprocess to the cache</span>
+<span class="n">p</span><span class="o">.</span><span class="n">deActivate</span><span class="p">()</span>
+<span class="n">processes_1</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+<span class="o">...</span>
+<span class="c1"># at the end of your program</span>
+<span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">processes_1</span><span class="p">:</span>
+    <span class="n">p</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>i.e., instead of creating and starting multiprocesses in the middle of your program, you create and start them at the very beginning and then cache them for future use.</p>
+</div>
+<div class="section" id="some-testing-and-debugging-tips">
+<h2>Some Testing and debugging tips<a class="headerlink" href="#some-testing-and-debugging-tips" title="Permalink to this headline">¶</a></h2>
+<p>For test purposes, you can run your python multiprocessing classes without forking at all, by simply not using “start()” in your test code.  In this case you can call the backend methods directly in your tests/frontend, provided that you have structured your code correctly.</p>
+<p>For python refleaks and resulting memory blowup issues you can use the following technique.  Import the setproctitle library with</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">setproctitle</span> <span class="kn">import</span> <span class="n">setproctitle</span>
+</pre></div>
+</div>
+<p>In your multiprocesses <code class="docutils literal notranslate"><span class="pre">run()</span></code> method, include this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">setproctitle</span><span class="p">(</span><span class="s2">&quot;Your-Process-Name&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Now your process is tagged with a name, so that you can follow the memory consumption of that single process very easily with standard linux tools, say, with smem and htop
+(in htop, remember to go to <code class="docutils literal notranslate"><span class="pre">setup</span> <span class="pre">=&gt;</span> <span class="pre">display</span> <span class="pre">options</span> <span class="pre">and</span> <span class="pre">enable</span> <span class="pre">“Hide</span> <span class="pre">userland</span> <span class="pre">process</span> <span class="pre">threads”</span></code> in order to make the output more readable).</p>
+</div>
+<div class="section" id="finally">
+<h2>Finally<a class="headerlink" href="#finally" title="Permalink to this headline">¶</a></h2>
+<p>In this tutorial I have given you some guidelines to succeed with your python multiprocessing program and not to fall into some typical pitfalls.</p>
+<p>You might still have lot of questions:</p>
+<ol class="arabic simple">
+<li><p>How to listen at several multiprocesses simultaneously at my main program? (hint: use the select module)</p></li>
+<li><p>How do I send megabytes of streaming data to a running multiprocess?  I mean images and/or video (can be done perfectly, but not trivial)</p></li>
+<li><p>Can I run asyncio in the back- or frontend or both? (sure)</p></li>
+</ol>
+<p>These are, however, out of the scope of this tutorial.</p>
+<p>Let’s just mention that in the case (2) that:</p>
+<ul class="simple">
+<li><p>You would _not_ certainly use pipes (they are not for large streaming data)</p></li>
+<li><p>Use posix shared memory, mapped into numpy arrays instead</p></li>
+<li><p>Those arrays belong to a ring-buffer that is synchronized using posix semaphores across process boundaries</p></li>
+<li><p>You need to listen simultaneously to the intercommunication pipe and the ringbuffer.  Posix EventFd is a nice tool for this.</p></li>
+</ul>
+<p>I’ve done this kind of stuff in a python multimedia framework I’ve written.  If you’re interested, please see <a class="reference external" href="https://elsampsa.github.io/valkka-examples/_build/html/index.html">here</a></p>
+<p>That’s the end of the tutorial.  I hope it gave you some food for thought.</p>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="submodules.html" class="btn btn-neutral float-left" title="API documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="license.html" class="btn btn-neutral float-right" title="Licenses" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2017-2023 Sampsa Riikonen.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

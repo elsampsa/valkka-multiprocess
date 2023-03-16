@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>API documentation &mdash; Valkka_multiprocess  documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Article" href="article.html" />
+    <link rel="prev" title="Part I: Managing a multiprocess" href="snippets/index.html" />
+    <!-- as per https://stackoverflow.com/questions/23211695/modifying-content-width-of-the-sphinx-theme-read-the-docs -->
+    <link href="_static/rtd_override.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body class="wy-body-for-nav">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+  <a href="index.html"><img src="_static/valkka.png" class="logo" alt="Logo"/>
+</a>
+    <div class="version">
+      1.0.0
+    </div>
+
+
+<!-- font awesome comes with the rtd package.. use like this:-->
+<a href="https://github.com/elsampsa/valkka_multiprocess" class="icon icon-github"> Valkka_multiprocess @ github</a>
+<a href="https://github.com/elsampsa/valkka_multiprocess/issues" class="fa fa-bug"> Issue Tracker @ github</a>
+
+<!-- don't even think about subclassing searchbox.html .. will never work!-->
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Intro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="requirements.html">Installing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Tutorial</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">API documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#messageobject">MessageObject</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#messageprocess">MessageProcess</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#asyncbackmessageprocess">AsyncBackMessageProcess</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#maincontext">MainContext</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#eventgroup">EventGroup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#syncindex">SyncIndex</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#other">Other</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="article.html">Article</a></li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">Licenses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="authors.html">Authors</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Valkka_multiprocess</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">API documentation</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/submodules.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="api-documentation">
+<h1>API documentation<a class="headerlink" href="#api-documentation" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="messageobject">
+<h2>MessageObject<a class="headerlink" href="#messageobject" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="valkka.multiprocess.base.MessageObject">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">valkka.multiprocess.base.</span></code><code class="sig-name descname"><span class="pre">MessageObject</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/valkka/multiprocess/base.html#MessageObject"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#valkka.multiprocess.base.MessageObject" title="Permalink to this definition">¶</a></dt>
+<dd><p>A generic MessageObject for intercommunication between
+fronend (main python process) and backend (forked multiprocess).</p>
+<p>Encapsulates a command and parameters</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>command</strong> – the command</p></li>
+<li><p><strong>kwargs</strong> – kwargs</p></li>
+</ul>
+</dd>
+</dl>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">msg</span> <span class="o">=</span> <span class="n">MessageObject</span><span class="p">(</span><span class="s2">&quot;a-command&quot;</span><span class="p">,</span> <span class="n">par1</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">par2</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">msg</span><span class="p">()</span> <span class="c1"># returns &quot;a-command&quot;</span>
+<span class="n">msg</span><span class="p">[</span><span class="s2">&quot;par1&quot;</span><span class="p">]</span> <span class="c1"># returns 1</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+<div class="section" id="messageprocess">
+<h2>MessageProcess<a class="headerlink" href="#messageprocess" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">MessageProcess</span></code> class implements a seamless intercommunication between the
+forked multiprocess (aka “backend”) and the main/current python process (aka “frontend”).</p>
+<p>Like this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">valkka.multiprocess</span> <span class="kn">import</span> <span class="n">MessageProcess</span><span class="p">,</span> <span class="n">MessageObject</span>
+
+<span class="k">class</span> <span class="nc">MyProcess</span><span class="p">(</span><span class="n">MessageProcess</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">c__myStuff</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameter</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Regards from other side of the fork!  Got parameter&quot;</span><span class="p">,</span> <span class="n">parameter</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">myStuff</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameter</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sendMessageToBack</span><span class="p">(</span><span class="n">MessageObject</span><span class="p">(</span>
+            <span class="s2">&quot;myStuff&quot;</span><span class="p">,</span> <span class="n">parameter</span><span class="o">=</span><span class="n">parameter</span><span class="p">))</span>
+
+<span class="n">p</span> <span class="o">=</span> <span class="n">MyProcess</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;my-process&quot;</span><span class="p">)</span>
+<span class="n">pipe</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">getPipe</span><span class="p">()</span> <span class="c1"># returns a multiprocessing.Pipe instance</span>
+<span class="c1"># ..that can be used as-is with select.select</span>
+<span class="n">p</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+<span class="n">p</span><span class="o">.</span><span class="n">myStuff</span><span class="p">(</span><span class="n">parameter</span><span class="o">=</span><span class="s2">&quot;gotcha!&quot;</span><span class="p">)</span>
+<span class="o">...</span>
+<span class="n">p</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>In <code class="docutils literal notranslate"><span class="pre">MessageProcess</span></code>’s <code class="docutils literal notranslate"><span class="pre">run</span></code> method, there is an event loop that listens
+to <code class="docutils literal notranslate"><span class="pre">MessageObject</span></code> s, which are mapped to correct methods in the backend
+(to method <code class="docutils literal notranslate"><span class="pre">c__myStuff</span></code> in this case).</p>
+<dl class="py class">
+<dt id="valkka.multiprocess.base.MessageProcess">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">valkka.multiprocess.base.</span></code><code class="sig-name descname"><span class="pre">MessageProcess</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MessageProcess'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/valkka/multiprocess/base.html#MessageProcess"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#valkka.multiprocess.base.MessageProcess" title="Permalink to this definition">¶</a></dt>
+<dd><p>Encapsulates:</p>
+<ul class="simple">
+<li><p>Frontend methods (in the current main process)</p></li>
+<li><p>Backend methods (that run in the background/forked process)</p></li>
+<li><p>Intercom pipes that communicate (seamlessly) between the multiprocessing front- and backend</p></li>
+<li><p>All intercom is encapsulated in <code class="docutils literal notranslate"><span class="pre">MessageObject</span></code> s</p></li>
+</ul>
+<p>When you send a <code class="docutils literal notranslate"><span class="pre">MessageObject</span></code> with command <code class="docutils literal notranslate"><span class="pre">myStuff</span></code>, the forked multiprocess
+(aka backend) tries to find and execute the method <code class="docutils literal notranslate"><span class="pre">c__myStuff</span></code> in the backend.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>name</strong> – name of the multiprocess</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="valkka.multiprocess.base.MessageProcess.c__ping">
+<code class="sig-name descname"><span class="pre">c__ping</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/valkka/multiprocess/base.html#MessageProcess.c__ping"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#valkka.multiprocess.base.MessageProcess.c__ping" title="Permalink to this definition">¶</a></dt>
+<dd><p>A demo multiprocessing backend method: triggered when frontend calls the method <code class="docutils literal notranslate"><span class="pre">ping</span></code> and sends a reply to frontend</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="valkka.multiprocess.base.MessageProcess.formatLogger">
+<em class="property"><span class="pre">classmethod</span> </em><code class="sig-name descname"><span class="pre">formatLogger</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/valkka/multiprocess/base.html#MessageProcess.formatLogger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#valkka.multiprocess.base.MessageProcess.formatLogger" title="Permalink to this definition">¶</a></dt>
+<dd><p>A helper to setup logger formatter</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>level</strong> – loglevel.  Default: <code class="docutils literal notranslate"><span class="pre">logging.INFO</span></code>.</p>
+</dd>
+</dl>
+<p>Use only for initial development</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="valkka.multiprocess.base.MessageProcess.getPipe">
+<code class="sig-name descname"><span class="pre">getPipe</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">multiprocessing.context.BaseContext.Pipe</span><a class="reference internal" href="_modules/valkka/multiprocess/base.html#MessageProcess.getPipe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#valkka.multiprocess.base.MessageProcess.getPipe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Multiprocessing frontend method: returns the pipe you can use to listen to messages sent by the multiprocessing backend.</p>
+<p>returns a <code class="docutils literal notranslate"><span class="pre">multiprocessing.Pipe</span></code> instance</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="valkka.multiprocess.base.MessageProcess.go">
+<code class="sig-name descname"><span class="pre">go</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/valkka/multiprocess/base.html#MessageProcess.go"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#valkka.multiprocess.base.MessageProcess.go" title="Permalink to this definition">¶</a></dt>
+<dd><p>Multiprocessing frontend method: a synonym to multiprocessing <code class="docutils literal notranslate"><span class="pre">start()</span></code></p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="valkka.multiprocess.base.MessageProcess.ignoreSIGINT">
+<code class="sig-name descname"><span class="pre">ignoreSIGINT</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/valkka/multiprocess/base.html#MessageProcess.ignoreSIGINT"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#valkka.multiprocess.base.MessageProcess.ignoreSIGINT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Multiprocessing frontend method: call before <code class="docutils literal notranslate"><span class="pre">start</span></code> (or <code class="docutils literal notranslate"><span class="pre">go</span></code>), so that the multiprocess ignores all SIGINT signals</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="valkka.multiprocess.base.MessageProcess.postRun__">
+<code class="sig-name descname"><span class="pre">postRun__</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/valkka/multiprocess/base.html#MessageProcess.postRun__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#valkka.multiprocess.base.MessageProcess.postRun__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Multiprocessing backend method: subclass if needed</p>
+<p>Everything that needs to be done <em>after the fork</em> (i.e. in the backend), and right <em>after</em>
+the multiprocess has exited it’s main listening &amp; execution loop, i.e. just before the multiprocess exits
+and dies.</p>
+<p>For example: clear heavy libraries and instantiate deep neural net detectors</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="valkka.multiprocess.base.MessageProcess.preRun__">
+<code class="sig-name descname"><span class="pre">preRun__</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/valkka/multiprocess/base.html#MessageProcess.preRun__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#valkka.multiprocess.base.MessageProcess.preRun__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Multiprocessing backend method: subclass if needed</p>
+<p>Everything that needs to be done <em>after the fork</em> (i.e. in the backend), but <em>before</em>
+the multiprocesses’ main listening &amp; execution loop starts running.</p>
+<p>For example: import heavy libraries and instantiate deep neural net detectors</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="valkka.multiprocess.base.MessageProcess.readPipes__">
+<code class="sig-name descname"><span class="pre">readPipes__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timeout</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/valkka/multiprocess/base.html#MessageProcess.readPipes__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#valkka.multiprocess.base.MessageProcess.readPipes__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Multiprocessing backend method: listen simultaneously (i.e. “multiplex”) all intercom pipes.</p>
+<p>If you need to listen additionally anything else than the normal intercom pipe, please subclass this one.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>timeout</strong> – listening i/o timeout in seconds</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="valkka.multiprocess.base.MessageProcess.requestStop">
+<code class="sig-name descname"><span class="pre">requestStop</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/valkka/multiprocess/base.html#MessageProcess.requestStop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#valkka.multiprocess.base.MessageProcess.requestStop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Multiprocessing frontend method: send a request to the multiprocess (backend) to stop</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="valkka.multiprocess.base.MessageProcess.run">
+<code class="sig-name descname"><span class="pre">run</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/valkka/multiprocess/base.html#MessageProcess.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#valkka.multiprocess.base.MessageProcess.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Multiprocessing backend method: the main listening &amp; execution loop.  Normally you would not subclass this one.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="valkka.multiprocess.base.MessageProcess.sendMessageToBack">
+<code class="sig-name descname"><span class="pre">sendMessageToBack</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#valkka.multiprocess.base.MessageObject" title="valkka.multiprocess.base.MessageObject"><span class="pre">valkka.multiprocess.base.MessageObject</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/valkka/multiprocess/base.html#MessageProcess.sendMessageToBack"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#valkka.multiprocess.base.MessageProcess.sendMessageToBack" title="Permalink to this definition">¶</a></dt>
+<dd><p>Multiprocessing frontend method: send a <code class="docutils literal notranslate"><span class="pre">MessageObject</span></code> to multiprocessing backend</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="valkka.multiprocess.base.MessageProcess.sendPing">
+<code class="sig-name descname"><span class="pre">sendPing</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lis</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/valkka/multiprocess/base.html#MessageProcess.sendPing"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#valkka.multiprocess.base.MessageProcess.sendPing" title="Permalink to this definition">¶</a></dt>
+<dd><p>A demo multiprocessing frontend method: a demo method that sends the following <code class="docutils literal notranslate"><span class="pre">MessageObject</span></code> to the multiprocessing backend:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">MessageObject</span><span class="p">(</span>
+    <span class="s2">&quot;ping&quot;</span><span class="p">,</span>
+    <span class="n">lis</span> <span class="o">=</span> <span class="n">lis</span>
+<span class="p">))</span>
+</pre></div>
+</div>
+<p>In the backend this is mapped seamlessly into backend method <code class="docutils literal notranslate"><span class="pre">c__ping</span></code></p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="valkka.multiprocess.base.MessageProcess.send_out__">
+<code class="sig-name descname"><span class="pre">send_out__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/valkka/multiprocess/base.html#MessageProcess.send_out__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#valkka.multiprocess.base.MessageProcess.send_out__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Multiprocessing backend method: send an object from the backend to the frontend. 
+It’s recommended to use the <code class="docutils literal notranslate"><span class="pre">MessageObject</span></code> class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="valkka.multiprocess.base.MessageProcess.stop">
+<code class="sig-name descname"><span class="pre">stop</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/valkka/multiprocess/base.html#MessageProcess.stop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#valkka.multiprocess.base.MessageProcess.stop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Multiprocessing frontend method: request backend multiprocess to stop and wait until it has finished</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="valkka.multiprocess.base.MessageProcess.waitStop">
+<code class="sig-name descname"><span class="pre">waitStop</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/valkka/multiprocess/base.html#MessageProcess.waitStop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#valkka.multiprocess.base.MessageProcess.waitStop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Multiprocessing frontend method: alias to multiprocessing <code class="docutils literal notranslate"><span class="pre">join()</span></code></p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="asyncbackmessageprocess">
+<h2>AsyncBackMessageProcess<a class="headerlink" href="#asyncbackmessageprocess" title="Permalink to this headline">¶</a></h2>
+<p>Identical to <code class="docutils literal notranslate"><span class="pre">MessageProcess</span></code> class, but now the forked process (aka backend) runs
+asyncio:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">valkka.multiprocess</span> <span class="kn">import</span> <span class="n">AsyncBackMessageProcess</span><span class="p">,</span> <span class="n">MessageObject</span>
+
+<span class="k">class</span> <span class="nc">MyProcess</span><span class="p">(</span><span class="n">AsyncBackMessageProcess</span><span class="p">):</span>
+
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">c__myStuff</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameter</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="c1"># NOTE: this is a coroutine</span>
+        <span class="c1"># so, here call other coroutine with await</span>
+        <span class="c1"># send asyncio tasks, etc. etc.</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Regards from other side of the fork!  Got parameter&quot;</span><span class="p">,</span> <span class="n">parameter</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">myStuff</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameter</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sendMessageToBack</span><span class="p">(</span><span class="n">MessageObject</span><span class="p">(</span>
+            <span class="s2">&quot;myStuff&quot;</span><span class="p">,</span> <span class="n">parameter</span><span class="o">=</span><span class="n">parameter</span><span class="p">))</span>
+
+<span class="n">p</span> <span class="o">=</span> <span class="n">MyProcess</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;my-process&quot;</span><span class="p">)</span>
+<span class="n">pipe</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">getPipe</span><span class="p">()</span> <span class="c1"># returns a custom Duplex instance</span>
+<span class="n">fd</span><span class="o">=</span><span class="n">pipe</span><span class="o">.</span><span class="n">getReadFd</span><span class="p">()</span> <span class="c1"># this can be used with select.select</span>
+<span class="n">p</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+<span class="n">p</span><span class="o">.</span><span class="n">myStuff</span><span class="p">(</span><span class="n">parameter</span><span class="o">=</span><span class="s2">&quot;gotcha!&quot;</span><span class="p">)</span>
+<span class="o">...</span>
+<span class="n">p</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Please, note the small “glitch” in the API when getting the file descriptor for reading: you need to call <code class="docutils literal notranslate"><span class="pre">getReadFd</span></code> to get the file descriptor.</p>
+<dl class="py class">
+<dt id="valkka.multiprocess.base.AsyncBackMessageProcess">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">valkka.multiprocess.base.</span></code><code class="sig-name descname"><span class="pre">AsyncBackMessageProcess</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'AsyncMessageProcess'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/valkka/multiprocess/base.html#AsyncBackMessageProcess"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#valkka.multiprocess.base.AsyncBackMessageProcess" title="Permalink to this definition">¶</a></dt>
+<dd><p>A subclass of <code class="docutils literal notranslate"><span class="pre">MessageProcess</span></code>, but now the backend runs asyncio</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>name</strong> – multiprocess name</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="valkka.multiprocess.base.AsyncBackMessageProcess.asyncPost__">
+<em class="property"><span class="pre">async</span> </em><code class="sig-name descname"><span class="pre">asyncPost__</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/valkka/multiprocess/base.html#AsyncBackMessageProcess.asyncPost__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#valkka.multiprocess.base.AsyncBackMessageProcess.asyncPost__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Multiprocessing backend coroutine: subclass if needed</p>
+<p>Everything that needs to be done <em>after the fork</em> (i.e. in the backend), immediately 
+before exiting the main asyncio event loop</p>
+<p>In addition to this, you can still subclass also <code class="docutils literal notranslate"><span class="pre">postRun__</span></code> that is executed
+after exiting the main syncio event loop</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="valkka.multiprocess.base.AsyncBackMessageProcess.asyncPre__">
+<em class="property"><span class="pre">async</span> </em><code class="sig-name descname"><span class="pre">asyncPre__</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/valkka/multiprocess/base.html#AsyncBackMessageProcess.asyncPre__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#valkka.multiprocess.base.AsyncBackMessageProcess.asyncPre__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Multiprocessing backend coroutine: subclass if needed</p>
+<p>Everything that needs to be done <em>after the fork</em> (i.e. in the backend), but <em>before</em>
+the multiprocesses’ main asyncio event loop starts running.</p>
+<p>In addition to this, you can still subclass also <code class="docutils literal notranslate"><span class="pre">preRun__</span></code> that is executed
+after the fork but <em>before</em> the asyncio event loop</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="valkka.multiprocess.base.AsyncBackMessageProcess.c__ping">
+<em class="property"><span class="pre">async</span> </em><code class="sig-name descname"><span class="pre">c__ping</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/valkka/multiprocess/base.html#AsyncBackMessageProcess.c__ping"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#valkka.multiprocess.base.AsyncBackMessageProcess.c__ping" title="Permalink to this definition">¶</a></dt>
+<dd><p>A demo backend coroutine:  triggered when frontend calls the method <code class="docutils literal notranslate"><span class="pre">ping</span></code> and sends a reply to frontend</p>
+<p>So, in this coroutine it’s all asyncio, i.e. await’ing and sending tasks.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="valkka.multiprocess.base.AsyncBackMessageProcess.send_out__">
+<em class="property"><span class="pre">async</span> </em><code class="sig-name descname"><span class="pre">send_out__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/valkka/multiprocess/base.html#AsyncBackMessageProcess.send_out__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#valkka.multiprocess.base.AsyncBackMessageProcess.send_out__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Multiprocessing backend coroutine: pickle obj &amp; send to main python process.
+It’s recommended to use the <code class="docutils literal notranslate"><span class="pre">MessageObject</span></code> class.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="maincontext">
+<h2>MainContext<a class="headerlink" href="#maincontext" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="valkka.multiprocess.base.MainContext">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">valkka.multiprocess.base.</span></code><code class="sig-name descname"><span class="pre">MainContext</span></code><a class="reference internal" href="_modules/valkka/multiprocess/base.html#MainContext"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#valkka.multiprocess.base.MainContext" title="Permalink to this definition">¶</a></dt>
+<dd><p>A convenience class to organize your python main process in the context of multiprocessing</p>
+<p>You should subclass this.  In subclassed <code class="docutils literal notranslate"><span class="pre">__init__</span></code>, you should always call the
+superclass constructor:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>This will have the effect of calling <code class="docutils literal notranslate"><span class="pre">startProcesses</span></code> and <code class="docutils literal notranslate"><span class="pre">startThreads</span></code>
+(see below).</p>
+<p>Please see tutorial, part II for practical subclassing examples</p>
+<dl class="py method">
+<dt id="valkka.multiprocess.base.MainContext.__call__">
+<code class="sig-name descname"><span class="pre">__call__</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/valkka/multiprocess/base.html#MainContext.__call__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#valkka.multiprocess.base.MainContext.__call__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mandatory.  Your main process loop.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="valkka.multiprocess.base.MainContext.close">
+<code class="sig-name descname"><span class="pre">close</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/valkka/multiprocess/base.html#MainContext.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#valkka.multiprocess.base.MainContext.close" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mandatory. Terminate all multiprocesses and threads.  Should be
+called in the <code class="docutils literal notranslate"><span class="pre">__call__</span></code> method after exiting the main loop.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="valkka.multiprocess.base.MainContext.formatLogger">
+<em class="property"><span class="pre">classmethod</span> </em><code class="sig-name descname"><span class="pre">formatLogger</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/valkka/multiprocess/base.html#MainContext.formatLogger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#valkka.multiprocess.base.MainContext.formatLogger" title="Permalink to this definition">¶</a></dt>
+<dd><p>A helper to setup logger formatter</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>level</strong> – loglevel.  Default: <code class="docutils literal notranslate"><span class="pre">logging.INFO</span></code>.</p>
+</dd>
+</dl>
+<p>Use only for initial development</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="valkka.multiprocess.base.MainContext.runAsThread">
+<code class="sig-name descname"><span class="pre">runAsThread</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/valkka/multiprocess/base.html#MainContext.runAsThread"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#valkka.multiprocess.base.MainContext.runAsThread" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run the class as a thread.  Only for testing/debugging purposes</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="valkka.multiprocess.base.MainContext.startProcesses">
+<code class="sig-name descname"><span class="pre">startProcesses</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/valkka/multiprocess/base.html#MainContext.startProcesses"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#valkka.multiprocess.base.MainContext.startProcesses" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mandatory. Create, cache and start your <code class="docutils literal notranslate"><span class="pre">MessageProcess</span></code> es here.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="valkka.multiprocess.base.MainContext.startThreads">
+<code class="sig-name descname"><span class="pre">startThreads</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/valkka/multiprocess/base.html#MainContext.startThreads"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#valkka.multiprocess.base.MainContext.startThreads" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mandatory. Create, cache and start any python multithreads here if you have them.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="valkka.multiprocess.base.MainContext.stopThread">
+<code class="sig-name descname"><span class="pre">stopThread</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/valkka/multiprocess/base.html#MainContext.stopThread"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#valkka.multiprocess.base.MainContext.stopThread" title="Permalink to this definition">¶</a></dt>
+<dd><p>If launched with <code class="docutils literal notranslate"><span class="pre">runAsThread</span></code>, use this method to stop.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="eventgroup">
+<h2>EventGroup<a class="headerlink" href="#eventgroup" title="Permalink to this headline">¶</a></h2>
+<p>With this class you can:</p>
+<ul class="simple">
+<li><p>reserve and release (i.e. recycle) events</p></li>
+<li><p>access a certain reserved event, based on it’s index</p></li>
+</ul>
+<p>Motivation for these are:</p>
+<p>When doing multiprocessing, the synchronization primitives (events in this case), must be reserved <em>before</em> forking - <em>after</em> forking you can’t
+create an event and then expect the forked process to see it.</p>
+<p>However if you have created an event <em>before</em> forking, then the forked multiprocesses <em>can</em> see the event and it’s state.  For this reason
+we need to create it before anything else and then reuse it (instead of creating a new one) on-demand.</p>
+<p>Furthermore, when communicating between the multiprocessing front- and backends, we can’t expect that an Event object would be serialized correctly.  However,
+as events were created and cached before forking, we can send the index/address of the event (just a simple integer) accross multiprocessing front-
+and backend: now both front- and backend know what event in question we are using to synchronize.</p>
+<p>An example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">...</span>
+<span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="kn">import</span> <span class="n">Event</span>
+
+<span class="k">class</span> <span class="nc">YourProcess</span><span class="p">(</span><span class="n">MessageProcess</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="o">...</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">event_group</span> <span class="o">=</span> <span class="n">EventGroup</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">Event</span><span class="p">)</span> <span class="c1"># create 10 multiprocessing.Event instances</span>
+        <span class="o">...</span>
+
+    <span class="c1"># multiprocessing backend methods</span>
+
+    <span class="k">def</span> <span class="nf">c__ping</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event_index</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="c1"># do something, then trigger the event to indicate that something&#39;s done</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">event_group</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">event_index</span><span class="p">)</span>
+
+    <span class="c1"># multiprocessing frontend methods</span>
+
+    <span class="k">def</span> <span class="nf">ping</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">i</span><span class="p">,</span> <span class="n">event</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">event_group</span><span class="o">.</span><span class="n">reserve</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sendMessageToBack</span><span class="p">(</span><span class="n">MessageObject</span><span class="p">(</span>
+            <span class="s2">&quot;ping&quot;</span><span class="p">,</span>
+            <span class="n">event_index</span> <span class="o">=</span> <span class="n">i</span>
+        <span class="p">))</span>
+        <span class="n">event</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span> <span class="c1"># wait until c__ping sets the event</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">event_group</span><span class="o">.</span><span class="n">release</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="py class">
+<dt id="valkka.multiprocess.sync.EventGroup">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">valkka.multiprocess.sync.</span></code><code class="sig-name descname"><span class="pre">EventGroup</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">n=10</span></em>, <em class="sig-param"><span class="pre">event_class=&lt;bound</span> <span class="pre">method</span> <span class="pre">BaseContext.Event</span> <span class="pre">of</span> <span class="pre">&lt;multiprocessing.context.DefaultContext</span> <span class="pre">object&gt;&gt;</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/valkka/multiprocess/sync.html#EventGroup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#valkka.multiprocess.sync.EventGroup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a group of multiprocessing events</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n</strong> – number of events to be instantiated and cached</p></li>
+<li><p><strong>event_class</strong> – a multiprocessing event class that has <code class="docutils literal notranslate"><span class="pre">set</span></code> and <code class="docutils literal notranslate"><span class="pre">clear</span></code> methods.
+default: python <code class="docutils literal notranslate"><span class="pre">multiprocessing.Event</span></code>.  Can also be <code class="docutils literal notranslate"><span class="pre">EventFd</span></code> from libValkka.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="valkka.multiprocess.sync.EventGroup.asIndex">
+<code class="sig-name descname"><span class="pre">asIndex</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/valkka/multiprocess/sync.html#EventGroup.asIndex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#valkka.multiprocess.sync.EventGroup.asIndex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return index corresponding to an event</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="valkka.multiprocess.sync.EventGroup.release">
+<code class="sig-name descname"><span class="pre">release</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/valkka/multiprocess/sync.html#EventGroup.release"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#valkka.multiprocess.sync.EventGroup.release" title="Permalink to this definition">¶</a></dt>
+<dd><p>Release an EventFd sync primitive.  
+Use typically at process frontend / python main process</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>event</strong> – event to be released / returned</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="valkka.multiprocess.sync.EventGroup.release_ind">
+<code class="sig-name descname"><span class="pre">release_ind</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/valkka/multiprocess/sync.html#EventGroup.release_ind"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#valkka.multiprocess.sync.EventGroup.release_ind" title="Permalink to this definition">¶</a></dt>
+<dd><p>Release an EventFd sync primitive, based on the index.
+Use typically at process frontend / python main process</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>index</strong> – event’s index</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="valkka.multiprocess.sync.EventGroup.reserve">
+<code class="sig-name descname"><span class="pre">reserve</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">tuple</span><a class="reference internal" href="_modules/valkka/multiprocess/sync.html#EventGroup.reserve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#valkka.multiprocess.sync.EventGroup.reserve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reserve and return an Event instance together with its index: <code class="docutils literal notranslate"><span class="pre">index,</span> <span class="pre">Event</span></code></p>
+<p>Use typically at process frontend / python main process</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="valkka.multiprocess.sync.EventGroup.set">
+<code class="sig-name descname"><span class="pre">set</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/valkka/multiprocess/sync.html#EventGroup.set"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#valkka.multiprocess.sync.EventGroup.set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set / trigger an event at index i.  Used typically at multiprocessing backend.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="syncindex">
+<h2>SyncIndex<a class="headerlink" href="#syncindex" title="Permalink to this headline">¶</a></h2>
+<p>A context manager that reserves an event from EventGroup, wait’s until it has been set’ted and finally
+returns the event back to EventGroup.</p>
+<p>An example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">...</span>
+<span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="kn">import</span> <span class="n">Event</span>
+
+<span class="k">class</span> <span class="nc">YourProcess</span><span class="p">(</span><span class="n">MessageProcess</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="o">...</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">event_group</span> <span class="o">=</span> <span class="n">EventGroup</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">Event</span><span class="p">)</span> <span class="c1"># create 10 multiprocessing.Event instances</span>
+        <span class="o">...</span>
+
+    <span class="c1"># multiprocessing backend methods</span>
+
+    <span class="k">def</span> <span class="nf">c__ping</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event_index</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="c1"># do something, then trigger the event to indicate that something&#39;s done</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">event_group</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">event_index</span><span class="p">)</span>
+
+    <span class="c1"># multiprocessing frontend methods</span>
+
+    <span class="k">def</span> <span class="nf">ping</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">with</span> <span class="n">SyncIndex</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">event_group</span><span class="p">)</span> <span class="k">as</span> <span class="n">i</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sendMessageToBack</span><span class="p">(</span><span class="n">MessageObject</span><span class="p">(</span>
+                <span class="s2">&quot;ping&quot;</span><span class="p">,</span>
+                <span class="n">event_index</span> <span class="o">=</span> <span class="n">i</span>
+            <span class="p">))</span>
+            <span class="c1"># SyncIndex context manager:</span>
+            <span class="c1"># - reserves event from self.event_group</span>
+            <span class="c1"># - waits until event has been set&#39;ted</span>
+            <span class="c1"># - releases event back to self.event_group</span>
+</pre></div>
+</div>
+<dl class="py class">
+<dt id="valkka.multiprocess.sync.SyncIndex">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">valkka.multiprocess.sync.</span></code><code class="sig-name descname"><span class="pre">SyncIndex</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event_group</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#valkka.multiprocess.sync.EventGroup" title="valkka.multiprocess.sync.EventGroup"><span class="pre">valkka.multiprocess.sync.EventGroup</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/valkka/multiprocess/sync.html#SyncIndex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#valkka.multiprocess.sync.SyncIndex" title="Permalink to this definition">¶</a></dt>
+<dd><p>A context manager for synchronizing between multiprocessing front- and backend.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>event_group</strong> – an EventGroup instance</p>
+</dd>
+</dl>
+<p>Wait’s and releases an event at context manager exit</p>
+</dd></dl>
+
+</div>
+<div class="section" id="other">
+<h2>Other<a class="headerlink" href="#other" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="valkka.multiprocess.base.safe_select">
+<code class="sig-prename descclassname"><span class="pre">valkka.multiprocess.base.</span></code><code class="sig-name descname"><span class="pre">safe_select</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">l1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">l2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">l3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/valkka/multiprocess/base.html#safe_select"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#valkka.multiprocess.base.safe_select" title="Permalink to this definition">¶</a></dt>
+<dd><p>Like select.select, but ignores EINTR</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="snippets/index.html" class="btn btn-neutral float-left" title="Part I: Managing a multiprocess" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="article.html" class="btn btn-neutral float-right" title="Article" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2017-2023 Sampsa Riikonen.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

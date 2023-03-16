@@ -1,0 +1,92 @@
+
+:: 
+
+    import time
+    import logging
+    from valkka.multiprocess import MessageProcess, MessageObject
+
+We are going to use quite some the select module:
+
+:: 
+
+    import select
+
+so you might want to read 
+`this tutorial <https://docs.python.org/3/howto/sockets.html#non-blocking-sockets>`_
+
+:: 
+
+    
+    class MyProcess(MessageProcess):
+    
+        def __init__(self, name):
+            super().__init__(name)
+    
+
+We're sending a message, now from backend to frontend
+
+:: 
+
+        def c__ping(self, parameter=None):
+            self.logger.info("c__ping: got parameter %s - will do some", parameter)
+            time.sleep(1.0) # do something time consuming..
+            self.logger.info("c__ping: ..did that!")
+            self.send_out__(MessageObject(
+                "pong", result="pudding"
+            ))
+    
+        def ping(self, parameter=None):
+            self.logger.info("ping: sending ping to backend")
+            self.sendMessageToBack(MessageObject(
+                "ping", 
+                parameter=parameter
+            ))
+    
+    p = MyProcess(name="my-process")
+    p.formatLogger()
+
+Get the pipe (``multiprocessing.Pipe``) for listening messages from ``MyProcess`` p.
+Remember that you should use use pipe communication only for a small amount of data:
+typically just short messages and maybe some tiny (numpy) arrays if you have to.
+
+:: 
+
+    pipe = p.getPipe()
+
+Calling ``start``, forks and creates the backend
+
+:: 
+
+    p.start()
+    time.sleep(1)
+    p.ping(parameter="gotcha!")
+    print("main: waiting reply from multiprocessing backend")
+
+Use select to wait for the message
+
+:: 
+
+    select.select([pipe], [], [])
+    msg = pipe.recv()
+    print("main: got", msg(), "with some", msg["result"])
+
+Tell the backend to stop and exit
+
+:: 
+
+    p.stop()
+
+
+We get this output:
+
+.. code:: text
+
+    MyProcess.my-process - INFO - ping: sending ping to backend
+    main: waiting reply from multiprocessing backend
+    MyProcess.my-process - INFO - c__ping: got parameter gotcha! - will do some
+    MyProcess.my-process - INFO - c__ping: ..did that!
+    main: got pong with some pudding
+    
+
+:: 
+

@@ -1,0 +1,47 @@
+
+:: 
+
+    import time
+    from valkka.multiprocess import MessageProcess, MessageObject
+    
+    class MyProcess(MessageProcess):
+        
+        def c__ping(self, parameter=None):
+            print("Regards from other side of the fork!  Got parameter", parameter)
+    
+        def ping(self, parameter=None):
+            self.sendMessageToBack(MessageObject(
+                "ping", parameter=parameter))
+    
+    p = MyProcess(name="my-process")
+
+Calling ``start``, forks and creates the backend
+
+:: 
+
+    p.start()
+
+Let multiprocessing backend run on it's own for one second
+
+:: 
+
+    time.sleep(1)
+
+Call frontend method with a parameter: it sends seamlessly a message to the backend
+which executes ``c__ping`` in the backend:
+
+:: 
+
+    p.ping(parameter="gotcha!")
+
+Again, let multiprocessing backend run on it's own a while
+
+:: 
+
+    time.sleep(1)
+
+Finally, tell the backend to stop and exit
+
+:: 
+
+    p.stop()

@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Part I: Managing a multiprocess &mdash; Valkka_multiprocess  documentation</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="API documentation" href="../submodules.html" />
+    <link rel="prev" title="Tutorial" href="../examples.html" />
+    <!-- as per https://stackoverflow.com/questions/23211695/modifying-content-width-of-the-sphinx-theme-read-the-docs -->
+    <link href="../_static/rtd_override.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body class="wy-body-for-nav">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+  <a href="../index.html"><img src="../_static/valkka.png" class="logo" alt="Logo"/>
+</a>
+    <div class="version">
+      1.0.0
+    </div>
+
+
+<!-- font awesome comes with the rtd package.. use like this:-->
+<a href="https://github.com/elsampsa/valkka_multiprocess" class="icon icon-github"> Valkka_multiprocess @ github</a>
+<a href="https://github.com/elsampsa/valkka_multiprocess/issues" class="fa fa-bug"> Issue Tracker @ github</a>
+
+<!-- don't even think about subclassing searchbox.html .. will never work!-->
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../intro.html">Intro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../requirements.html">Installing</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../examples.html">Tutorial</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Part I: Managing a multiprocess</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#send-message-to-a-forked-process">1. Send message to a forked process</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#send-message-and-synchronize">2. Send message and synchronize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#send-and-receive-message">3. Send and receive message</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#using-shared-memory-and-forked-resources">4. Using shared memory and forked resources</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#syncing-server-client-resources">5. Syncing server/client resources</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#part-ii-organizing-workers">Part II: Organizing workers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#planning-it">6. Planning it</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#implementation">7. Implementation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#part-iii-miscellaneous">Part III: Miscellaneous</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#development-cleanup">Development cleanup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#process-debug">Process debug</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#advanced-topics">Advanced topics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#qt-related">Qt related</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../submodules.html">API documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../article.html">Article</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Authors</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Valkka_multiprocess</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../examples.html">Tutorial</a></li>
+      <li class="breadcrumb-item active">Part I: Managing a multiprocess</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/snippets/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="part-i-managing-a-multiprocess">
+<h1>Part I: Managing a multiprocess<a class="headerlink" href="#part-i-managing-a-multiprocess" title="Permalink to this headline">¶</a></h1>
+<p>In this part we create your first multiprocess and learn how to intercommunicate
+and share resources with it.</p>
+<div class="section" id="send-message-to-a-forked-process">
+<h2>1. Send message to a forked process<a class="headerlink" href="#send-message-to-a-forked-process" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference download internal" download="" href="../_downloads/2e922a7bb6a576cdbb5fc4bafbe8516f/ping.py"><code class="xref download docutils literal notranslate"><span class="pre">[download</span> <span class="pre">code]</span></code></a></p>
+<p>In this example, we call a method in the backend (forked multiprocess) seamlessly
+by simply calling a method in the frontend (python main process context).</p>
+<p>This is achieved with:</p>
+<p><code class="docutils literal notranslate"><span class="pre">MessageProcess</span></code>’s backend has an internal execution loop that listen’s continuously
+messages from the frontend.</p>
+<p>When a <code class="docutils literal notranslate"><span class="pre">MessageObject</span></code> is sent with the command <code class="docutils literal notranslate"><span class="pre">ping</span></code>, backend looks automagically
+for the method <code class="docutils literal notranslate"><span class="pre">c__ping</span></code> in the backend and executes it:  execution of <code class="docutils literal notranslate"><span class="pre">c__ping</span></code>
+happens in the multiprocessing backend, i.e. in the forked process</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">valkka.multiprocess</span> <span class="kn">import</span> <span class="n">MessageProcess</span><span class="p">,</span> <span class="n">MessageObject</span>
+
+<span class="k">class</span> <span class="nc">MyProcess</span><span class="p">(</span><span class="n">MessageProcess</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">c__ping</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameter</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Regards from other side of the fork!  Got parameter&quot;</span><span class="p">,</span> <span class="n">parameter</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">ping</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameter</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sendMessageToBack</span><span class="p">(</span><span class="n">MessageObject</span><span class="p">(</span>
+            <span class="s2">&quot;ping&quot;</span><span class="p">,</span> <span class="n">parameter</span><span class="o">=</span><span class="n">parameter</span><span class="p">))</span>
+
+<span class="n">p</span> <span class="o">=</span> <span class="n">MyProcess</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;my-process&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Calling <code class="docutils literal notranslate"><span class="pre">start</span></code>, forks and creates the backend</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">p</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Let multiprocessing backend run on it’s own for one second</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Call frontend method with a parameter: it sends seamlessly a message to the backend
+which executes <code class="docutils literal notranslate"><span class="pre">c__ping</span></code> in the backend:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">p</span><span class="o">.</span><span class="n">ping</span><span class="p">(</span><span class="n">parameter</span><span class="o">=</span><span class="s2">&quot;gotcha!&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Again, let multiprocessing backend run on it’s own a while</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Finally, tell the backend to stop and exit</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">p</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="send-message-and-synchronize">
+<h2>2. Send message and synchronize<a class="headerlink" href="#send-message-and-synchronize" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference download internal" download="" href="../_downloads/413407c299eb85ff742750d63cbdaf4e/ping2.py"><code class="xref download docutils literal notranslate"><span class="pre">[download</span> <span class="pre">code]</span></code></a></p>
+<p>So, we can call backend methods, i.e. tell the forked process <em>to do something</em> by simply
+calling a frontend method.</p>
+<p>Many times we need to synchronize between the main python process and the forked
+multiprocess: i.e., the main process needs to wait that the forked process has completed
+doing something.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">valkka.multiprocess</span> <span class="kn">import</span> <span class="n">MessageProcess</span><span class="p">,</span> <span class="n">MessageObject</span><span class="p">,</span> \
+    <span class="n">EventGroup</span><span class="p">,</span> <span class="n">SyncIndex</span>
+
+<span class="k">class</span> <span class="nc">MyProcess</span><span class="p">(</span><span class="n">MessageProcess</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eg</span> <span class="o">=</span> <span class="n">EventGroup</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>here we have created a group of multiprocessing <code class="docutils literal notranslate"><span class="pre">Event</span></code> objects
+<a class="reference external" href="https://docs.python.org/3/library/multiprocessing.html#multiprocessing.Event">(link)</a>.
+into the <code class="docutils literal notranslate"><span class="pre">self.eg</span></code> member.</p>
+<p>As the <code class="docutils literal notranslate"><span class="pre">Event</span></code> s are created before fork (i.e. calling <code class="docutils literal notranslate"><span class="pre">start</span></code>), they are visible
+both in the multiprocessing back- and frontend.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">c__ping</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sync_index</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;c__ping: got parameter </span><span class="si">%s</span><span class="s2"> - will do some&quot;</span><span class="p">,</span> <span class="n">parameter</span><span class="p">)</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span> <span class="c1"># do something time consuming..</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;c__ping: ..did that!&quot;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">eg</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">sync_index</span><span class="p">)</span> <span class="c1"># tell frontend that it&#39;s done</span>
+</pre></div>
+</div>
+<p>An index number is communicated to the multiprocessing backend,
+so that the forked process knows which <code class="docutils literal notranslate"><span class="pre">Event</span></code> it needs to set
+in order to sync with the frontend:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="k">def</span> <span class="nf">ping</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameter</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;ping: callin backend to do some stuff&quot;</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">SyncIndex</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eg</span><span class="p">)</span> <span class="k">as</span> <span class="n">i</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sendMessageToBack</span><span class="p">(</span><span class="n">MessageObject</span><span class="p">(</span>
+                <span class="s2">&quot;ping&quot;</span><span class="p">,</span>
+                <span class="n">parameter</span><span class="o">=</span><span class="n">parameter</span><span class="p">,</span>
+                <span class="n">sync_index</span> <span class="o">=</span> <span class="n">i</span>
+            <span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;ping: backend seems to be ready&quot;</span><span class="p">)</span>
+
+<span class="n">p</span> <span class="o">=</span> <span class="n">MyProcess</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;my-process&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>A helper method to quick-format the logger for <code class="docutils literal notranslate"><span class="pre">MyProcess</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">p</span><span class="o">.</span><span class="n">formatLogger</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Calling <code class="docutils literal notranslate"><span class="pre">start</span></code>, forks and creates the backend</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">p</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+<span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">p</span><span class="o">.</span><span class="n">ping</span><span class="p">(</span><span class="n">parameter</span><span class="o">=</span><span class="s2">&quot;gotcha!&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Tell the backend to stop and exit</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">p</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>We get this output:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>MyProcess.my-process - INFO - ping: callin backend to do some stuff
+MyProcess.my-process - INFO - c__ping: got parameter gotcha! - will do some
+MyProcess.my-process - INFO - c__ping: ..did that!
+MyProcess.my-process - INFO - ping: backend seems to be ready
+</pre></div>
+</div>
+</div>
+<div class="section" id="send-and-receive-message">
+<h2>3. Send and receive message<a class="headerlink" href="#send-and-receive-message" title="Permalink to this headline">¶</a></h2>
+<p id="example3"><a class="reference download internal" download="" href="../_downloads/4e4bf9c97e08d5b08865e81fd4674222/ping_pong.py"><code class="xref download docutils literal notranslate"><span class="pre">[download</span> <span class="pre">code]</span></code></a></p>
+<p>Next, we’re going to call a backend method and then get some results
+from the backend in the form of a message.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">valkka.multiprocess</span> <span class="kn">import</span> <span class="n">MessageProcess</span><span class="p">,</span> <span class="n">MessageObject</span>
+</pre></div>
+</div>
+<p>We are going to use quite some the select module:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">select</span>
+</pre></div>
+</div>
+<p>so you might want to read
+<a class="reference external" href="https://docs.python.org/3/howto/sockets.html#non-blocking-sockets">this tutorial</a></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MyProcess</span><span class="p">(</span><span class="n">MessageProcess</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We’re sending a message, now from backend to frontend</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="k">def</span> <span class="nf">c__ping</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameter</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;c__ping: got parameter </span><span class="si">%s</span><span class="s2"> - will do some&quot;</span><span class="p">,</span> <span class="n">parameter</span><span class="p">)</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span> <span class="c1"># do something time consuming..</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;c__ping: ..did that!&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">send_out__</span><span class="p">(</span><span class="n">MessageObject</span><span class="p">(</span>
+            <span class="s2">&quot;pong&quot;</span><span class="p">,</span> <span class="n">result</span><span class="o">=</span><span class="s2">&quot;pudding&quot;</span>
+        <span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">ping</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameter</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;ping: sending ping to backend&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sendMessageToBack</span><span class="p">(</span><span class="n">MessageObject</span><span class="p">(</span>
+            <span class="s2">&quot;ping&quot;</span><span class="p">,</span>
+            <span class="n">parameter</span><span class="o">=</span><span class="n">parameter</span>
+        <span class="p">))</span>
+
+<span class="n">p</span> <span class="o">=</span> <span class="n">MyProcess</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;my-process&quot;</span><span class="p">)</span>
+<span class="n">p</span><span class="o">.</span><span class="n">formatLogger</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Get the pipe (<code class="docutils literal notranslate"><span class="pre">multiprocessing.Pipe</span></code>) for listening messages from <code class="docutils literal notranslate"><span class="pre">MyProcess</span></code> p.
+Remember that you should use use pipe communication only for a small amount of data:
+typically just short messages and maybe some tiny (numpy) arrays if you have to.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pipe</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">getPipe</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Calling <code class="docutils literal notranslate"><span class="pre">start</span></code>, forks and creates the backend</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">p</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+<span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">p</span><span class="o">.</span><span class="n">ping</span><span class="p">(</span><span class="n">parameter</span><span class="o">=</span><span class="s2">&quot;gotcha!&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;main: waiting reply from multiprocessing backend&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Use select to wait for the message</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">select</span><span class="o">.</span><span class="n">select</span><span class="p">([</span><span class="n">pipe</span><span class="p">],</span> <span class="p">[],</span> <span class="p">[])</span>
+<span class="n">msg</span> <span class="o">=</span> <span class="n">pipe</span><span class="o">.</span><span class="n">recv</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;main: got&quot;</span><span class="p">,</span> <span class="n">msg</span><span class="p">(),</span> <span class="s2">&quot;with some&quot;</span><span class="p">,</span> <span class="n">msg</span><span class="p">[</span><span class="s2">&quot;result&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>Tell the backend to stop and exit</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">p</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>We get this output:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>MyProcess.my-process - INFO - ping: sending ping to backend
+main: waiting reply from multiprocessing backend
+MyProcess.my-process - INFO - c__ping: got parameter gotcha! - will do some
+MyProcess.my-process - INFO - c__ping: ..did that!
+main: got pong with some pudding
+</pre></div>
+</div>
+</div>
+<div class="section" id="using-shared-memory-and-forked-resources">
+<h2>4. Using shared memory and forked resources<a class="headerlink" href="#using-shared-memory-and-forked-resources" title="Permalink to this headline">¶</a></h2>
+<p id="example4"><a class="reference download internal" download="" href="../_downloads/f23b635943d231fd85c04aa4cf0dba19/shm1.py"><code class="xref download docutils literal notranslate"><span class="pre">[download</span> <span class="pre">code]</span></code></a></p>
+<p>Shared memory is a powerfull tool in multiprocessing: it allows you to
+intercommunicate large blocks of data between the main python process (aka
+frontend) and the forked multiprocess (aka backend).</p>
+<p>Shared memory is used as follows:</p>
+<p>Shared memory blocks are created <em>first in the frontend</em> and
+after that <em>again in the backend</em>, using the same unique name.</p>
+<p>You can think of the shared memory in the frontend as “server-side” and in the
+backend as “client-side”.</p>
+<p>Shared memory is just memory, i.e. raw bytes, and is typically wrapped into a numpy
+array.</p>
+<p>In the other examples you learned how to subclass <code class="docutils literal notranslate"><span class="pre">MessageProcess</span></code>.  Here we also
+define the (virtual) methods <code class="docutils literal notranslate"><span class="pre">preRun__</span></code> and <code class="docutils literal notranslate"><span class="pre">postRun__</span></code> from the <code class="docutils literal notranslate"><span class="pre">MessageProcess</span></code>
+class:  both of them are executed <em>after the fork</em>, i.e. in the backend, but outside
+<code class="docutils literal notranslate"><span class="pre">MessageProcess</span></code> s main execution loops:  they are “startup” and “shutdown” functions
+in the forked process.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">valkka.multiprocess</span> <span class="kn">import</span> <span class="n">MessageProcess</span><span class="p">,</span> <span class="n">MessageObject</span><span class="p">,</span> \
+    <span class="n">EventGroup</span><span class="p">,</span> <span class="n">SyncIndex</span>
+<span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="kn">import</span> <span class="n">shared_memory</span>
+
+<span class="k">class</span> <span class="nc">MyProcess</span><span class="p">(</span><span class="n">MessageProcess</span><span class="p">):</span>
+</pre></div>
+</div>
+<p>Create “server-side” shared memory first in the frontend with the unique name <code class="docutils literal notranslate"><span class="pre">my-shm-1</span></code></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">eg</span> <span class="o">=</span> <span class="n">EventGroup</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">shmem_name</span> <span class="o">=</span> <span class="s2">&quot;my-shm-1&quot;</span>
+    <span class="c1"># create a dummy model array;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">100</span><span class="p">,</span><span class="mi">100</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="c1"># create frontend-side shared memory array:</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">shmem</span> <span class="o">=</span> <span class="n">shared_memory</span><span class="o">.</span><span class="n">SharedMemory</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">shmem_name</span><span class="p">,</span> <span class="n">create</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">nbytes</span>
+    <span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">(</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">buffer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">shmem</span><span class="o">.</span><span class="n">buf</span>
+    <span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">array</span><span class="p">[:,:]</span> <span class="o">=</span> <span class="mf">1.0</span>
+</pre></div>
+</div>
+<p>Close the “server-side” shared memory, for example, at garbage collection of <code class="docutils literal notranslate"><span class="pre">MyProcess</span></code></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">shmem</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Backend methods are: <code class="docutils literal notranslate"><span class="pre">preRun__</span></code>, <code class="docutils literal notranslate"><span class="pre">postRun__</span></code> and <code class="docutils literal notranslate"><span class="pre">c__readWrite</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">preRun__</span></code> is executed in the forked process (backend) before the main
+execution loop kicks in: create “client-side” shared memory in the backend
+with the correct unique name <code class="docutils literal notranslate"><span class="pre">my-shm-1</span></code>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">preRun__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;preRun__ : &quot;</span><span class="p">)</span>
+    <span class="c1"># create backend-side shared memory array:</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">shmem__</span> <span class="o">=</span> <span class="n">shared_memory</span><span class="o">.</span><span class="n">SharedMemory</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">shmem_name</span><span class="p">,</span> <span class="n">create</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">nbytes</span>
+    <span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">array__</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">(</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">buffer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">shmem__</span><span class="o">.</span><span class="n">buf</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">postRun__</span></code> is executed in the forked process (backend) just before the
+process exists and shuts down: close “client-side” shared memory:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">postRun__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;postRun__ : &quot;</span><span class="p">)</span>
+    <span class="c1"># release backend-side shared memory array:</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">shmem__</span><span class="o">.</span><span class="n">unlink</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">c__readWrite</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sync_index</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;c__readWrite: will change array values from </span><span class="si">%s</span><span class="s2"> to </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">array__</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="mf">3.0</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">array__</span><span class="p">[:,:]</span> <span class="o">=</span> <span class="mf">3.0</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;c__readWrite: ..did that!&quot;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">eg</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">sync_index</span><span class="p">)</span> <span class="c1"># tell frontend that it&#39;s done</span>
+</pre></div>
+</div>
+<p>Frontend methods: <code class="docutils literal notranslate"><span class="pre">readWrite</span></code></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="k">def</span> <span class="nf">readWrite</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;readWrite : calling backend&quot;</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">SyncIndex</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eg</span><span class="p">)</span> <span class="k">as</span> <span class="n">i</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sendMessageToBack</span><span class="p">(</span><span class="n">MessageObject</span><span class="p">(</span>
+                <span class="s2">&quot;readWrite&quot;</span><span class="p">,</span>
+                <span class="n">sync_index</span> <span class="o">=</span> <span class="n">i</span>
+            <span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;readWrite: array values now </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">array</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+
+<span class="n">p</span> <span class="o">=</span> <span class="n">MyProcess</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;my-process&quot;</span><span class="p">)</span>
+<span class="n">p</span><span class="o">.</span><span class="n">formatLogger</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Calling <code class="docutils literal notranslate"><span class="pre">start</span></code>, forks and creates the backend</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">p</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+<span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">p</span><span class="o">.</span><span class="n">readWrite</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Tell the backend to stop and exit</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">p</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Resulting output:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>MyProcess.my-process - INFO - preRun__ :
+MyProcess.my-process - INFO - readWrite : callin backend
+MyProcess.my-process - INFO - c__readWrite: will change array values from 1.0 to 3.0
+MyProcess.my-process - INFO - c__readWrite: ..did that!
+MyProcess.my-process - INFO - readWrite: array values now 3.0
+MyProcess.my-process - INFO - postRun__ :
+</pre></div>
+</div>
+<p>Some additional observations are in place:</p>
+<p>Now that you learned how to use <code class="docutils literal notranslate"><span class="pre">preRun__</span></code>, that would be the typical
+place where you would import heavy libraries that utilize threading
+(remember: spawning threads should be done <em>after</em> fork).</p>
+<p>That’s also the place where you would instantiate your heavy neural net instances:
+no need to fork all that stuff (as it might not like forking at all).  In general,
+all libraries and object instances that might be sensitive to forking.</p>
+<p>Similary, shutting down / releasing resources should be done in <code class="docutils literal notranslate"><span class="pre">postRun__</span></code>.</p>
+</div>
+<div class="section" id="syncing-server-client-resources">
+<h2>5. Syncing server/client resources<a class="headerlink" href="#syncing-server-client-resources" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference download internal" download="" href="../_downloads/d17c93956fca6a0fcda0f061b5c22857/shm2.py"><code class="xref download docutils literal notranslate"><span class="pre">[download</span> <span class="pre">code]</span></code></a></p>
+<p>In the previous example we played around with shared memory.  As discussed, there
+is “server-side” and “client-side” shared memory.</p>
+<p>In multiprocessing programming, the same goes for <em>any</em> resource: i.e. the main
+python process (again, “frontend”) instantiates some resource first and the forked
+process (“backend”) instantiates it’s “client-side” / mirror image of the same resource.</p>
+<p>After this, the resource (in this case shared memory) can be used to interchange
+data between front- and backend.</p>
+<p>Let’s demonstrate all this by instantiating shared memory “on-demand”:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">time</span><span class="o">,</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">valkka.multiprocess</span> <span class="kn">import</span> <span class="n">MessageProcess</span><span class="p">,</span> <span class="n">MessageObject</span><span class="p">,</span> \
+    <span class="n">EventGroup</span><span class="p">,</span> <span class="n">SyncIndex</span>
+<span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="kn">import</span> <span class="n">shared_memory</span>
+
+<span class="k">class</span> <span class="nc">MyProcess</span><span class="p">(</span><span class="n">MessageProcess</span><span class="p">):</span>
+</pre></div>
+</div>
+<p>Create “server-side” shared memory first in the frontend with the unique name <code class="docutils literal notranslate"><span class="pre">my-shm-1</span></code></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">eg</span> <span class="o">=</span> <span class="n">EventGroup</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Backend methods: create, modify and close shared memory at the forked process</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">c__create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">dtype</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">dtype</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">shape</span><span class="p">:</span> <span class="nb">tuple</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">sync_index</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="c1"># create backend-side shared memory array &quot;on-demand&quot;</span>
+    <span class="n">n_bytes</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span><span class="o">.</span><span class="n">tobytes</span><span class="p">())</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">shmem_name</span> <span class="o">=</span> <span class="n">name</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">shmem__</span> <span class="o">=</span> <span class="n">shared_memory</span><span class="o">.</span><span class="n">SharedMemory</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">shmem_name</span><span class="p">,</span> <span class="n">create</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">n_bytes</span>
+    <span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">array__</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">(</span>
+        <span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">,</span> <span class="n">buffer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">shmem__</span><span class="o">.</span><span class="n">buf</span>
+    <span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">eg</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">sync_index</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">c__close</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sync_index</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">shmem__</span><span class="o">.</span><span class="n">unlink</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;c__close: client side shmem unlinked&quot;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">eg</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">sync_index</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">c__readWrite</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sync_index</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;c__readWrite: will change array values from </span><span class="si">%s</span><span class="s2"> to </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">array__</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="mf">3.0</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">array__</span><span class="p">[:,:]</span> <span class="o">=</span> <span class="mf">3.0</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;c__readWrite: ..did that!&quot;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">eg</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">sync_index</span><span class="p">)</span> <span class="c1"># tell frontend that it&#39;s done</span>
+</pre></div>
+</div>
+<p>Frontend methods: create and close shared memory in the main python process and tell backend
+to do the same.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">shape</span><span class="p">:</span> <span class="nb">tuple</span> <span class="o">=</span> <span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">)):</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;my-shm-1&quot;</span>
+    <span class="n">dtype</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float16</span>
+    <span class="n">n_bytes</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span><span class="o">.</span><span class="n">tobytes</span><span class="p">())</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">shmem</span> <span class="o">=</span> <span class="n">shared_memory</span><span class="o">.</span><span class="n">SharedMemory</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">create</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">n_bytes</span>
+    <span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">(</span>
+        <span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">,</span> <span class="n">buffer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">shmem</span><span class="o">.</span><span class="n">buf</span>
+    <span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">array</span><span class="p">[:,:]</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="c1"># send data to backend so that it can create the client side shmem</span>
+    <span class="k">with</span> <span class="n">SyncIndex</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eg</span><span class="p">)</span> <span class="k">as</span> <span class="n">i</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sendMessageToBack</span><span class="p">(</span><span class="n">MessageObject</span><span class="p">(</span>
+            <span class="s2">&quot;create&quot;</span><span class="p">,</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="p">,</span>
+            <span class="n">dtype</span> <span class="o">=</span> <span class="n">dtype</span><span class="p">,</span>
+            <span class="n">shape</span> <span class="o">=</span> <span class="n">shape</span><span class="p">,</span>
+            <span class="n">sync_index</span> <span class="o">=</span> <span class="n">i</span>
+        <span class="p">))</span>
+
+<span class="k">def</span> <span class="nf">getArray</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">array</span>
+
+<span class="k">def</span> <span class="nf">readWrite</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">with</span> <span class="n">SyncIndex</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eg</span><span class="p">)</span> <span class="k">as</span> <span class="n">i</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sendMessageToBack</span><span class="p">(</span><span class="n">MessageObject</span><span class="p">(</span>
+            <span class="s2">&quot;readWrite&quot;</span><span class="p">,</span>
+            <span class="n">sync_index</span> <span class="o">=</span> <span class="n">i</span>
+        <span class="p">))</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;readWrite: array values now </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">array</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+
+<span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">with</span> <span class="n">SyncIndex</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eg</span><span class="p">)</span> <span class="k">as</span> <span class="n">i</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sendMessageToBack</span><span class="p">(</span><span class="n">MessageObject</span><span class="p">(</span>
+            <span class="s2">&quot;close&quot;</span><span class="p">,</span>
+            <span class="n">sync_index</span> <span class="o">=</span> <span class="n">i</span>
+        <span class="p">))</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;close: closing server side shmem&quot;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">shmem</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Run the process:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">p</span> <span class="o">=</span> <span class="n">MyProcess</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;my-process&quot;</span><span class="p">)</span>
+<span class="n">p</span><span class="o">.</span><span class="n">formatLogger</span><span class="p">()</span>
+<span class="n">p</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+<span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">p</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span><span class="mi">200</span><span class="p">))</span>
+<span class="n">p</span><span class="o">.</span><span class="n">readWrite</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;main: array values now&quot;</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">getArray</span><span class="p">()[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">p</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+<span class="n">p</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;main: bye!&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Resulting output:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>MyProcess.my-process - INFO - c__readWrite: will change array values from 0.0 to 3.0
+MyProcess.my-process - INFO - c__readWrite: ..did that!
+MyProcess.my-process - INFO - readWrite: array values now 3.0
+main: array values now 3.0
+MyProcess.my-process - INFO - c__close: client side shmem unlinked
+MyProcess.my-process - INFO - close: closing server side shmem
+main: bye!
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="part-ii-organizing-workers">
+<h1>Part II: Organizing workers<a class="headerlink" href="#part-ii-organizing-workers" title="Permalink to this headline">¶</a></h1>
+<p>Time to ramp things up and to fire hundreds or even thousands of multiprocessing workers!</p>
+<p>How do you manage and organize something like that?  You are about to find out just that.</p>
+<p>A word of warning: if you’re trying to “optimize”
+and skip the Part I of the tutorial,
+don’t do that, as you’ll miss important concepts and will not understand
+what’s going on (mainly, the concept of “front” and “backend” methods).</p>
+<div class="section" id="planning-it">
+<h2>6. Planning it<a class="headerlink" href="#planning-it" title="Permalink to this headline">¶</a></h2>
+<p>Our goal is to create a main process and <code class="docutils literal notranslate"><span class="pre">N</span></code> subprocess workers that do some (heavy)
+calculation and return results to the main process via a sharedmem numpy array.</p>
+<p>When having a main process and workers, we have a <em>hierarchy</em> and it is
+always a good idea to
+<a class="reference external" href="https://medium.com/p/d5161dc19052">write it down as a hierarchical list</a>,
+so we will do just that:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Manager (main process)
+    - IN:
+        - MessageObject (from SUB WorkerProcess-N)
+    - SUB:
+        WorkerProcess-1
+            - UP:
+                - MessageObject
+                - method: getArray()
+            - IN:
+                - method doWork()
+        WorkerProcess-2
+            - UP:
+                - MessageObject
+                - method: getArray()
+            - IN:
+                - method doWork()
+        WorkerProcess-3
+            ...
+        WorkerProcess-4
+            ...
+    ...
+</pre></div>
+</div>
+<p>In this notation, there is a <code class="docutils literal notranslate"><span class="pre">Manager</span></code> (the main process) that get’s input
+messages in the form of <code class="docutils literal notranslate"><span class="pre">MessageObject</span></code> s from the individual workers which
+are <code class="docutils literal notranslate"><span class="pre">WorkerProcess-1</span></code>, <code class="docutils literal notranslate"><span class="pre">WorkerProcess-2</span></code>, etc.</p>
+<p>Each <code class="docutils literal notranslate"><span class="pre">WorkerProcess-N</span></code> is commanded <em>in</em> by the upper-level object (<code class="docutils literal notranslate"><span class="pre">Manager</span></code>)
+by the method <code class="docutils literal notranslate"><span class="pre">doWork</span></code> that tells the <code class="docutils literal notranslate"><span class="pre">WorkerProcess</span></code> to launch a calculation.</p>
+<p>Information is passed from the lower-level objects (<code class="docutils literal notranslate"><span class="pre">WorkerProcess</span></code>) to <a href="#id1"><span class="problematic" id="id2">*</span></a>up*per level
+(<code class="docutils literal notranslate"><span class="pre">Manager</span></code>) with a <code class="docutils literal notranslate"><span class="pre">MessageObject</span></code> and by the method <code class="docutils literal notranslate"><span class="pre">getArray()</span></code>.</p>
+<p>You seldomly need to create any <em>deeper</em> nested hierarchies.  If you have to, then
+you’re probably doing something wrong.</p>
+</div>
+<div class="section" id="implementation">
+<span id="manager-imp"></span><h2>7. Implementation<a class="headerlink" href="#implementation" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference download internal" download="" href="../_downloads/4c252ca533db548b340dfddea458fc69/main1.py"><code class="xref download docutils literal notranslate"><span class="pre">[download</span> <span class="pre">code]</span></code></a></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">time</span><span class="o">,</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">randint</span>
+<span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="kn">import</span> <span class="n">shared_memory</span>
+<span class="kn">from</span> <span class="nn">valkka.multiprocess</span> <span class="kn">import</span> <span class="n">MessageProcess</span><span class="p">,</span> <span class="n">MessageObject</span><span class="p">,</span> \
+    <span class="n">MainContext</span><span class="p">,</span> <span class="n">safe_select</span>
+</pre></div>
+</div>
+<p>First define the worker process that will do some calculation on a shared numpy array.</p>
+<p>This is similar to examples <a class="reference internal" href="#example3"><span class="std std-ref">3</span></a> and <a class="reference internal" href="#example4"><span class="std std-ref">4</span></a>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">WorkerProcess</span><span class="p">(</span><span class="n">MessageProcess</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shmem_name</span> <span class="o">=</span> <span class="s2">&quot;shm-&quot;</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span>
+        <span class="c1"># create a dummy model array;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">100</span><span class="p">,</span><span class="mi">100</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="c1"># create frontend-side shared memory array:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shmem</span> <span class="o">=</span> <span class="n">shared_memory</span><span class="o">.</span><span class="n">SharedMemory</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">shmem_name</span><span class="p">,</span> <span class="n">create</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">nbytes</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">buffer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">shmem</span><span class="o">.</span><span class="n">buf</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">array</span><span class="p">[:,:]</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+    <span class="k">def</span> <span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shmem</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="c1"># Backend methods</span>
+    <span class="k">def</span> <span class="nf">preRun__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;preRun__ : &quot;</span><span class="p">)</span>
+        <span class="c1"># create backend-side shared memory array:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shmem__</span> <span class="o">=</span> <span class="n">shared_memory</span><span class="o">.</span><span class="n">SharedMemory</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">shmem_name</span><span class="p">,</span> <span class="n">create</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">nbytes</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">array__</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">buffer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">shmem__</span><span class="o">.</span><span class="n">buf</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">postRun__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;postRun__ : &quot;</span><span class="p">)</span>
+        <span class="c1"># release backend-side shared memory array:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shmem__</span><span class="o">.</span><span class="n">unlink</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">c__doWork</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;c__doWork: will change array values from </span><span class="si">%s</span><span class="s2"> to </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">array__</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="mf">3.0</span><span class="p">)</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">randint</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">5</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">array__</span><span class="p">[:,:]</span> <span class="o">=</span> <span class="n">r</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="c1"># wait random secs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;c__doWork: ..did that!&quot;</span><span class="p">)</span>
+        <span class="c1"># send message when ready</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">send_out__</span><span class="p">(</span><span class="n">MessageObject</span><span class="p">(</span>
+            <span class="s2">&quot;ready&quot;</span>
+        <span class="p">))</span>
+
+    <span class="c1"># Frontend methods</span>
+    <span class="k">def</span> <span class="nf">doWork</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;readWrite : calling backend&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sendMessageToBack</span><span class="p">(</span><span class="n">MessageObject</span><span class="p">(</span>
+            <span class="s2">&quot;doWork&quot;</span>
+        <span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">getArray</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">array</span>
+</pre></div>
+</div>
+<p>Next we create a convenience class that helps us in managing the main process
+systematically.  It is subclassed from <code class="docutils literal notranslate"><span class="pre">MainContext</span></code>, which is pretty simple
+base class:   You only need to (re)define <code class="docutils literal notranslate"><span class="pre">__init__()</span></code>, <code class="docutils literal notranslate"><span class="pre">startProcesses()</span></code>,
+<code class="docutils literal notranslate"><span class="pre">startThreads()</span></code>, <code class="docutils literal notranslate"><span class="pre">close()</span></code> and <code class="docutils literal notranslate"><span class="pre">__call__</span></code> methods.</p>
+<p><code class="docutils literal notranslate"><span class="pre">super().__init__()</span></code> inits the logger and calls first <code class="docutils literal notranslate"><span class="pre">startProcesses</span></code>
+and then <code class="docutils literal notranslate"><span class="pre">startThreads</span></code> (i.e. forks before thread):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Manager</span><span class="p">(</span><span class="n">MainContext</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_workers</span> <span class="o">=</span> <span class="mi">10</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_workers</span> <span class="o">=</span> <span class="n">n_workers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">timeout</span> <span class="o">=</span> <span class="mf">2.0</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">startProcesses</span></code> (mandatory) creates and caches processes.</p>
+<p>Here we cache processes into the list
+<code class="docutils literal notranslate"><span class="pre">self.cache</span></code> and also into the
+dictionary <code class="docutils literal notranslate"><span class="pre">self.process_by_pipe</span></code>, where key = <code class="docutils literal notranslate"><span class="pre">multiprocessing.Pipe</span></code> and
+value = the running multiprocess.  Reason for this will become obvious
+in method <code class="docutils literal notranslate"><span class="pre">__call__</span></code> (see below).</p>
+<p>All pipes we’re going to listen, are also cached into <code class="docutils literal notranslate"><span class="pre">self.read_pipes</span></code>.  That
+list should also always include <code class="docutils literal notranslate"><span class="pre">self.aux_pipe_read</span></code> (which is created in
+the base class <code class="docutils literal notranslate"><span class="pre">super().__init__()</span></code>):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">startProcesses</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;startProcesses:&quot;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">cache</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1"># all multiprocesses</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">avail_cache</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1"># available multiprocesses for work</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">process_by_pipe</span> <span class="o">=</span> <span class="p">{}</span> <span class="c1"># ditto</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">read_pipes</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">aux_pipe_read</span><span class="p">]</span> <span class="c1"># pipes / file descriptors to listen to</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_workers</span><span class="p">):</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">WorkerProcess</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;worker-&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">ignoreSIGINT</span><span class="p">()</span>
+        <span class="n">pipe</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">getPipe</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">avail_cache</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">process_by_pipe</span><span class="p">[</span><span class="n">pipe</span><span class="p">]</span> <span class="o">=</span> <span class="n">p</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">read_pipes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pipe</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;startProcesses: starting multiprocesses&quot;</span><span class="p">)</span>
+    <span class="c1"># forks!</span>
+    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="p">:</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;startProcesses: all multiprocesses running&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>One more thing worth noticing: each multiprocesses <code class="docutils literal notranslate"><span class="pre">ignoreSIGINT()</span></code> method
+is called: this makes them to ignore <code class="docutils literal notranslate"><span class="pre">SIGINT</span></code> as that signal should be
+caught <em>only</em> by the main process, and processed accordingly (i.e. when
+receiving <code class="docutils literal notranslate"><span class="pre">SIGINT</span></code> main process should shutdown the multiprocesses
+in a clean way).</p>
+<p><code class="docutils literal notranslate"><span class="pre">startThreads</span></code> (mandatory), creates and starts threads (if any):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">startThreads</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;startThreads:&quot;</span><span class="p">)</span>
+    <span class="k">pass</span> <span class="c1"># no threads in this app</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">close</span></code> (mandatory) stops all multiprocesses and threads in parallel:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;close: stopping processes&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="p">:</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">requestStop</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="p">:</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">waitStop</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;close: processes stopped&quot;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">closed</span> <span class="o">=</span> <span class="kc">True</span>
+</pre></div>
+</div>
+<p>In <code class="docutils literal notranslate"><span class="pre">__call__</span></code> (mandatory) we have the main process startup and loop.</p>
+<p>First, we tell three multiprocesses from the cache to do some work
+and then start the execution loop:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="n">p1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">avail_cache</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">p2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">avail_cache</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">p3</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">avail_cache</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">p1</span><span class="o">.</span><span class="n">doWork</span><span class="p">()</span>
+    <span class="n">p2</span><span class="o">.</span><span class="n">doWork</span><span class="p">()</span>
+    <span class="n">p3</span><span class="o">.</span><span class="n">doWork</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">loop</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;starting main loop&quot;</span><span class="p">)</span>
+    <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">loop</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">reads</span><span class="p">,</span> <span class="n">writes</span><span class="p">,</span> <span class="n">others</span> <span class="o">=</span> <span class="n">safe_select</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">read_pipes</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="n">timeout</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">timeout</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;SIGTERM or CTRL-C: will exit asap&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">loop</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">continue</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">reads</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span> <span class="c1"># reading operation timeout</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;still alive&quot;</span><span class="p">)</span>
+            <span class="k">continue</span>
+        <span class="k">for</span> <span class="n">pipe</span> <span class="ow">in</span> <span class="n">reads</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">pipe</span> <span class="ow">is</span> <span class="bp">self</span><span class="o">.</span><span class="n">aux_pipe_read</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s2">&quot;debug mode exit&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">loop</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="k">continue</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_by_pipe</span><span class="p">[</span><span class="n">pipe</span><span class="p">]</span>
+                <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s2">&quot;unknown pipe </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
+                    <span class="k">continue</span>
+                <span class="n">obj</span> <span class="o">=</span> <span class="n">pipe</span><span class="o">.</span><span class="n">recv</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;got message </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">handleMessage__</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;bye!&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>So, we’re listening <em>simultaneously</em> all running multiprocesses.  When
+any of them sends a message, <code class="docutils literal notranslate"><span class="pre">safe_select</span></code> is triggered and the message
+is processed by <code class="docutils literal notranslate"><span class="pre">handleMessage__</span></code>.</p>
+<p>In addition to just the multiprocesses, as in this example, we could add
+in that <em>select</em> call the listening of <strong>any file descriptor</strong>, say, tcp sockets,
+unix named pipe and the like so that they would interact with our program
+and the multiprocesses.</p>
+<p>File descriptors can also be instantiated in C++ code (say, like
+<a class="reference external" href="https://elsampsa.github.io/valkka-core/html/classEventFd.html">EventFd</a>
+in libValkka) and listened here at the Python side.  This creates nice opportunities
+for interfacing i/o devices into this multiprocessing scheme.</p>
+<p>Messages coming from the worker processes are handled like this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">handleMessage__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">:</span> <span class="n">WorkerProcess</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="n">MessageObject</span><span class="p">):</span>
+    <span class="c1"># read the sharedmem:</span>
+    <span class="n">vals</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">getArray</span><span class="p">()[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;handleMessage__ : subprocess </span><span class="si">%s</span><span class="s2"> returned </span><span class="si">%s</span><span class="s2"> with values </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="n">p</span><span class="p">,</span> <span class="n">msg</span><span class="p">(),</span> <span class="n">vals</span><span class="p">)</span>
+    <span class="c1"># return the process back to cache</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">avail_cache</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+    <span class="c1"># take a new process from the cache</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">p_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">avail_cache</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">fatal</span><span class="p">(</span><span class="s2">&quot;handleMessage__ : no more processes available!&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># tell it to do some work</span>
+        <span class="n">p_</span><span class="o">.</span><span class="n">doWork</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>So, in this particular example, once a worker has done it’s calculation,
+another worker is launched to do another one.</p>
+<p>If you have many different kinds of multiprocesses running under your main
+process, it’s a good idea to create dedicated <code class="docutils literal notranslate"><span class="pre">MessageObject</span></code> classes
+and <code class="docutils literal notranslate"><span class="pre">handleMessage__</span></code> methods for each one of them to keep the code readable.</p>
+<p>Behold: this is your apps main entry point.</p>
+<p>When running interactively, just press CTRL-C to exit.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">Manager</span><span class="o">.</span><span class="n">formatLogger</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span> <span class="c1"># of course in a real app, in some other way</span>
+    <span class="n">WorkerProcess</span><span class="o">.</span><span class="n">formatLogger</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span> <span class="c1"># of course in a real app, in some other way</span>
+    <span class="n">manager</span> <span class="o">=</span> <span class="n">Manager</span><span class="p">(</span><span class="n">n_workers</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+    <span class="n">manager</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>For testing purposes, you can run the manager in background thread, while in the
+main code, you can interact with it in any way you want, say, create files it sees, or simulate the environment
+where it is running somehow.</p>
+<p>Here the only “interaction” we do, is just to sleep for 10 secs before terminating it.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">test</span><span class="p">():</span>
+    <span class="n">Manager</span><span class="o">.</span><span class="n">formatLogger</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
+    <span class="n">WorkerProcess</span><span class="o">.</span><span class="n">formatLogger</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
+    <span class="n">manager</span> <span class="o">=</span> <span class="n">Manager</span><span class="p">(</span><span class="n">n_workers</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+    <span class="n">manager</span><span class="o">.</span><span class="n">runAsThread</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;running manager for 10 secs&quot;</span><span class="p">)</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+    <span class="c1"># .. or alternative, interact with the manager somehow</span>
+    <span class="c1"># as it runs in the background thread</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;stopping manager&quot;</span><span class="p">)</span>
+    <span class="n">manager</span><span class="o">.</span><span class="n">stopThread</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;bye!&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Please do run this file interactively either with command line arg
+“main” or “test” to run <code class="docutils literal notranslate"><span class="pre">main()</span></code> or <a href="#id3"><span class="problematic" id="id4">``</span></a>test()``above:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;please give &#39;main&#39; or &#39;test&#39;&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;main&quot;</span><span class="p">:</span>
+        <span class="n">main</span><span class="p">()</span>
+    <span class="k">elif</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;test&quot;</span><span class="p">:</span>
+        <span class="n">test</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;please give &#39;main&#39; or &#39;test&#39;&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="part-iii-miscellaneous">
+<h1>Part III: Miscellaneous<a class="headerlink" href="#part-iii-miscellaneous" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="development-cleanup">
+<h2>Development cleanup<a class="headerlink" href="#development-cleanup" title="Permalink to this headline">¶</a></h2>
+<p>When you are developing your multiprocessing program, it might and will crash.  Many times, this has the practical effect
+of leaving “dangling” multiprocesses running in your system.  So remember to kill them manually with</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>killall -9 python3
+</pre></div>
+</div>
+<p>Or whatever name they might use.</p>
+<p>Forgetting this, will have all kinds of weird effects, as the “zombie” processes are still running in the background
+and continue meddling with the same shmem arrays and files etc. while you start your program again.</p>
+<p>If you’re using sharedmem, sometimes you might need to clean up manually memory-mapped files from:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>/dev/shm/
+</pre></div>
+</div>
+</div>
+<div class="section" id="process-debug">
+<h2>Process debug<a class="headerlink" href="#process-debug" title="Permalink to this headline">¶</a></h2>
+<p>Use the <a class="reference external" href="https://github.com/dvarrazzo/py-setproctitle">setproctitle python module</a> to name your python multiprocesses.  This way you can find them easily using standard
+linux monitoring tools, such as htop and smem.</p>
+<p>Setting the name of the process should, of course, happen after the multiprocessing fork (i.e. in <code class="docutils literal notranslate"><span class="pre">preRun__</span></code>).</p>
+<p>Install smem and htop:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">smem</span> <span class="n">htop</span>
+</pre></div>
+</div>
+<p>After that, run for example the script memwatch.bash in the aux/ directory.  Or just launch htop.  In htop, remember to go to <code class="docutils literal notranslate"><span class="pre">setup</span> <span class="pre">=&gt;</span> <span class="pre">display</span></code> options and enable “Hide userland process threads” to make
+the output more readable.</p>
+</div>
+<div class="section" id="advanced-topics">
+<h2>Advanced topics<a class="headerlink" href="#advanced-topics" title="Permalink to this headline">¶</a></h2>
+<p>You learned how to exchange numpy arrays between processes using shared memory.</p>
+<p>If you’re wondering how to exchange <em>streaming data</em> in the same manner,
+then the correct way to do that are synchronized sharedmem ringbuffers.
+You might want to google that, or use the particular implementation done
+in <a class="reference external" href="https://elsampsa.github.io/valkka-examples/_build/html/index.html">libValkka</a>.</p>
+<p>We also mentioned the possibility to create data at C++ side (say from specific industrial
+equipment, etc.) and then passing it to the python side.  In such case, you would
+simply add one more file descriptor (which is managed &amp; set’ted at C++ side) in the
+list that select listens to in your <a class="reference internal" href="#manager-imp"><span class="std std-ref">manager implementation</span></a>.</p>
+<p>For C++ / python numpy interfacing, you might want to take a look
+into <a class="reference external" href="https://github.com/elsampsa/skeleton">skeleton</a>.  A more serious example will
+be provided as well (TBA).</p>
+</div>
+<div class="section" id="qt-related">
+<h2>Qt related<a class="headerlink" href="#qt-related" title="Permalink to this headline">¶</a></h2>
+<p>Using multiprocesses in the context of Qt (PyQt, PySide2) is straighforward.</p>
+<p>If a multiprocess only receive signals, then the “slot” functions where the incoming
+signals are connected, correspond to the multiprocessing “frontend” methods.</p>
+<p>If the multiprocess should also launch signals into the Qt signal/slot system, I recommend
+creating a <code class="docutils literal notranslate"><span class="pre">MainContext</span></code> subclass and running it using <code class="docutils literal notranslate"><span class="pre">runAsThread</span></code> (see above): in the event loop
+of your <code class="docutils literal notranslate"><span class="pre">MainContext</span></code>, you can then transform the multiprocessing messages into Qt signals.</p>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../examples.html" class="btn btn-neutral float-left" title="Tutorial" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../submodules.html" class="btn btn-neutral float-right" title="API documentation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2017-2023 Sampsa Riikonen.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
