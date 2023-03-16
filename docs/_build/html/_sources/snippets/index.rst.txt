@@ -56,6 +56,8 @@ from the backend in the form of a message.
 
 :download:`[download code]<shm1.py>`
 
+NOTE: for the following examples, you need ``numpy`` installed.
+
 Shared memory is a powerfull tool in multiprocessing: it allows you to
 intercommunicate large blocks of data between the main python process (aka
 frontend) and the forked multiprocess (aka backend).
