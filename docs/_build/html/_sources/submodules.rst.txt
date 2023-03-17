@@ -45,6 +45,8 @@ to ``MessageObject`` s, which are mapped to correct methods in the backend
              getPipe, sendMessageToBack, go, requestStop, waitStop, stop, sendPing,
              formatLogger
 
+.. _asyncio:
+
 AsyncBackMessageProcess
 -----------------------
 

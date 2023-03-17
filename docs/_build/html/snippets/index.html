@@ -68,8 +68,11 @@
 <li class="toctree-l2"><a class="reference internal" href="#part-iii-miscellaneous">Part III: Miscellaneous</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#development-cleanup">Development cleanup</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#process-debug">Process debug</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#advanced-topics">Advanced topics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#streaming-data">Streaming data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#interfacing-with-c">Interfacing with C++</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#custom-messageprocess">Custom MessageProcess</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#qt-related">Qt related</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#asyncio">Asyncio</a></li>
 </ul>
 </li>
 </ul>
@@ -883,13 +886,16 @@ linux monitoring tools, such as htop and smem.</p>
 <p>After that, run for example the script memwatch.bash in the aux/ directory.  Or just launch htop.  In htop, remember to go to <code class="docutils literal notranslate"><span class="pre">setup</span> <span class="pre">=&gt;</span> <span class="pre">display</span></code> options and enable “Hide userland process threads” to make
 the output more readable.</p>
 </div>
-<div class="section" id="advanced-topics">
-<h2>Advanced topics<a class="headerlink" href="#advanced-topics" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="streaming-data">
+<h2>Streaming data<a class="headerlink" href="#streaming-data" title="Permalink to this headline">¶</a></h2>
 <p>You learned how to exchange numpy arrays between processes using shared memory.</p>
 <p>If you’re wondering how to exchange <em>streaming data</em> in the same manner,
 then the correct way to do that are synchronized sharedmem ringbuffers.
 You might want to google that, or use the particular implementation done
 in <a class="reference external" href="https://elsampsa.github.io/valkka-examples/_build/html/index.html">libValkka</a>.</p>
+</div>
+<div class="section" id="interfacing-with-c">
+<h2>Interfacing with C++<a class="headerlink" href="#interfacing-with-c" title="Permalink to this headline">¶</a></h2>
 <p>We also mentioned the possibility to create data at C++ side (say from specific industrial
 equipment, etc.) and then passing it to the python side.  In such case, you would
 simply add one more file descriptor (which is managed &amp; set’ted at C++ side) in the
@@ -897,6 +903,16 @@ list that select listens to in your <a class="reference internal" href="#manager
 <p>For C++ / python numpy interfacing, you might want to take a look
 into <a class="reference external" href="https://github.com/elsampsa/skeleton">skeleton</a>.  A more serious example will
 be provided as well (TBA).</p>
+</div>
+<div class="section" id="custom-messageprocess">
+<h2>Custom MessageProcess<a class="headerlink" href="#custom-messageprocess" title="Permalink to this headline">¶</a></h2>
+<p>On some occasions, when you need the <code class="docutils literal notranslate"><span class="pre">MessageProcess</span></code> class to do something more
+complex than just rerouting frontend to backend methods, say, you want it to create a shmem
+server and push streaming data to another process, you need to subclass more methods than was
+considered in the tutorial.</p>
+<p>Typically, you need to subclass the <code class="docutils literal notranslate"><span class="pre">run</span></code>, <code class="docutils literal notranslate"><span class="pre">readPipes__</span></code>, etc. methods.  This is fairly
+easy, since the whole <code class="docutils literal notranslate"><span class="pre">MessageProcess</span></code> class is very slim.  See in
+<a class="reference external" href="https://github.com/elsampsa/valkka-multiprocess/blob/main/valkka/multiprocess/base.py#L178">here</a>.</p>
 </div>
 <div class="section" id="qt-related">
 <h2>Qt related<a class="headerlink" href="#qt-related" title="Permalink to this headline">¶</a></h2>
@@ -906,6 +922,14 @@ signals are connected, correspond to the multiprocessing “frontend” methods.
 <p>If the multiprocess should also launch signals into the Qt signal/slot system, I recommend
 creating a <code class="docutils literal notranslate"><span class="pre">MainContext</span></code> subclass and running it using <code class="docutils literal notranslate"><span class="pre">runAsThread</span></code> (see above): in the event loop
 of your <code class="docutils literal notranslate"><span class="pre">MainContext</span></code>, you can then transform the multiprocessing messages into Qt signals.</p>
+</div>
+<div class="section" id="asyncio">
+<h2>Asyncio<a class="headerlink" href="#asyncio" title="Permalink to this headline">¶</a></h2>
+<p>If your multiprocess needs to run asyncio, that is ok.  Please take a look
+at the <a class="reference internal" href="../submodules.html#asyncio"><span class="std std-ref">AsyncBackMessageProcess class</span></a>.</p>
+<p>For full-blown asyncio programs, using the same kind of hierarchical scheme
+as considered in this module’s tutorial for master/worker processes,
+you might want to take a look at <a class="reference external" href="https://github.com/elsampsa/task_thread">TaskThread</a>.</p>
 </div>
 </div>
 

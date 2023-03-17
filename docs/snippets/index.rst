@@ -224,8 +224,8 @@ Install smem and htop:
 After that, run for example the script memwatch.bash in the aux/ directory.  Or just launch htop.  In htop, remember to go to ``setup => display`` options and enable "Hide userland process threads" to make
 the output more readable.
 
-Advanced topics
----------------
+Streaming data
+--------------
 
 You learned how to exchange numpy arrays between processes using shared memory.
 
@@ -233,6 +233,9 @@ If you're wondering how to exchange *streaming data* in the same manner,
 then the correct way to do that are synchronized sharedmem ringbuffers.
 You might want to google that, or use the particular implementation done
 in `libValkka <https://elsampsa.github.io/valkka-examples/_build/html/index.html>`_.
+
+Interfacing with C++
+--------------------
 
 We also mentioned the possibility to create data at C++ side (say from specific industrial
 equipment, etc.) and then passing it to the python side.  In such case, you would
@@ -242,6 +245,18 @@ list that select listens to in your :ref:`manager implementation <manager_imp>`.
 For C++ / python numpy interfacing, you might want to take a look
 into `skeleton <https://github.com/elsampsa/skeleton>`_.  A more serious example will
 be provided as well (TBA).
+
+Custom MessageProcess
+---------------------
+
+On some occasions, when you need the ``MessageProcess`` class to do something more
+complex than just rerouting frontend to backend methods, say, you want it to create a shmem
+server and push streaming data to another process, you need to subclass more methods than was
+considered in the tutorial.
+
+Typically, you need to subclass the ``run``, ``readPipes__``, etc. methods.  This is fairly
+easy, since the whole ``MessageProcess`` class is very slim.  See in 
+`here <https://github.com/elsampsa/valkka-multiprocess/blob/main/valkka/multiprocess/base.py#L178>`_.
 
 Qt related
 ----------
@@ -254,3 +269,14 @@ signals are connected, correspond to the multiprocessing "frontend" methods.
 If the multiprocess should also launch signals into the Qt signal/slot system, I recommend
 creating a ``MainContext`` subclass and running it using ``runAsThread`` (see above): in the event loop
 of your ``MainContext``, you can then transform the multiprocessing messages into Qt signals.
+
+Asyncio
+-------
+
+If your multiprocess needs to run asyncio, that is ok.  Please take a look
+at the :ref:`AsyncBackMessageProcess class <asyncio>`.
+
+For full-blown asyncio programs, using the same kind of hierarchical scheme
+as considered in this module's tutorial for master/worker processes,
+you might want to take a look at `TaskThread <https://github.com/elsampsa/task_thread>`_.
+
