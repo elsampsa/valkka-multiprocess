@@ -221,7 +221,7 @@ Install smem and htop:
 
     sudo apt-get install smem htop
 
-After that, run for example the script memwatch.bash in the aux/ directory.  Or just launch htop.  In htop, remember to go to ``setup => display`` options and enable "Hide userland process threads" to make
+In htop, remember to go to ``setup => display`` options and enable "Hide userland process threads" to make
 the output more readable.
 
 Streaming data

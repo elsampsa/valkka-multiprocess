@@ -263,7 +263,7 @@ def test():
 
 """<rtf>
 Please do run this file interactively either with command line arg
-"main" or "test" to run ``main()`` or ``test()``above:
+"main" or "test" to run ``main()`` or ``test()`` above:
 <rtf>"""
 if __name__ == "__main__":
     if len(sys.argv) < 2:
