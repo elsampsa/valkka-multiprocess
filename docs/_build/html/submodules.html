@@ -36,8 +36,8 @@
 
 
 <!-- font awesome comes with the rtd package.. use like this:-->
-<a href="https://github.com/elsampsa/valkka-multiprocess" class="icon icon-github"> Valkka Multiprocess @ github</a>
-<a href="https://github.com/elsampsa/valkka-multiprocess/issues" class="fa fa-bug"> Issue Tracker @ github</a>
+<a href="https://github.com/elsampsa/cute-forms" class="icon icon-github"> CuteForms @ github</a>
+<a href="https://github.com/elsampsa/cute-forms/issues" class="fa fa-bug"> Issue Tracker @ github</a>
 
 <!-- don't even think about subclassing searchbox.html .. will never work!-->
 <div role="search">
@@ -486,6 +486,13 @@ default: python <code class="docutils literal notranslate"><span class="pre">mul
 <dt id="valkka.multiprocess.sync.EventGroup.asIndex">
 <code class="sig-name descname"><span class="pre">asIndex</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/valkka/multiprocess/sync.html#EventGroup.asIndex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#valkka.multiprocess.sync.EventGroup.asIndex" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return index corresponding to an event</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="valkka.multiprocess.sync.EventGroup.fromIndex">
+<code class="sig-name descname"><span class="pre">fromIndex</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/valkka/multiprocess/sync.html#EventGroup.fromIndex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#valkka.multiprocess.sync.EventGroup.fromIndex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get an event, based on the event index.
+Use typically at multiprocessing backend to get the corresponding event as in the frontend.</p>
 </dd></dl>
 
 <dl class="py method">

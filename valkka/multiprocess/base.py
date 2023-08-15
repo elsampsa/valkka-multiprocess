@@ -274,6 +274,11 @@ class MessageProcess(Process):
         """Multiprocessing frontend method: a synonym to multiprocessing ``start()``
         """
         self.start()
+        """here we could start a watcher thread for listening messages that come
+        from the multiprocess.. i.e. the user uses the api with select on the getPipe,
+        but there could be another pipe that is being listened by a dedicated "frontend thread"
+        this way could move logging from backend to frontend, send qt signals, etc.
+        """
 
     def requestStop(self):
         """Multiprocessing frontend method: send a request to the multiprocess (backend) to stop

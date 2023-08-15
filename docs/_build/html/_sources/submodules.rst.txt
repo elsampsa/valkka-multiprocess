@@ -145,7 +145,7 @@ An example:
 
 
 .. autoclass:: valkka.multiprocess.sync.EventGroup
-   :members: set, reserve, release, release_ind, fromindex, asIndex
+   :members: set, reserve, release, release_ind, fromIndex, asIndex
 
 
 SyncIndex

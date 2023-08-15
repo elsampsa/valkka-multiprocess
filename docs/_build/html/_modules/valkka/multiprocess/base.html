@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>valkka.multiprocess.base &mdash; Valkka_multiprocess  documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <title>valkka.multiprocess.base &mdash; Valkka Multiprocess  documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
@@ -29,13 +29,13 @@
   <a href="../../../index.html"><img src="../../../_static/valkka.png" class="logo" alt="Logo"/>
 </a>
     <div class="version">
-      1.0.0
+      0.0.0
     </div>
 
 
 <!-- font awesome comes with the rtd package.. use like this:-->
-<a href="https://github.com/elsampsa/valkka_multiprocess" class="icon icon-github"> Valkka_multiprocess @ github</a>
-<a href="https://github.com/elsampsa/valkka_multiprocess/issues" class="fa fa-bug"> Issue Tracker @ github</a>
+<a href="https://github.com/elsampsa/cute-forms" class="icon icon-github"> CuteForms @ github</a>
+<a href="https://github.com/elsampsa/cute-forms/issues" class="fa fa-bug"> Issue Tracker @ github</a>
 
 <!-- don't even think about subclassing searchbox.html .. will never work!-->
 <div role="search">
@@ -62,7 +62,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Valkka_multiprocess</a>
+          <a href="../../../index.html">Valkka Multiprocess</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -356,7 +356,12 @@
 <div class="viewcode-block" id="MessageProcess.go"><a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.base.MessageProcess.go">[docs]</a>    <span class="k">def</span> <span class="nf">go</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Multiprocessing frontend method: a synonym to multiprocessing ``start()``</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="p">()</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        <span class="sd">&quot;&quot;&quot;here we could start a watcher thread for listening messages that come</span>
+<span class="sd">        from the multiprocess.. i.e. the user uses the api with select on the getPipe,</span>
+<span class="sd">        but there could be another pipe that is being listened by a dedicated &quot;frontend thread&quot;</span>
+<span class="sd">        this way could move logging from backend to frontend, send qt signals, etc.</span>
+<span class="sd">        &quot;&quot;&quot;</span></div>
 
 <div class="viewcode-block" id="MessageProcess.requestStop"><a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.base.MessageProcess.requestStop">[docs]</a>    <span class="k">def</span> <span class="nf">requestStop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Multiprocessing frontend method: send a request to the multiprocess (backend) to stop</span>
@@ -846,7 +851,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2017-2023 Sampsa Riikonen.</p>
+    <p>&#169; Copyright 2023 Sampsa Riikonen.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
