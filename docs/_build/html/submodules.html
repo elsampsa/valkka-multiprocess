@@ -146,6 +146,9 @@ forked multiprocess (aka “backend”) and the main/current python process (aka
 <p>In <code class="docutils literal notranslate"><span class="pre">MessageProcess</span></code>’s <code class="docutils literal notranslate"><span class="pre">run</span></code> method, there is an event loop that listens
 to <code class="docutils literal notranslate"><span class="pre">MessageObject</span></code> s, which are mapped to correct methods in the backend
 (to method <code class="docutils literal notranslate"><span class="pre">c__myStuff</span></code> in this case).</p>
+<p>Within <code class="docutils literal notranslate"><span class="pre">MessageProcess</span></code>, you can use logger <code class="docutils literal notranslate"><span class="pre">self.logger</span></code> that
+has the name <code class="docutils literal notranslate"><span class="pre">classname.name</span></code>, in this example
+case it is <code class="docutils literal notranslate"><span class="pre">MyProcess.my-process</span></code></p>
 <dl class="py class">
 <dt id="valkka.multiprocess.base.MessageProcess">
 <em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">valkka.multiprocess.base.</span></code><code class="sig-name descname"><span class="pre">MessageProcess</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MessageProcess'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/valkka/multiprocess/base.html#MessageProcess"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#valkka.multiprocess.base.MessageProcess" title="Permalink to this definition">¶</a></dt>
@@ -173,12 +176,13 @@ to <code class="docutils literal notranslate"><span class="pre">MessageObject</s
 <dt id="valkka.multiprocess.base.MessageProcess.formatLogger">
 <em class="property"><span class="pre">classmethod</span> </em><code class="sig-name descname"><span class="pre">formatLogger</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/valkka/multiprocess/base.html#MessageProcess.formatLogger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#valkka.multiprocess.base.MessageProcess.formatLogger" title="Permalink to this definition">¶</a></dt>
 <dd><p>A helper to setup logger formatter</p>
+<p>Sets loglevel to the automatically created logger <code class="docutils literal notranslate"><span class="pre">self.logger</span></code> 
+(that has the name <code class="docutils literal notranslate"><span class="pre">classname.name</span></code>)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>level</strong> – loglevel.  Default: <code class="docutils literal notranslate"><span class="pre">logging.INFO</span></code>.</p>
 </dd>
 </dl>
-<p>Use only for initial development</p>
 </dd></dl>
 
 <dl class="py method">
@@ -349,6 +353,25 @@ after the fork but <em>before</em> the asyncio event loop</p>
 </dd></dl>
 
 <dl class="py method">
+<dt id="valkka.multiprocess.base.AsyncBackMessageProcess.getPipe">
+<code class="sig-name descname"><span class="pre">getPipe</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">valkka.multiprocess.base.Duplex</span><a class="reference internal" href="_modules/valkka/multiprocess/base.html#AsyncBackMessageProcess.getPipe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#valkka.multiprocess.base.AsyncBackMessageProcess.getPipe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a Duplex object, instead of multiprocessing.Pipe object.</p>
+<p>Duplex.fileno() returns the read file dtor number</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="valkka.multiprocess.base.AsyncBackMessageProcess.getReadFd">
+<code class="sig-name descname"><span class="pre">getReadFd</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/valkka/multiprocess/base.html#AsyncBackMessageProcess.getReadFd"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#valkka.multiprocess.base.AsyncBackMessageProcess.getReadFd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns read file dtor number for the frontend Duplex object</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="valkka.multiprocess.base.AsyncBackMessageProcess.getWriteFd">
+<code class="sig-name descname"><span class="pre">getWriteFd</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/valkka/multiprocess/base.html#AsyncBackMessageProcess.getWriteFd"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#valkka.multiprocess.base.AsyncBackMessageProcess.getWriteFd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns write file dtor number for the frontend Duplex object</p>
+</dd></dl>
+
+<dl class="py method">
 <dt id="valkka.multiprocess.base.AsyncBackMessageProcess.send_out__">
 <em class="property"><span class="pre">async</span> </em><code class="sig-name descname"><span class="pre">send_out__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/valkka/multiprocess/base.html#AsyncBackMessageProcess.send_out__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#valkka.multiprocess.base.AsyncBackMessageProcess.send_out__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Multiprocessing backend coroutine: pickle obj &amp; send to main python process.
@@ -367,12 +390,18 @@ It’s recommended to use the <code class="docutils literal notranslate"><span c
 <p>You should subclass this.  In subclassed <code class="docutils literal notranslate"><span class="pre">__init__</span></code>, you should always call the
 superclass constructor:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="c1"># do custom initializations</span>
+    <span class="c1"># call superclass ctor in the last line of your</span>
+    <span class="c1"># custom init</span>
     <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>This will have the effect of calling <code class="docutils literal notranslate"><span class="pre">startProcesses</span></code> and <code class="docutils literal notranslate"><span class="pre">startThreads</span></code>
 (see below).</p>
+<p>Remember to call the superclass constructor always in the last line of your customized <code class="docutils literal notranslate"><span class="pre">__init__</span></code></p>
 <p>Please see tutorial, part II for practical subclassing examples</p>
+<p><code class="docutils literal notranslate"><span class="pre">MainContext</span></code> has a logger <code class="docutils literal notranslate"><span class="pre">self.logger</span></code> with the name
+<code class="docutils literal notranslate"><span class="pre">classname</span></code>.</p>
 <dl class="py method">
 <dt id="valkka.multiprocess.base.MainContext.__call__">
 <code class="sig-name descname"><span class="pre">__call__</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/valkka/multiprocess/base.html#MainContext.__call__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#valkka.multiprocess.base.MainContext.__call__" title="Permalink to this definition">¶</a></dt>
@@ -390,12 +419,13 @@ called in the <code class="docutils literal notranslate"><span class="pre">__cal
 <dt id="valkka.multiprocess.base.MainContext.formatLogger">
 <em class="property"><span class="pre">classmethod</span> </em><code class="sig-name descname"><span class="pre">formatLogger</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/valkka/multiprocess/base.html#MainContext.formatLogger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#valkka.multiprocess.base.MainContext.formatLogger" title="Permalink to this definition">¶</a></dt>
 <dd><p>A helper to setup logger formatter</p>
+<p>Sets loglevel to the automatically created logger <code class="docutils literal notranslate"><span class="pre">self.logger</span></code> 
+(that has the name <code class="docutils literal notranslate"><span class="pre">classname</span></code>)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>level</strong> – loglevel.  Default: <code class="docutils literal notranslate"><span class="pre">logging.INFO</span></code>.</p>
 </dd>
 </dl>
-<p>Use only for initial development</p>
 </dd></dl>
 
 <dl class="py method">

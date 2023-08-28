@@ -102,7 +102,7 @@
 <span class="sd">@file    base.py</span>
 <span class="sd">@author  Sampsa Riikonen</span>
 <span class="sd">@date    2020</span>
-<span class="sd">@version 1.3.4 </span>
+<span class="sd">@version 1.5.2 </span>
 
 <span class="sd">@brief   A simple multiprocessing framework with back- and frontend and pipes communicating between them</span>
 <span class="sd">&quot;&quot;&quot;</span>
@@ -198,9 +198,10 @@
     <span class="k">def</span> <span class="nf">formatLogger</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">level</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;A helper to setup logger formatter</span>
 
-<span class="sd">        :param level: loglevel.  Default: ``logging.INFO``.</span>
+<span class="sd">        Sets loglevel to the automatically created logger ``self.logger`` </span>
+<span class="sd">        (that has the name ``classname.name``)</span>
 
-<span class="sd">        Use only for initial development</span>
+<span class="sd">        :param level: loglevel.  Default: ``logging.INFO``.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">logger</span><span class="o">.</span><span class="n">hasHandlers</span><span class="p">():</span>
@@ -356,12 +357,7 @@
 <div class="viewcode-block" id="MessageProcess.go"><a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.base.MessageProcess.go">[docs]</a>    <span class="k">def</span> <span class="nf">go</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Multiprocessing frontend method: a synonym to multiprocessing ``start()``</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
-        <span class="sd">&quot;&quot;&quot;here we could start a watcher thread for listening messages that come</span>
-<span class="sd">        from the multiprocess.. i.e. the user uses the api with select on the getPipe,</span>
-<span class="sd">        but there could be another pipe that is being listened by a dedicated &quot;frontend thread&quot;</span>
-<span class="sd">        this way could move logging from backend to frontend, send qt signals, etc.</span>
-<span class="sd">        &quot;&quot;&quot;</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="MessageProcess.requestStop"><a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.base.MessageProcess.requestStop">[docs]</a>    <span class="k">def</span> <span class="nf">requestStop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Multiprocessing frontend method: send a request to the multiprocess (backend) to stop</span>
@@ -464,6 +460,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">reader</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">fdopen</span><span class="p">(</span><span class="n">read_fd</span><span class="p">,</span> <span class="s2">&quot;br&quot;</span><span class="p">,</span> <span class="n">buffering</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">writer</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">fdopen</span><span class="p">(</span><span class="n">write_fd</span><span class="p">,</span> <span class="s2">&quot;bw&quot;</span><span class="p">,</span> <span class="n">buffering</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
     
+    <span class="k">def</span> <span class="nf">fileno</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_fd</span>
+
     <span class="k">def</span> <span class="nf">getReadIO</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;_io.FileIO object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -526,7 +525,7 @@
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;AsyncMessageProcess&quot;</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pre</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pre</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pre</span><span class="p">)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="c1"># self.front_pipe, self.back_pipe = getPipes(True, False) # blocking frontend, non-blocking backend (for asynchronous backend)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">front_pipe</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">back_pipe</span> <span class="o">=</span> <span class="n">getPipes</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span> <span class="c1"># both blocking: for testing # seems to make no difference (asyncio sets the pipes to non-blocking mode)</span>
@@ -534,6 +533,22 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">listening</span> <span class="o">=</span> <span class="kc">False</span> <span class="c1"># are we listening something else than just the intercom pipes?</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sigint</span> <span class="o">=</span> <span class="kc">True</span>
 
+<div class="viewcode-block" id="AsyncBackMessageProcess.getPipe"><a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.base.AsyncBackMessageProcess.getPipe">[docs]</a>    <span class="k">def</span> <span class="nf">getPipe</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Duplex</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Returns a Duplex object, instead of multiprocessing.Pipe object.</span>
+
+<span class="sd">        Duplex.fileno() returns the read file dtor number</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">front_pipe</span></div>
+
+<div class="viewcode-block" id="AsyncBackMessageProcess.getReadFd"><a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.base.AsyncBackMessageProcess.getReadFd">[docs]</a>    <span class="k">def</span> <span class="nf">getReadFd</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns read file dtor number for the frontend Duplex object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">front_pipe</span><span class="o">.</span><span class="n">getReadFd</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="AsyncBackMessageProcess.getWriteFd"><a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.base.AsyncBackMessageProcess.getWriteFd">[docs]</a>    <span class="k">def</span> <span class="nf">getWriteFd</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns write file dtor number for the frontend Duplex object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">front_pipe</span><span class="o">.</span><span class="n">getWriteFd</span><span class="p">()</span></div>
 
     <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sigint</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
@@ -726,12 +741,21 @@
 <span class="sd">    ::</span>
 
 <span class="sd">        def __init__(self):</span>
+<span class="sd">            # do custom initializations</span>
+<span class="sd">            # call superclass ctor in the last line of your</span>
+<span class="sd">            # custom init</span>
 <span class="sd">            super().__init__()</span>
 
 <span class="sd">    This will have the effect of calling ``startProcesses`` and ``startThreads``</span>
 <span class="sd">    (see below).</span>
 
+<span class="sd">    Remember to call the superclass constructor always in the last line of your customized ``__init__``</span>
+
 <span class="sd">    Please see tutorial, part II for practical subclassing examples</span>
+
+<span class="sd">    ``MainContext`` has a logger ``self.logger`` with the name</span>
+<span class="sd">    ``classname``.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
@@ -744,9 +768,10 @@
     <span class="k">def</span> <span class="nf">formatLogger</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">level</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;A helper to setup logger formatter</span>
 
-<span class="sd">        :param level: loglevel.  Default: ``logging.INFO``.</span>
+<span class="sd">        Sets loglevel to the automatically created logger ``self.logger`` </span>
+<span class="sd">        (that has the name ``classname``)</span>
 
-<span class="sd">        Use only for initial development</span>
+<span class="sd">        :param level: loglevel.  Default: ``logging.INFO``.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">logger</span><span class="o">.</span><span class="n">hasHandlers</span><span class="p">():</span>

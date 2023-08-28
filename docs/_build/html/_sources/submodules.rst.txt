@@ -40,6 +40,10 @@ In ``MessageProcess``'s ``run`` method, there is an event loop that listens
 to ``MessageObject`` s, which are mapped to correct methods in the backend
 (to method ``c__myStuff`` in this case).
 
+Within ``MessageProcess``, you can use logger ``self.logger`` that
+has the name ``classname.name``, in this example
+case it is ``MyProcess.my-process``
+
 .. autoclass:: valkka.multiprocess.base.MessageProcess
    :members: preRun__, postRun__, run, readPipes__, send_out__, c__ping, ignoreSIGINT,
              getPipe, sendMessageToBack, go, requestStop, waitStop, stop, sendPing,
@@ -80,7 +84,8 @@ asyncio:
 Please, note the small "glitch" in the API when getting the file descriptor for reading: you need to call ``getReadFd`` to get the file descriptor.
 
 .. autoclass:: valkka.multiprocess.base.AsyncBackMessageProcess
-   :members: asyncPre__, asyncPost__, send_out__, c__ping
+   :members: asyncPre__, asyncPost__, send_out__, c__ping,
+             getPipe, getReadFd, getWriteFd
 
 
 MainContext

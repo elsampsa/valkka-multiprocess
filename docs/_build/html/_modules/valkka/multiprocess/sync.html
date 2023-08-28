@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>valkka.multiprocess.sync &mdash; Valkka_multiprocess  documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <title>valkka.multiprocess.sync &mdash; Valkka Multiprocess  documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
@@ -29,13 +29,13 @@
   <a href="../../../index.html"><img src="../../../_static/valkka.png" class="logo" alt="Logo"/>
 </a>
     <div class="version">
-      1.0.0
+      0.0.0
     </div>
 
 
 <!-- font awesome comes with the rtd package.. use like this:-->
-<a href="https://github.com/elsampsa/valkka_multiprocess" class="icon icon-github"> Valkka_multiprocess @ github</a>
-<a href="https://github.com/elsampsa/valkka_multiprocess/issues" class="fa fa-bug"> Issue Tracker @ github</a>
+<a href="https://github.com/elsampsa/cute-forms" class="icon icon-github"> CuteForms @ github</a>
+<a href="https://github.com/elsampsa/cute-forms/issues" class="fa fa-bug"> Issue Tracker @ github</a>
 
 <!-- don't even think about subclassing searchbox.html .. will never work!-->
 <div role="search">
@@ -62,7 +62,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Valkka_multiprocess</a>
+          <a href="../../../index.html">Valkka Multiprocess</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -131,7 +131,13 @@
         <span class="k">except</span> <span class="ne">IndexError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">NotEnoughEvents</span>
         <span class="n">event</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
-        <span class="n">event</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span> <span class="c1"># clear event before using it</span>
+        <span class="c1"># event.clear() # clear event before using it</span>
+        <span class="sd">&quot;&quot;&quot;..woops: simply calling clear before calling set</span>
+<span class="sd">        on an EventFd will crash the program with</span>
+<span class="sd">        &quot;Resource temporarily unavailable&quot;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">event</span><span class="o">.</span><span class="n">set</span><span class="p">()</span>
+        <span class="n">event</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">index</span><span class="p">,</span> <span class="n">event</span></div>
         
 <div class="viewcode-block" id="EventGroup.release"><a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.sync.EventGroup.release">[docs]</a>    <span class="k">def</span> <span class="nf">release</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
@@ -154,11 +160,11 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">index</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">fromIndex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span>
+<div class="viewcode-block" id="EventGroup.fromIndex"><a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.sync.EventGroup.fromIndex">[docs]</a>    <span class="k">def</span> <span class="nf">fromIndex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get an event, based on the event index.</span>
 <span class="sd">        Use typically at multiprocessing backend to get the corresponding event as in the frontend.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="p">[</span><span class="n">i</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="EventGroup.asIndex"><a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.sync.EventGroup.asIndex">[docs]</a>    <span class="k">def</span> <span class="nf">asIndex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return index corresponding to an event</span>
@@ -228,7 +234,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2017-2023 Sampsa Riikonen.</p>
+    <p>&#169; Copyright 2023 Sampsa Riikonen.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
