@@ -2,7 +2,7 @@ from setuptools import setup, Extension, find_packages
 import sys, os
 
 # The following line is modified by setver.bash
-version = '0.0.0'
+version = '1.5.3'
 
 packages=[ # or better called "modules"
     'valkka',
