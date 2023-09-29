@@ -54,12 +54,14 @@ case it is ``MyProcess.my-process``
 AsyncBackMessageProcess
 -----------------------
 
+*Warning: understanding of asyncio required*
+
 Identical to ``MessageProcess`` class, but now the forked process (aka backend) runs
 asyncio:
 
 .. code:: python
 
-    from valkka.multiprocess import AsyncBackMessageProcess, MessageObject
+    from valkka.multiprocess import AsyncBackMessageProcess, MessageObject, exclog
 
     class MyProcess(AsyncBackMessageProcess):
         
@@ -81,7 +83,32 @@ asyncio:
     ...
     p.stop()
 
-Please, note the small "glitch" in the API when getting the file descriptor for reading: you need to call ``getReadFd`` to get the file descriptor.
+The whole idea of using asyncio python, is to solve the problem of simultaneous, blocking i/o operations.  In the above example, we don't
+yet achieve that i/o concurrency: if you would call ``myStuff`` consecutively twice, the asyncio backend will await the completion of ``c__myStuff`` before
+executing and awaiting it for the second time.
+
+To achieve non-blocking behaviour for i/o operations, you should use (background) tasks instead.  Here is one way to do that:
+
+.. code:: python
+
+    class MyProcess(AsyncBackMessageProcess):
+
+        @exclog
+        async def myStuff__(self, parameter=None):
+            print("Regards from other side of the fork!  Got parameter", parameter)
+            # DO SOME BLOCKING IO HERE
+            print("Did that blocking io wait")
+
+        async def c__myStuff(self, parameter=None):
+            asyncio.get_event_loop().create_task(self.myStuff__(parameter=parameter))
+            
+        def myStuff(self, parameter=None):
+            self.sendMessageToBack(MessageObject(
+                "myStuff", parameter=parameter))
+
+For a handy way to achieve asyncio concurrency (without ``asyncio.gather`` etc. techniques), please see `TaskThread <https://elsampsa.github.io/task_thread/_build/html/index.html>`_.
+
+Finally, please, note the small "glitch" in the API when getting the file descriptor for reading: you need to call ``getReadFd`` to get the file descriptor.
 
 .. autoclass:: valkka.multiprocess.base.AsyncBackMessageProcess
    :members: asyncPre__, asyncPost__, send_out__, c__ping,

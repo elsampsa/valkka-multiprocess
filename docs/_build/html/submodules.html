@@ -31,7 +31,7 @@
   <a href="index.html"><img src="_static/valkka.png" class="logo" alt="Logo"/>
 </a>
     <div class="version">
-      1.5.3
+      1.6.1
     </div>
 
 
@@ -166,6 +166,7 @@ case it is <code class="docutils literal notranslate"><span class="pre">MyProces
 <dd class="field-odd"><p><strong>name</strong> – name of the multiprocess</p>
 </dd>
 </dl>
+<p>NOTE: when subclassing <code class="docutils literal notranslate"><span class="pre">__init__</span></code>, remember to call therein <code class="docutils literal notranslate"><span class="pre">super().__init__()</span></code></p>
 <dl class="py method">
 <dt id="valkka.multiprocess.base.MessageProcess.c__ping">
 <code class="sig-name descname"><span class="pre">c__ping</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/valkka/multiprocess/base.html#MessageProcess.c__ping"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#valkka.multiprocess.base.MessageProcess.c__ping" title="Permalink to this definition">¶</a></dt>
@@ -290,9 +291,10 @@ It’s recommended to use the <code class="docutils literal notranslate"><span c
 </div>
 <div class="section" id="asyncbackmessageprocess">
 <span id="asyncio"></span><h2>AsyncBackMessageProcess<a class="headerlink" href="#asyncbackmessageprocess" title="Permalink to this headline">¶</a></h2>
+<p><em>Warning: understanding of asyncio required</em></p>
 <p>Identical to <code class="docutils literal notranslate"><span class="pre">MessageProcess</span></code> class, but now the forked process (aka backend) runs
 asyncio:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">valkka.multiprocess</span> <span class="kn">import</span> <span class="n">AsyncBackMessageProcess</span><span class="p">,</span> <span class="n">MessageObject</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">valkka.multiprocess</span> <span class="kn">import</span> <span class="n">AsyncBackMessageProcess</span><span class="p">,</span> <span class="n">MessageObject</span><span class="p">,</span> <span class="n">exclog</span>
 
 <span class="k">class</span> <span class="nc">MyProcess</span><span class="p">(</span><span class="n">AsyncBackMessageProcess</span><span class="p">):</span>
 
@@ -315,7 +317,28 @@ asyncio:</p>
 <span class="n">p</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>Please, note the small “glitch” in the API when getting the file descriptor for reading: you need to call <code class="docutils literal notranslate"><span class="pre">getReadFd</span></code> to get the file descriptor.</p>
+<p>The whole idea of using asyncio python, is to solve the problem of simultaneous, blocking i/o operations.  In the above example, we don’t
+yet achieve that i/o concurrency: if you would call <code class="docutils literal notranslate"><span class="pre">myStuff</span></code> consecutively twice, the asyncio backend will await the completion of <code class="docutils literal notranslate"><span class="pre">c__myStuff</span></code> before
+executing and awaiting it for the second time.</p>
+<p>To achieve non-blocking behaviour for i/o operations, you should use (background) tasks instead.  Here is one way to do that:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MyProcess</span><span class="p">(</span><span class="n">AsyncBackMessageProcess</span><span class="p">):</span>
+
+    <span class="nd">@exclog</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">myStuff__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameter</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Regards from other side of the fork!  Got parameter&quot;</span><span class="p">,</span> <span class="n">parameter</span><span class="p">)</span>
+        <span class="c1"># DO SOME BLOCKING IO HERE</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Did that blocking io wait&quot;</span><span class="p">)</span>
+
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">c__myStuff</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameter</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">myStuff__</span><span class="p">(</span><span class="n">parameter</span><span class="o">=</span><span class="n">parameter</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">myStuff</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameter</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sendMessageToBack</span><span class="p">(</span><span class="n">MessageObject</span><span class="p">(</span>
+            <span class="s2">&quot;myStuff&quot;</span><span class="p">,</span> <span class="n">parameter</span><span class="o">=</span><span class="n">parameter</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>For a handy way to achieve asyncio concurrency (without <code class="docutils literal notranslate"><span class="pre">asyncio.gather</span></code> etc. techniques), please see <a class="reference external" href="https://elsampsa.github.io/task_thread/_build/html/index.html">TaskThread</a>.</p>
+<p>Finally, please, note the small “glitch” in the API when getting the file descriptor for reading: you need to call <code class="docutils literal notranslate"><span class="pre">getReadFd</span></code> to get the file descriptor.</p>
 <dl class="py class">
 <dt id="valkka.multiprocess.base.AsyncBackMessageProcess">
 <em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">valkka.multiprocess.base.</span></code><code class="sig-name descname"><span class="pre">AsyncBackMessageProcess</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'AsyncMessageProcess'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/valkka/multiprocess/base.html#AsyncBackMessageProcess"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#valkka.multiprocess.base.AsyncBackMessageProcess" title="Permalink to this definition">¶</a></dt>
@@ -325,6 +348,7 @@ asyncio:</p>
 <dd class="field-odd"><p><strong>name</strong> – multiprocess name</p>
 </dd>
 </dl>
+<p>NOTE: when subclassing <code class="docutils literal notranslate"><span class="pre">__init__</span></code>, remember to call therein <code class="docutils literal notranslate"><span class="pre">super().__init__()</span></code></p>
 <dl class="py method">
 <dt id="valkka.multiprocess.base.AsyncBackMessageProcess.asyncPost__">
 <em class="property"><span class="pre">async</span> </em><code class="sig-name descname"><span class="pre">asyncPost__</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/valkka/multiprocess/base.html#AsyncBackMessageProcess.asyncPost__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#valkka.multiprocess.base.AsyncBackMessageProcess.asyncPost__" title="Permalink to this definition">¶</a></dt>
