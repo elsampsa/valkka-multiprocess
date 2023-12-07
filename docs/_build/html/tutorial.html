@@ -1,22 +1,27 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tutorial - start here ! &mdash; Valkka Multiprocess  documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <title>Tutorial - start here ! &mdash; Valkka Multiprocess  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/doctools.js"></script>
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <!-- as per https://stackoverflow.com/questions/23211695/modifying-content-width-of-the-sphinx-theme-read-the-docs -->
-    <link href="_static/rtd_override.css" rel="stylesheet" type="text/css">
+<!-- as per https://stackoverflow.com/questions/23211695/modifying-content-width-of-the-sphinx-theme-read-the-docs -->
+<link href="_static/rtd_override.css" rel="stylesheet" type="text/css">
+<script src="https://kit.fontawesome.com/1f90d3565b.js" crossorigin="anonymous"></script>
 
 </head>
 
@@ -26,7 +31,22 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-  <a href="index.html"><img src="_static/valkka.png" class="logo" alt="Logo"/>
+
+<!--
+  <a href="index.html" class="icon icon-home"> Valkka Multiprocess
+-->
+
+<!--
+
+NO LOGO
+-->
+
+<!--
+NOTE: we are starting to have "version creep" here..  at the moment, with Sphinx==7.2.6 and sphinx-rtd-theme==1.3.0 the only thing that
+works is this:
+-->
+<a href="index.html">
+<img src="_static/logo.png" class="logo" style="width: 200px; height: auto; border-radius: 0px 6px 6px 0px;" alt="Logo"/>
 </a>
     <div class="version">
       1.6.1
@@ -34,13 +54,13 @@
 
 
 <!-- font awesome comes with the rtd package.. use like this:-->
-<a href="https://github.com/elsampsa/cute-forms" class="icon icon-github"> CuteForms @ github</a>
-<a href="https://github.com/elsampsa/cute-forms/issues" class="fa fa-bug"> Issue Tracker @ github</a>
-
+<a href="https://github.com/elsampsa/valkka-multiprocess" target="_blank" rel="noopener noreferrer"> <i class="fa-brands fa-github"></i> Valkka Multiprocess @ github</a>
+<a href="https://github.com/elsampsa/valkka-multiprocess/issues" target="_blank" rel="noopener noreferrer"> <i class="fas fa-bug"></i> Issue Tracker @ github</a>
+<a href="https://discord.com/channels/1116100310574837812/1116101478235521205" target="_blank" rel="noopener noreferrer"> <i class="fa-brands fa-discord"></i> Discord </a>
 <!-- don't even think about subclassing searchbox.html .. will never work!-->
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -69,7 +89,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
       <li class="breadcrumb-item active">Tutorial - start here !</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/tutorial.rst.txt" rel="nofollow"> View page source</a>
@@ -80,8 +100,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <span class="target" id="about"></span><div class="section" id="tutorial-start-here">
-<h1>Tutorial - start here !<a class="headerlink" href="#tutorial-start-here" title="Permalink to this headline">¶</a></h1>
+  <span class="target" id="about"></span><section id="tutorial-start-here">
+<h1>Tutorial - start here !<a class="headerlink" href="#tutorial-start-here" title="Link to this heading"></a></h1>
 <p>Well, this module does actually nothing.</p>
 <p>It’s a valkka_multiprocess module that servers as a template for python3 projects:</p>
 <a class="reference internal image-reference" href="_images/skull.png"><img alt="_images/skull.png" src="_images/skull.png" style="width: 10%;" /></a>
@@ -100,8 +120,8 @@
 <li><p>Proper logging (never optional!)</p></li>
 </ul>
 </div></blockquote>
-<div class="section" id="what-s-in-it">
-<span id="impatient"></span><h2>What’s in it?<a class="headerlink" href="#what-s-in-it" title="Permalink to this headline">¶</a></h2>
+<section id="what-s-in-it">
+<span id="impatient"></span><h2>What’s in it?<a class="headerlink" href="#what-s-in-it" title="Link to this heading"></a></h2>
 <p>Let’s take a closer look at the directory structure:</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>valkka_multiprocess/               # python package dir
     setup.py            # standard python install script
@@ -167,17 +187,17 @@ microservice-3/     # as git submodule
 </pre></div>
 </div>
 <p>For more info about git submodules, please see <a class="reference external" href="https://gist.github.com/gitaarik/8735255">this</a>.</p>
-</div>
-<div class="section" id="creating-your-own-package">
-<h2>Creating Your Own Package<a class="headerlink" href="#creating-your-own-package" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="creating-your-own-package">
+<h2>Creating Your Own Package<a class="headerlink" href="#creating-your-own-package" title="Link to this heading"></a></h2>
 <p>Let’s suppose your name is <em>Janne Jantunen</em> and you have decided to create a new package named <em>your_package_name</em>.  Proceed like this:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git clone https://github.com/elsampsa/valkka_multiprocess
-mv valkka_multiprocess your_package_name
-<span class="nb">cd</span> your_package_name <span class="c1"># the self-contained python package dir</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/elsampsa/valkka_multiprocess
+mv<span class="w"> </span>valkka_multiprocess<span class="w"> </span>your_package_name
+<span class="nb">cd</span><span class="w"> </span>your_package_name<span class="w"> </span><span class="c1"># the self-contained python package dir</span>
 bash/reinit.bash
 bash/cleanpy.bash
-bash/setauthor.bash <span class="s2">&quot;Janne Jantunen&quot;</span>
-bash/setver.bash <span class="m">0</span> <span class="m">0</span> <span class="m">1</span>
+bash/setauthor.bash<span class="w"> </span><span class="s2">&quot;Janne Jantunen&quot;</span>
+bash/setver.bash<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="m">1</span>
 </pre></div>
 </div>
 <p>That should change all occurrences of “valkka_multiprocess” (in the file and directory names and inside the files)
@@ -185,13 +205,13 @@ into “your_package_name”, among other things.</p>
 <p>If you don’t wan’t the cpp extensions, edit <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> &amp; comment the cpp section away.</p>
 <p>If you want to use the provided dockerization scheme (see above), run next:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>bash/dockerize.bash
-<span class="nb">cd</span> your_package_name
+<span class="nb">cd</span><span class="w"> </span>your_package_name
 </pre></div>
 </div>
 <p>Which will create series of directories and softlinks</p>
 <p>Finally, run this command:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> your_package_name
-pip3 install --user -e .
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>your_package_name
+pip3<span class="w"> </span>install<span class="w"> </span>--user<span class="w"> </span>-e<span class="w"> </span>.
 </pre></div>
 </div>
 <p>This way your package is installed in the “editable mode” (that extra “-e”).  It creates link from the python package directory (in linux, look for <code class="docutils literal notranslate"><span class="pre">$HOME/.local/lib/python3.x/site-packages/*.egg-link</span></code> files)
@@ -199,8 +219,8 @@ to your local directory.  Now python’s package system can find your module.</p
 <p>If you did not use the <code class="docutils literal notranslate"><span class="pre">-e</span></code> switch, it would simply create a copy of your code and place it into the python package directory and your future changes to the codebase would not
 be updated.</p>
 <p>Now you can try these commands:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>your_package_name -h
-your_package_name-service -h
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>your_package_name<span class="w"> </span>-h
+your_package_name-service<span class="w"> </span>-h
 </pre></div>
 </div>
 <p>They map to <code class="docutils literal notranslate"><span class="pre">your_package_name/your_package_name/cli.py</span></code> and <code class="docutils literal notranslate"><span class="pre">service.py</span></code> (look into <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> how this mapping is done).</p>
@@ -208,37 +228,37 @@ your_package_name-service -h
 uses an <code class="docutils literal notranslate"><span class="pre">.ini</span></code> file for configuration and sensitive information.</p>
 <p>You can mod the documentation by editing <code class="docutils literal notranslate"><span class="pre">.rst</span></code> files in the <code class="docutils literal notranslate"><span class="pre">docs/</span></code> directory.  The idea is that you hide/delete this page (<code class="docutils literal notranslate"><span class="pre">tutorial.rst</span></code>) from your own module.</p>
 <p>After installing the package, you can re-compile and check the documentation with</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> docs
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>docs
 ./compile.bash
-<span class="nb">cd</span> ..
-firefox docs/index.html
+<span class="nb">cd</span><span class="w"> </span>..
+firefox<span class="w"> </span>docs/index.html
 </pre></div>
 </div>
 <p>If you want to push your newly minted python project into a git repo, do:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git init
-git remote add origin https://<span class="o">[</span>your-personal-git-repository<span class="o">]</span>/your_package_name.git
-git add *
-git commit -m <span class="s2">&quot;initial commit&quot;</span>
-git push -u origin master
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>init
+git<span class="w"> </span>remote<span class="w"> </span>add<span class="w"> </span>origin<span class="w"> </span>https://<span class="o">[</span>your-personal-git-repository<span class="o">]</span>/your_package_name.git
+git<span class="w"> </span>add<span class="w"> </span>*
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;initial commit&quot;</span>
+git<span class="w"> </span>push<span class="w"> </span>-u<span class="w"> </span>origin<span class="w"> </span>master
 </pre></div>
 </div>
 <p>NOTE: be sure just to do this to the python package directory and not for the whole dockerization directory scheme if you use that.</p>
 <p>Please note the file <code class="docutils literal notranslate"><span class="pre">.gitignore</span></code> for the files we do <em>not</em> want into our package.</p>
 <p>The name of your package (that is also the name of your python module) should not contain “weird characters”, i.e. “.,-” etc.</p>
 <p>Git tags can be added with:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git tag v1.2 -m <span class="s2">&quot;cool version v1.2&quot;</span>
-git push origin --tags
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>tag<span class="w"> </span>v1.2<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;cool version v1.2&quot;</span>
+git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>--tags
 </pre></div>
 </div>
 <p>However, it’s recommended to use the <code class="docutils literal notranslate"><span class="pre">bash/git_tag.bash</span></code> script together with the <code class="docutils literal notranslate"><span class="pre">bash/setver.bash</span></code> script</p>
 <p>Now production users can install with pip3 certain revisions of the software (see <span class="xref std std-ref">here</span>)</p>
-</div>
-<div class="section" id="docker">
-<h2>Docker<a class="headerlink" href="#docker" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="docker">
+<h2>Docker<a class="headerlink" href="#docker" title="Link to this heading"></a></h2>
 <p>If you ran the dockerization script, your directory structure should look like explained in <a class="reference internal" href="#docker-scheme"><span class="std std-ref">here</span></a>.
 In order to build the docker image and create a running container, simply run in the main directory:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>dev.bash build
-dev.bash up
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>dev.bash<span class="w"> </span>build
+dev.bash<span class="w"> </span>up
 </pre></div>
 </div>
 <p>The C++ extension is put on the docker image,
@@ -259,22 +279,18 @@ while all other code is read from local directory via a shared docker mount.</p>
         ...            #
 </pre></div>
 </div>
-</div>
-<div class="section" id="dependencies">
-<h2>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="dependencies">
+<h2>Dependencies<a class="headerlink" href="#dependencies" title="Link to this heading"></a></h2>
 <p>Keep them up-to-date in <code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code></p>
-</div>
-<div class="section" id="files">
-<h2>Files<a class="headerlink" href="#files" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="files">
+<h2>Files<a class="headerlink" href="#files" title="Link to this heading"></a></h2>
 <p>This page has been produced with the file <code class="docutils literal notranslate"><span class="pre">valkka_multiprocess/docs/tutorial.rst</span></code>.  Go ahead and open it in your editor.  Open also “index.rst”.  Edit them accordingly.
 Said that, let’s take a closer look at the directory structure (in the following <code class="docutils literal notranslate"><span class="pre">valkka_multiprocess</span></code> is synonymous to <code class="docutils literal notranslate"><span class="pre">your_package_name</span></code>):</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">valkka_multiprocess/</span></code> : This is the python package directory</p>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 11%" />
-<col style="width: 89%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p>README.md</p></td>
 <td><p>Readme file in online markdown format (nice for github). Play around with online markdown <a class="reference external" href="https://stackedit.io/editor">here</a></p></td>
@@ -304,10 +320,6 @@ for example, installs build environment &amp; swig that you need to install the 
 </li>
 <li><p><code class="docutils literal notranslate"><span class="pre">bash/</span></code> : Some helper scripts</p>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 12%" />
-<col style="width: 88%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p>dockerize.bash</p></td>
 <td><p>Creates a docker-compose “wireframe” directory structure around your python package</p></td>
@@ -353,10 +365,6 @@ for example, installs build environment &amp; swig that you need to install the 
 </li>
 <li><p><code class="docutils literal notranslate"><span class="pre">valkka_multiprocess/docs/</span></code>  : Documentation and autogenerated documentation lives here</p>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 11%" />
-<col style="width: 89%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p>index.html</p></td>
 <td><p>Redirects to the autogenerated html [don’t touch]</p></td>
@@ -408,10 +416,6 @@ for example, installs build environment &amp; swig that you need to install the 
 </li>
 <li><p><code class="docutils literal notranslate"><span class="pre">valkka_multiprocess/valkka_multiprocess</span></code> : Python source code directory</p>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 11%" />
-<col style="width: 89%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p>__init__.py</p></td>
 <td><p>Python module initialization</p></td>
@@ -433,12 +437,12 @@ for using Sphinx and here <a class="reference external" href="http://www.sphinx-
 </pre></div>
 </div>
 <p>To see your documentation, launch</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>firefox index.html
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>firefox<span class="w"> </span>index.html
 </pre></div>
 </div>
-</div>
-<div class="section" id="online-autodocumentation">
-<h2>Online autodocumentation<a class="headerlink" href="#online-autodocumentation" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="online-autodocumentation">
+<h2>Online autodocumentation<a class="headerlink" href="#online-autodocumentation" title="Link to this heading"></a></h2>
 <p><strong>Github users</strong></p>
 <p>After creating the git repo, create also a site for your project like this:  Settings =&gt; GitHub pages =&gt; Source : master branch / docs folder =&gt; press Save.  Now your documentation is online in github! (don’t forget to include the “docs/” folder into git).</p>
 <p><strong>Gitlab users</strong></p>
@@ -457,9 +461,9 @@ for using Sphinx and here <a class="reference external" href="http://www.sphinx-
 <li><p>You still need to use git to add and push all the files to the wiki repository online (there are instructions in “compile.bash”)</p></li>
 </ul>
 </div></blockquote>
-</div>
-<div class="section" id="organize-with-namespaces">
-<h2>Organize with namespaces<a class="headerlink" href="#organize-with-namespaces" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="organize-with-namespaces">
+<h2>Organize with namespaces<a class="headerlink" href="#organize-with-namespaces" title="Link to this heading"></a></h2>
 <p>You can also organize your module under namespaces.  Read more about it <a class="reference external" href="https://packaging.python.org/guides/packaging-namespace-packages/">here</a>.</p>
 <p>Let’s assume two modules</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>namespace_subpackage1/
@@ -488,9 +492,9 @@ for using Sphinx and here <a class="reference external" href="http://www.sphinx-
 <span class="kn">from</span> <span class="nn">namespace.subpackage2</span> <span class="kn">import</span> <span class="n">something_else</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="code-organization">
-<h2>Code Organization<a class="headerlink" href="#code-organization" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="code-organization">
+<h2>Code Organization<a class="headerlink" href="#code-organization" title="Link to this heading"></a></h2>
 <p>This tutorial comes with a module that has a single submodule called “greeters” that is organized as follows:</p>
 <dl>
 <dt>greeters</dt><dd><div class="line-block">
@@ -513,38 +517,38 @@ for using Sphinx and here <a class="reference external" href="http://www.sphinx-
 methods therein.</p>
 <p>The file <code class="docutils literal notranslate"><span class="pre">cli.py</span></code> is the command-line entry point for the whole application.  See in <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> how
 you can map a command into <code class="docutils literal notranslate"><span class="pre">cli.py</span></code>.</p>
-</div>
-<div class="section" id="packaging">
-<h2>Packaging<a class="headerlink" href="#packaging" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="packaging">
+<h2>Packaging<a class="headerlink" href="#packaging" title="Link to this heading"></a></h2>
 <p>If you have done everything as instructed here, creating a distributable python package can be done as follows:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> your_package_name
-python3 setup.py sdist
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>your_package_name
+python3<span class="w"> </span>setup.py<span class="w"> </span>sdist
 </pre></div>
 </div>
 <p>Your distributable python package is now in directory “dist/”.  You can install it with:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip3 install --upgrade dist/your_package_name-version.tar.gz
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip3<span class="w"> </span>install<span class="w"> </span>--upgrade<span class="w"> </span>dist/your_package_name-version.tar.gz
 </pre></div>
 </div>
 <p>The setup.py script automatically finds and includes python packages to the distribution package.  In “MANIFEST.in” we also tell it to include the complete “docs/” directory and an auxiliary file from the “greeters” submodule.  See “setup.py” for more instructions.</p>
 <p>Polish your setup script with the following cycle:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>rm dist/*
-python3 setup.py sdist
-pip3 install --user --upgrade --verbose dist/your_package_name-version.tar.gz
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>rm<span class="w"> </span>dist/*
+python3<span class="w"> </span>setup.py<span class="w"> </span>sdist
+pip3<span class="w"> </span>install<span class="w"> </span>--user<span class="w"> </span>--upgrade<span class="w"> </span>--verbose<span class="w"> </span>dist/your_package_name-version.tar.gz
 </pre></div>
 </div>
 <p>The verbose option is nice to see any problems, with say, your post-installing script defined in setup.py.  Once you have got rid of all the errors, you can be sure that it works also when people install your python package directly from git using pip3.</p>
-</div>
-<div class="section" id="package-testing">
-<h2>Package testing<a class="headerlink" href="#package-testing" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="package-testing">
+<h2>Package testing<a class="headerlink" href="#package-testing" title="Link to this heading"></a></h2>
 <p>When testing the pip3 installation, use virtualenv to see that you got the dependencies right.  First, create a virtualenv:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>virtualenv --no-site-packages -p python3 <span class="nb">test</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>virtualenv<span class="w"> </span>--no-site-packages<span class="w"> </span>-p<span class="w"> </span>python3<span class="w"> </span><span class="nb">test</span>
 </pre></div>
 </div>
 <p>Then let’s use that virtualenv (we also clean up PYTHONPATH) to test your production system:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> <span class="nb">test</span>
-<span class="nb">source</span> bin/activate
-<span class="nb">export</span> <span class="nv">PYTHONPATH</span><span class="o">=</span>
-pip3 install --user --upgrade git+git://<span class="o">[</span>your-personal-git-repository<span class="o">]</span>/your_package_name
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span><span class="nb">test</span>
+<span class="nb">source</span><span class="w"> </span>bin/activate
+<span class="nb">export</span><span class="w"> </span><span class="nv">PYTHONPATH</span><span class="o">=</span>
+pip3<span class="w"> </span>install<span class="w"> </span>--user<span class="w"> </span>--upgrade<span class="w"> </span>git+git://<span class="o">[</span>your-personal-git-repository<span class="o">]</span>/your_package_name
 </pre></div>
 </div>
 <p>See <a class="reference internal" href="requirements.html#started"><span class="std std-ref">here</span></a> how the end-user would be using your python module directly from git.</p>
@@ -552,11 +556,11 @@ pip3 install --user --upgrade git+git://<span class="o">[</span>your-personal-gi
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>deactivate
 </pre></div>
 </div>
-</div>
-<div class="section" id="pypi">
-<h2>PyPi<a class="headerlink" href="#pypi" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="pypi">
+<h2>PyPi<a class="headerlink" href="#pypi" title="Link to this heading"></a></h2>
 <p>By uploading your python package to PyPi (Python Package Index), end users can install it simply with</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip3 install --user packagename
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip3<span class="w"> </span>install<span class="w"> </span>--user<span class="w"> </span>packagename
 </pre></div>
 </div>
 <p>To use the python package repositories, follow these steps:</p>
@@ -589,35 +593,35 @@ password = a_very_long_token
 <ol class="arabic simple" start="3">
 <li><p>Install twine</p></li>
 </ol>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip3 install --user twine
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip3<span class="w"> </span>install<span class="w"> </span>--user<span class="w"> </span>twine
 </pre></div>
 </div>
 <p>Now you can use the scripts <em>test_upload.bash</em> and <em>upload.bash</em> to send your package to the python (test) repository (first, edit those scripts).</p>
 <p>To install from test repository (instead of the official one), use:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip3 install --user --extra-index-url https://testpypi.python.org/pypi packagename
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip3<span class="w"> </span>install<span class="w"> </span>--user<span class="w"> </span>--extra-index-url<span class="w"> </span>https://testpypi.python.org/pypi<span class="w"> </span>packagename
 </pre></div>
 </div>
-</div>
-<div class="section" id="debian-packaging">
-<h2>Debian packaging<a class="headerlink" href="#debian-packaging" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="debian-packaging">
+<h2>Debian packaging<a class="headerlink" href="#debian-packaging" title="Link to this heading"></a></h2>
 <p>Create a .deb package like this:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make -f debian/rules package
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span>-f<span class="w"> </span>debian/rules<span class="w"> </span>package
 </pre></div>
 </div>
-</div>
-<div class="section" id="uploading-to-an-ubuntu-ppa">
-<h2>Uploading to an Ubuntu PPA<a class="headerlink" href="#uploading-to-an-ubuntu-ppa" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="uploading-to-an-ubuntu-ppa">
+<h2>Uploading to an Ubuntu PPA<a class="headerlink" href="#uploading-to-an-ubuntu-ppa" title="Link to this heading"></a></h2>
 <p>Start like this:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>debuild -S -sa
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>debuild<span class="w"> </span>-S<span class="w"> </span>-sa
 </pre></div>
 </div>
 <p>Now in the upper level directory you will have the file <em>valkka_multiprocess_0.0.0-0ubuntu1-bionicppa1_source.changes</em>.  You can send it to your Ubuntu PPA (personal package archive) with:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>dput ppa:your-name/your-repo valkka_multiprocess_0.0.0-0ubuntu1-bionicppa1_source.changes
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>dput<span class="w"> </span>ppa:your-name/your-repo<span class="w"> </span>valkka_multiprocess_0.0.0-0ubuntu1-bionicppa1_source.changes
 </pre></div>
 </div>
-</div>
-<div class="section" id="example-snippets">
-<h2>Example snippets<a class="headerlink" href="#example-snippets" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="example-snippets">
+<h2>Example snippets<a class="headerlink" href="#example-snippets" title="Link to this heading"></a></h2>
 <p>The following python code can be downloaded from <a class="reference download internal" download="" href="_downloads/86df3b757703bdb72f25c7a8471a46ba/example1.py"><code class="xref download docutils literal notranslate"><span class="pre">[here]</span></code></a></p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">valkka_multiprocess.greeters</span> <span class="kn">import</span> <span class="n">FancyHelloWorld</span>
 <span class="c1"># let&#39;s create an instance</span>
@@ -627,37 +631,37 @@ password = a_very_long_token
 </pre></div>
 </div>
 <p>Check out directory “docs/snippets/”.  It serves as a collection for small example programs.  Open and edit “form_snippets.bash” there.  You can then run it.  Remember to recompile the documentation once you’ve run that script.</p>
-</div>
-<div class="section" id="notebooks">
-<h2>Notebooks<a class="headerlink" href="#notebooks" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="notebooks">
+<h2>Notebooks<a class="headerlink" href="#notebooks" title="Link to this heading"></a></h2>
 <p>Notebooks can used for interactive code development and testing!</p>
 <p>Go to directory <code class="docutils literal notranslate"><span class="pre">notebook</span></code> and run there:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>jupyter notebook
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>jupyter<span class="w"> </span>notebook
 </pre></div>
 </div>
 <p>Open the example notebook.
 Observe how neatly you can do interactive code development with notebooks.
 The example notebook also shows how to use the installed python package (including the cpp extensions)</p>
-</div>
-<div class="section" id="miscellaneous">
-<h2>Miscellaneous<a class="headerlink" href="#miscellaneous" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="miscellaneous">
+<h2>Miscellaneous<a class="headerlink" href="#miscellaneous" title="Link to this heading"></a></h2>
 <ul class="simple">
 <li><p>Check out in the source code, how I init and check a large number of parameters in the constructor</p></li>
 <li><p>To keep your code clean and PEP8 compliant, there’s a nice tool called “autopep8”, install with:</p></li>
 </ul>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip3 install --user autopep8
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip3<span class="w"> </span>install<span class="w"> </span>--user<span class="w"> </span>autopep8
 </pre></div>
 </div>
 <p>Now you can fix a python file like this:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>autopep8 --aggressive --in-place yourfile.py
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>autopep8<span class="w"> </span>--aggressive<span class="w"> </span>--in-place<span class="w"> </span>yourfile.py
 </pre></div>
 </div>
-</div>
-<div class="section" id="internal-links">
-<h2>Internal links<a class="headerlink" href="#internal-links" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="internal-links">
+<h2>Internal links<a class="headerlink" href="#internal-links" title="Link to this heading"></a></h2>
 <p>Remember that reference we did up there?  Here is a <a class="reference internal" href="intro.html#intro"><span class="std std-ref">link</span></a> to it.</p>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>

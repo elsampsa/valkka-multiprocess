@@ -3,15 +3,18 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>valkka.multiprocess.base &mdash; Valkka Multiprocess  documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <title>valkka.multiprocess.base &mdash; Valkka Multiprocess  documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/doctools.js"></script>
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
@@ -26,21 +29,32 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-  <a href="../../../index.html"><img src="../../../_static/valkka.png" class="logo" alt="Logo"/>
+
+<!--
+  <a href="../../../index.html" class="icon icon-home"> Valkka Multiprocess
+-->
+
+<!--
+
+NO LOGO
+-->
+
+<img src="../../../_static/logo.png" class="logo" height="300px", alt="Logo"/>
+
 </a>
     <div class="version">
-      0.0.0
+      1.6.1
     </div>
 
 
 <!-- font awesome comes with the rtd package.. use like this:-->
-<a href="https://github.com/elsampsa/cute-forms" class="icon icon-github"> CuteForms @ github</a>
-<a href="https://github.com/elsampsa/cute-forms/issues" class="fa fa-bug"> Issue Tracker @ github</a>
+<a href="https://github.com/elsampsa/valkka_multiprocess" class="icon icon-github"> Valkka Multiprocess @ github</a>
+<a href="https://github.com/elsampsa/valkka_multiprocess/issues" class="fa fa-bug"> Issue Tracker @ github</a>
 
 <!-- don't even think about subclassing searchbox.html .. will never work!-->
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -69,7 +83,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
       <li class="breadcrumb-item active">valkka.multiprocess.base</li>
       <li class="wy-breadcrumbs-aside">
@@ -102,7 +116,7 @@
 <span class="sd">@file    base.py</span>
 <span class="sd">@author  Sampsa Riikonen</span>
 <span class="sd">@date    2020</span>
-<span class="sd">@version 1.5.2 </span>
+<span class="sd">@version 1.6.1 </span>
 
 <span class="sd">@brief   A simple multiprocessing framework with back- and frontend and pipes communicating between them</span>
 <span class="sd">&quot;&quot;&quot;</span>
@@ -113,14 +127,17 @@
 <span class="kn">import</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">signal</span><span class="o">,</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">pickle</span><span class="o">,</span> <span class="nn">math</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">asyncio</span>
+<span class="kn">import</span> <span class="nn">traceback</span>
 
 <span class="c1"># from valkka.api2.tools import getLogger, setLogger</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="safe_select"><a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.base.safe_select">[docs]</a><span class="k">def</span> <span class="nf">safe_select</span><span class="p">(</span><span class="n">l1</span><span class="p">,</span> <span class="n">l2</span><span class="p">,</span> <span class="n">l3</span><span class="p">,</span> <span class="n">timeout</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Like select.select, but ignores EINTR</span>
+<div class="viewcode-block" id="safe_select">
+<a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.base.safe_select">[docs]</a>
+<span class="k">def</span> <span class="nf">safe_select</span><span class="p">(</span><span class="n">l1</span><span class="p">,</span> <span class="n">l2</span><span class="p">,</span> <span class="n">l3</span><span class="p">,</span> <span class="n">timeout</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Like select.select, but ignores EINTR</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">timeout</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -136,8 +153,11 @@
         <span class="k">return</span> <span class="n">res</span>  <span class="c1"># read socket</span></div>
 
 
-<div class="viewcode-block" id="MessageObject"><a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.base.MessageObject">[docs]</a><span class="k">class</span> <span class="nc">MessageObject</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;A generic MessageObject for intercommunication between</span>
+
+<div class="viewcode-block" id="MessageObject">
+<a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.base.MessageObject">[docs]</a>
+<span class="k">class</span> <span class="nc">MessageObject</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A generic MessageObject for intercommunication between</span>
 <span class="sd">    fronend (main python process) and backend (forked multiprocess).</span>
 <span class="sd">    </span>
 <span class="sd">    Encapsulates a command and parameters</span>
@@ -168,8 +188,11 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="p">[</span><span class="n">key</span><span class="p">]</span></div>
 
 
-<div class="viewcode-block" id="MessageProcess"><a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.base.MessageProcess">[docs]</a><span class="k">class</span> <span class="nc">MessageProcess</span><span class="p">(</span><span class="n">Process</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Encapsulates:</span>
+
+<div class="viewcode-block" id="MessageProcess">
+<a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.base.MessageProcess">[docs]</a>
+<span class="k">class</span> <span class="nc">MessageProcess</span><span class="p">(</span><span class="n">Process</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Encapsulates:</span>
 
 <span class="sd">    - Frontend methods (in the current main process)</span>
 <span class="sd">    - Backend methods (that run in the background/forked process)</span>
@@ -180,6 +203,8 @@
 <span class="sd">    (aka backend) tries to find and execute the method ``c__myStuff`` in the backend.</span>
 
 <span class="sd">    :param name: name of the multiprocess</span>
+
+<span class="sd">    NOTE: when subclassing ``__init__``, remember to call therein ``super().__init__()``</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">timeout</span> <span class="o">=</span> <span class="mf">1.0</span>
 
@@ -194,9 +219,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">listening</span> <span class="o">=</span> <span class="kc">False</span> <span class="c1"># are we listening something else than just the intercom pipes?</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sigint</span> <span class="o">=</span> <span class="kc">True</span>
 
-<div class="viewcode-block" id="MessageProcess.formatLogger"><a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.base.MessageProcess.formatLogger">[docs]</a>    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="MessageProcess.formatLogger">
+<a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.base.MessageProcess.formatLogger">[docs]</a>
+    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">formatLogger</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">level</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;A helper to setup logger formatter</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;A helper to setup logger formatter</span>
 
 <span class="sd">        Sets loglevel to the automatically created logger ``self.logger`` </span>
 <span class="sd">        (that has the name ``classname.name``)</span>
@@ -213,14 +240,17 @@
             <span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">level</span><span class="p">)</span></div>
 
 
+
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;&lt;&quot;</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">pre</span><span class="o">+</span><span class="s2">&quot;&gt;&quot;</span>
 
     <span class="k">def</span> <span class="nf">setDebug</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
 
-<div class="viewcode-block" id="MessageProcess.preRun__"><a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.base.MessageProcess.preRun__">[docs]</a>    <span class="k">def</span> <span class="nf">preRun__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Multiprocessing backend method: subclass if needed</span>
+<div class="viewcode-block" id="MessageProcess.preRun__">
+<a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.base.MessageProcess.preRun__">[docs]</a>
+    <span class="k">def</span> <span class="nf">preRun__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Multiprocessing backend method: subclass if needed</span>
 <span class="sd">        </span>
 <span class="sd">        Everything that needs to be done *after the fork* (i.e. in the backend), but *before*</span>
 <span class="sd">        the multiprocesses&#39; main listening &amp; execution loop starts running.</span>
@@ -229,8 +259,11 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
 
-<div class="viewcode-block" id="MessageProcess.postRun__"><a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.base.MessageProcess.postRun__">[docs]</a>    <span class="k">def</span> <span class="nf">postRun__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Multiprocessing backend method: subclass if needed</span>
+
+<div class="viewcode-block" id="MessageProcess.postRun__">
+<a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.base.MessageProcess.postRun__">[docs]</a>
+    <span class="k">def</span> <span class="nf">postRun__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Multiprocessing backend method: subclass if needed</span>
 <span class="sd">        </span>
 <span class="sd">        Everything that needs to be done *after the fork* (i.e. in the backend), and right *after*</span>
 <span class="sd">        the multiprocess has exited it&#39;s main listening &amp; execution loop, i.e. just before the multiprocess exits</span>
@@ -240,10 +273,13 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
 
+
     <span class="c1"># **** backend ****</span>
 
-<div class="viewcode-block" id="MessageProcess.run"><a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.base.MessageProcess.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Multiprocessing backend method: the main listening &amp; execution loop.  Normally you would not subclass this one.</span>
+<div class="viewcode-block" id="MessageProcess.run">
+<a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.base.MessageProcess.run">[docs]</a>
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Multiprocessing backend method: the main listening &amp; execution loop.  Normally you would not subclass this one.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sigint</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
             <span class="n">signal</span><span class="o">.</span><span class="n">signal</span><span class="p">(</span><span class="n">signal</span><span class="o">.</span><span class="n">SIGINT</span><span class="p">,</span> <span class="n">signal</span><span class="o">.</span><span class="n">SIG_IGN</span><span class="p">)</span> <span class="c1"># handle in master process correctly</span>
@@ -259,8 +295,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">postRun__</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="MessageProcess.readPipes__"><a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.base.MessageProcess.readPipes__">[docs]</a>    <span class="k">def</span> <span class="nf">readPipes__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Multiprocessing backend method: listen simultaneously (i.e. &quot;multiplex&quot;) all intercom pipes.</span>
+
+<div class="viewcode-block" id="MessageProcess.readPipes__">
+<a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.base.MessageProcess.readPipes__">[docs]</a>
+    <span class="k">def</span> <span class="nf">readPipes__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Multiprocessing backend method: listen simultaneously (i.e. &quot;multiplex&quot;) all intercom pipes.</span>
 
 <span class="sd">        If you need to listen additionally anything else than the normal intercom pipe, please subclass this one.</span>
 
@@ -272,11 +311,12 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">back_pipe</span> <span class="ow">in</span> <span class="n">r</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">handleBackPipe__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">back_pipe</span><span class="p">)</span>    
             <span class="n">r</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">back_pipe</span><span class="p">)</span></div>
+
         <span class="c1"># in your subclass, handle rest of the pipes</span>
 
 
     <span class="k">def</span> <span class="nf">handleBackPipe__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Route message to correct method</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Route message to correct method</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">ok</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">try</span><span class="p">:</span>
@@ -289,7 +329,7 @@
 
 
     <span class="k">def</span> <span class="nf">routeMainPipe__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Object from main pipe:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Object from main pipe:</span>
 <span class="sd">            </span>
 <span class="sd">        - object.command</span>
 <span class="sd">        - object.kwargs</span>
@@ -312,11 +352,14 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;routeMainPipe : no such method </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span><span class="p">(</span><span class="n">method_name</span><span class="p">))</span>
 
 
-<div class="viewcode-block" id="MessageProcess.send_out__"><a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.base.MessageProcess.send_out__">[docs]</a>    <span class="k">def</span> <span class="nf">send_out__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Multiprocessing backend method: send an object from the backend to the frontend. </span>
+<div class="viewcode-block" id="MessageProcess.send_out__">
+<a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.base.MessageProcess.send_out__">[docs]</a>
+    <span class="k">def</span> <span class="nf">send_out__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Multiprocessing backend method: send an object from the backend to the frontend. </span>
 <span class="sd">        It&#39;s recommended to use the ``MessageObject`` class.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">back_pipe</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span></div>
+
 
 
     <span class="k">def</span> <span class="nf">return_out__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
@@ -325,60 +368,86 @@
 
     <span class="c1"># *** _your_ backend methods ***</span>
 
-<div class="viewcode-block" id="MessageProcess.c__ping"><a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.base.MessageProcess.c__ping">[docs]</a>    <span class="k">def</span> <span class="nf">c__ping</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lis</span> <span class="o">=</span> <span class="p">[]):</span>
-        <span class="sd">&quot;&quot;&quot;A demo multiprocessing backend method: triggered when frontend calls the method ``ping`` and sends a reply to frontend</span>
+<div class="viewcode-block" id="MessageProcess.c__ping">
+<a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.base.MessageProcess.c__ping">[docs]</a>
+    <span class="k">def</span> <span class="nf">c__ping</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lis</span> <span class="o">=</span> <span class="p">[]):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;A demo multiprocessing backend method: triggered when frontend calls the method ``ping`` and sends a reply to frontend</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;c__ping:&quot;</span><span class="p">,</span> <span class="n">lis</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">send_out__</span><span class="p">(</span><span class="n">MessageObject</span><span class="p">(</span><span class="s2">&quot;pong&quot;</span><span class="p">,</span> <span class="n">lis</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]))</span></div>
 
 
+
     <span class="c1"># **** frontend ****</span>
 
-<div class="viewcode-block" id="MessageProcess.ignoreSIGINT"><a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.base.MessageProcess.ignoreSIGINT">[docs]</a>    <span class="k">def</span> <span class="nf">ignoreSIGINT</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Multiprocessing frontend method: call before ``start`` (or ``go``), so that the multiprocess ignores all SIGINT signals</span>
+<div class="viewcode-block" id="MessageProcess.ignoreSIGINT">
+<a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.base.MessageProcess.ignoreSIGINT">[docs]</a>
+    <span class="k">def</span> <span class="nf">ignoreSIGINT</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Multiprocessing frontend method: call before ``start`` (or ``go``), so that the multiprocess ignores all SIGINT signals</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sigint</span> <span class="o">=</span> <span class="kc">False</span></div>
 
-<div class="viewcode-block" id="MessageProcess.getPipe"><a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.base.MessageProcess.getPipe">[docs]</a>    <span class="k">def</span> <span class="nf">getPipe</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Pipe</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Multiprocessing frontend method: returns the pipe you can use to listen to messages sent by the multiprocessing backend.</span>
+
+<div class="viewcode-block" id="MessageProcess.getPipe">
+<a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.base.MessageProcess.getPipe">[docs]</a>
+    <span class="k">def</span> <span class="nf">getPipe</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Pipe</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Multiprocessing frontend method: returns the pipe you can use to listen to messages sent by the multiprocessing backend.</span>
 
 <span class="sd">        returns a ``multiprocessing.Pipe`` instance</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">front_pipe</span></div>
 
-<div class="viewcode-block" id="MessageProcess.sendMessageToBack"><a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.base.MessageProcess.sendMessageToBack">[docs]</a>    <span class="k">def</span> <span class="nf">sendMessageToBack</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="n">MessageObject</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Multiprocessing frontend method: send a ``MessageObject`` to multiprocessing backend</span>
+
+<div class="viewcode-block" id="MessageProcess.sendMessageToBack">
+<a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.base.MessageProcess.sendMessageToBack">[docs]</a>
+    <span class="k">def</span> <span class="nf">sendMessageToBack</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="n">MessageObject</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Multiprocessing frontend method: send a ``MessageObject`` to multiprocessing backend</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">front_pipe</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">message</span><span class="p">)</span></div>
+
 
     <span class="k">def</span> <span class="nf">returnFromBack</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">front_pipe_internal</span><span class="o">.</span><span class="n">recv</span><span class="p">()</span>
 
-<div class="viewcode-block" id="MessageProcess.go"><a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.base.MessageProcess.go">[docs]</a>    <span class="k">def</span> <span class="nf">go</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Multiprocessing frontend method: a synonym to multiprocessing ``start()``</span>
+<div class="viewcode-block" id="MessageProcess.go">
+<a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.base.MessageProcess.go">[docs]</a>
+    <span class="k">def</span> <span class="nf">go</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Multiprocessing frontend method: a synonym to multiprocessing ``start()``</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="MessageProcess.requestStop"><a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.base.MessageProcess.requestStop">[docs]</a>    <span class="k">def</span> <span class="nf">requestStop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Multiprocessing frontend method: send a request to the multiprocess (backend) to stop</span>
+
+<div class="viewcode-block" id="MessageProcess.requestStop">
+<a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.base.MessageProcess.requestStop">[docs]</a>
+    <span class="k">def</span> <span class="nf">requestStop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Multiprocessing frontend method: send a request to the multiprocess (backend) to stop</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sendMessageToBack</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span></div>
+
         
-<div class="viewcode-block" id="MessageProcess.waitStop"><a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.base.MessageProcess.waitStop">[docs]</a>    <span class="k">def</span> <span class="nf">waitStop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Multiprocessing frontend method: alias to multiprocessing ``join()``</span>
+<div class="viewcode-block" id="MessageProcess.waitStop">
+<a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.base.MessageProcess.waitStop">[docs]</a>
+    <span class="k">def</span> <span class="nf">waitStop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Multiprocessing frontend method: alias to multiprocessing ``join()``</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">join</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="MessageProcess.stop"><a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.base.MessageProcess.stop">[docs]</a>    <span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Multiprocessing frontend method: request backend multiprocess to stop and wait until it has finished</span>
+
+<div class="viewcode-block" id="MessageProcess.stop">
+<a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.base.MessageProcess.stop">[docs]</a>
+    <span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Multiprocessing frontend method: request backend multiprocess to stop and wait until it has finished</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">requestStop</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">waitStop</span><span class="p">()</span></div>
 
+
     <span class="c1"># *** _your_ frontend methods ***</span>
 
-<div class="viewcode-block" id="MessageProcess.sendPing"><a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.base.MessageProcess.sendPing">[docs]</a>    <span class="k">def</span> <span class="nf">sendPing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lis</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;A demo multiprocessing frontend method: a demo method that sends the following ``MessageObject`` to the multiprocessing backend:</span>
+<div class="viewcode-block" id="MessageProcess.sendPing">
+<a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.base.MessageProcess.sendPing">[docs]</a>
+    <span class="k">def</span> <span class="nf">sendPing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lis</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;A demo multiprocessing frontend method: a demo method that sends the following ``MessageObject`` to the multiprocessing backend:</span>
 
 <span class="sd">        .. code:: python</span>
 
@@ -392,14 +461,16 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">sendMessageToBack</span><span class="p">(</span><span class="n">MessageObject</span><span class="p">(</span>
             <span class="s2">&quot;ping&quot;</span><span class="p">,</span>
             <span class="n">lis</span> <span class="o">=</span> <span class="n">lis</span>
-            <span class="p">))</span></div></div>
+            <span class="p">))</span></div>
+</div>
+
 
 
 <span class="c1"># Mixed sync/async processes</span>
 
 
 <span class="k">def</span> <span class="nf">getPipes</span><span class="p">(</span><span class="n">block_A</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">block_B</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    Either A or B can be blocking or non-blocking </span>
 
@@ -449,7 +520,7 @@
 
 
 <span class="k">class</span> <span class="nc">Duplex</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Creates a duplex, similar to what you get from multiprocessing.Pipe(), but other side of the</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Creates a duplex, similar to what you get from multiprocessing.Pipe(), but other side of the</span>
 <span class="sd">    duplex is non-blocking (for asyncio backend)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">read_fd</span><span class="p">,</span> <span class="n">write_fd</span><span class="p">):</span>
@@ -464,12 +535,12 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_fd</span>
 
     <span class="k">def</span> <span class="nf">getReadIO</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;_io.FileIO object</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;_io.FileIO object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">reader</span>
 
     <span class="k">def</span> <span class="nf">getReadFd</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns the file descriptor (int), aka &quot;fd&quot; for this pipe</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the file descriptor (int), aka &quot;fd&quot; for this pipe</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_fd</span>
 
@@ -477,12 +548,12 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">write_fd</span>
 
     <span class="k">def</span> <span class="nf">getWriteIO</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;_io.FileIO object</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;_io.FileIO object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">writer</span>
 
     <span class="k">def</span> <span class="nf">recv</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Traditional blocking recv</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Traditional blocking recv</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">msg</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span>
         <span class="n">N</span> <span class="o">=</span> <span class="kc">None</span>
@@ -504,7 +575,7 @@
         <span class="k">return</span> <span class="n">obj</span>
 
     <span class="k">def</span> <span class="nf">send</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Tradition blocking send</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Tradition blocking send</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">msg</span> <span class="o">=</span> <span class="n">to8ByteMessage</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
         <span class="n">n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">writer</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
@@ -517,38 +588,95 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">writer</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
 
-<div class="viewcode-block" id="AsyncBackMessageProcess"><a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.base.AsyncBackMessageProcess">[docs]</a><span class="k">class</span> <span class="nc">AsyncBackMessageProcess</span><span class="p">(</span><span class="n">MessageProcess</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;A subclass of ``MessageProcess``, but now the backend runs asyncio</span>
+<span class="k">def</span> <span class="nf">exclog</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Decorator for coroutines: turns exceptions into logging events</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">self_</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="k">await</span> <span class="n">f</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">CancelledError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>  <span class="c1"># propagate task cancel</span>
+            <span class="k">raise</span> <span class="p">(</span><span class="n">e</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>  <span class="c1"># any other exception should be reported, and BaseException raised so that the program stops</span>
+            <span class="c1"># raise(BaseException) # enable this if you wan&#39;t exceptions raised.  Good for first-stage debugging # DEBUGGING</span>
+            <span class="n">self_</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s2">&quot;asyncio call failed with &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+            <span class="c1">#self_.logger.critical(&quot;------------------------------&gt;&quot;)</span>
+            <span class="n">self_</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">())</span>
+            <span class="c1">#self_.logger.critical(&quot;&lt;------------------------------&quot;)</span>
+    <span class="n">wrapper</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="vm">__name__</span>
+    <span class="n">wrapper</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="vm">__doc__</span>
+    <span class="k">return</span> <span class="n">wrapper</span>
+
+
+<span class="k">def</span> <span class="nf">exclogmsg</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Decorator for coroutines: turns exceptions into logging events</span>
+<span class="sd">    Sends also an error message to outgoing pipe</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">self_</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">slot</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;slot&quot;</span><span class="p">]</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="k">await</span> <span class="n">f</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">CancelledError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>  <span class="c1"># propagate task cancel</span>
+            <span class="k">raise</span> <span class="p">(</span><span class="n">e</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>  <span class="c1"># any other exception should be reported, and BaseException raised so that the program stops</span>
+            <span class="c1"># raise(BaseException) # enable this if you wan&#39;t exceptions raised.  Good for first-stage debugging # DEBUGGING</span>
+            <span class="n">self_</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s2">&quot;asyncio call failed with &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+            <span class="k">await</span> <span class="n">self_</span><span class="o">.</span><span class="n">send_out__</span><span class="p">(</span><span class="n">MessageObject</span><span class="p">(</span><span class="s2">&quot;error&quot;</span><span class="p">,</span> <span class="n">slot</span><span class="o">=</span><span class="n">slot</span><span class="p">,</span> <span class="n">error</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)))</span>
+            <span class="c1">#self_.logger.critical(&quot;------------------------------&gt;&quot;)</span>
+            <span class="n">self_</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">())</span>
+            <span class="c1">#self_.logger.critical(&quot;&lt;------------------------------&quot;)</span>
+    <span class="n">wrapper</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="vm">__name__</span>
+    <span class="n">wrapper</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="vm">__doc__</span>
+    <span class="k">return</span> <span class="n">wrapper</span>
+
+
+
+<div class="viewcode-block" id="AsyncBackMessageProcess">
+<a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.base.AsyncBackMessageProcess">[docs]</a>
+<span class="k">class</span> <span class="nc">AsyncBackMessageProcess</span><span class="p">(</span><span class="n">MessageProcess</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A subclass of ``MessageProcess``, but now the backend runs asyncio</span>
 
 <span class="sd">    :param name: multiprocess name</span>
+
+<span class="sd">    NOTE: when subclassing ``__init__``, remember to call therein ``super().__init__()``</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;AsyncMessageProcess&quot;</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">pre</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pre</span><span class="p">)</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="c1"># self.name = name</span>
+        <span class="c1">#self.pre = self.__class__.__name__ + &quot;.&quot; + self.name</span>
+        <span class="c1">#self.logger = logging.getLogger(self.pre)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="p">)</span> <span class="c1"># -&gt; this takes care of the logger and self.name</span>
         <span class="c1"># self.front_pipe, self.back_pipe = getPipes(True, False) # blocking frontend, non-blocking backend (for asynchronous backend)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">front_pipe</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">back_pipe</span> <span class="o">=</span> <span class="n">getPipes</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span> <span class="c1"># both blocking: for testing # seems to make no difference (asyncio sets the pipes to non-blocking mode)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">loop</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">listening</span> <span class="o">=</span> <span class="kc">False</span> <span class="c1"># are we listening something else than just the intercom pipes?</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sigint</span> <span class="o">=</span> <span class="kc">True</span>
 
-<div class="viewcode-block" id="AsyncBackMessageProcess.getPipe"><a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.base.AsyncBackMessageProcess.getPipe">[docs]</a>    <span class="k">def</span> <span class="nf">getPipe</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Duplex</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Returns a Duplex object, instead of multiprocessing.Pipe object.</span>
+<div class="viewcode-block" id="AsyncBackMessageProcess.getPipe">
+<a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.base.AsyncBackMessageProcess.getPipe">[docs]</a>
+    <span class="k">def</span> <span class="nf">getPipe</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Duplex</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a Duplex object, instead of multiprocessing.Pipe object.</span>
 
 <span class="sd">        Duplex.fileno() returns the read file dtor number</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">front_pipe</span></div>
 
-<div class="viewcode-block" id="AsyncBackMessageProcess.getReadFd"><a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.base.AsyncBackMessageProcess.getReadFd">[docs]</a>    <span class="k">def</span> <span class="nf">getReadFd</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns read file dtor number for the frontend Duplex object</span>
+
+<div class="viewcode-block" id="AsyncBackMessageProcess.getReadFd">
+<a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.base.AsyncBackMessageProcess.getReadFd">[docs]</a>
+    <span class="k">def</span> <span class="nf">getReadFd</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns read file dtor number for the frontend Duplex object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">front_pipe</span><span class="o">.</span><span class="n">getReadFd</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="AsyncBackMessageProcess.getWriteFd"><a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.base.AsyncBackMessageProcess.getWriteFd">[docs]</a>    <span class="k">def</span> <span class="nf">getWriteFd</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns write file dtor number for the frontend Duplex object</span>
+
+<div class="viewcode-block" id="AsyncBackMessageProcess.getWriteFd">
+<a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.base.AsyncBackMessageProcess.getWriteFd">[docs]</a>
+    <span class="k">def</span> <span class="nf">getWriteFd</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns write file dtor number for the frontend Duplex object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">front_pipe</span><span class="o">.</span><span class="n">getWriteFd</span><span class="p">()</span></div>
+
 
     <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sigint</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
@@ -561,8 +689,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">postRun__</span><span class="p">()</span>
 
 
-<div class="viewcode-block" id="AsyncBackMessageProcess.asyncPre__"><a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.base.AsyncBackMessageProcess.asyncPre__">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">asyncPre__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Multiprocessing backend coroutine: subclass if needed</span>
+<div class="viewcode-block" id="AsyncBackMessageProcess.asyncPre__">
+<a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.base.AsyncBackMessageProcess.asyncPre__">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">asyncPre__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Multiprocessing backend coroutine: subclass if needed</span>
 <span class="sd">        </span>
 <span class="sd">        Everything that needs to be done *after the fork* (i.e. in the backend), but *before*</span>
 <span class="sd">        the multiprocesses&#39; main asyncio event loop starts running.</span>
@@ -573,8 +703,11 @@
         <span class="k">pass</span></div>
 
 
-<div class="viewcode-block" id="AsyncBackMessageProcess.asyncPost__"><a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.base.AsyncBackMessageProcess.asyncPost__">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">asyncPost__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Multiprocessing backend coroutine: subclass if needed</span>
+
+<div class="viewcode-block" id="AsyncBackMessageProcess.asyncPost__">
+<a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.base.AsyncBackMessageProcess.asyncPost__">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">asyncPost__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Multiprocessing backend coroutine: subclass if needed</span>
 
 <span class="sd">        Everything that needs to be done *after the fork* (i.e. in the backend), immediately </span>
 <span class="sd">        before exiting the main asyncio event loop</span>
@@ -583,6 +716,7 @@
 <span class="sd">        after exiting the main syncio event loop</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
+
 
 
     <span class="k">async</span> <span class="k">def</span> <span class="nf">async_run__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -596,8 +730,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">stream_reader</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">StreamReader</span><span class="p">()</span>
         <span class="k">def</span> <span class="nf">protocol_factory</span><span class="p">():</span>
             <span class="k">return</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">StreamReaderProtocol</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stream_reader</span><span class="p">)</span>
-            
-        <span class="sd">&quot;&quot;&quot;the logic here:</span>
+<span class="w">            </span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;the logic here:</span>
 
 <span class="sd">        read input (back_reader) is connected to the event loop, using</span>
 <span class="sd">        a certain protocol .. protocol == what happens when there is</span>
@@ -657,13 +791,13 @@
         
 
     <span class="k">async</span> <span class="k">def</span> <span class="nf">readPipes__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Multiplex all intercom pipes</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Multiplex all intercom pipes</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span><span class="p">(</span><span class="ne">BaseException</span><span class="p">(</span><span class="s2">&quot;not used&quot;</span><span class="p">))</span>
 
 
     <span class="k">async</span> <span class="k">def</span> <span class="nf">handleBackPipe__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Route message to correct method</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Route message to correct method</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">ok</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">try</span><span class="p">:</span>
@@ -676,7 +810,7 @@
 
 
     <span class="k">async</span> <span class="k">def</span> <span class="nf">routeMainPipe__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Object from main pipe:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Object from main pipe:</span>
 <span class="sd">            </span>
 <span class="sd">        - object.command</span>
 <span class="sd">        - object.kwargs</span>
@@ -701,8 +835,10 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;routeMainPipe : no such method </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span><span class="p">(</span><span class="n">method_name</span><span class="p">))</span>
 
 
-<div class="viewcode-block" id="AsyncBackMessageProcess.send_out__"><a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.base.AsyncBackMessageProcess.send_out__">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">send_out__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Multiprocessing backend coroutine: pickle obj &amp; send to main python process.</span>
+<div class="viewcode-block" id="AsyncBackMessageProcess.send_out__">
+<a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.base.AsyncBackMessageProcess.send_out__">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">send_out__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Multiprocessing backend coroutine: pickle obj &amp; send to main python process.</span>
 <span class="sd">        It&#39;s recommended to use the ``MessageObject`` class.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1">#print(&quot;send_out__&quot;, obj, self.writer_transport)</span>
@@ -711,6 +847,7 @@
         <span class="c1">#try:</span>
         <span class="c1"># print(&quot;send_out__&quot;, msg)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">writer_transport</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span> <span class="c1"># woops.. this is _not_ async call (it returns immediately)</span></div>
+
         <span class="c1">#except Exception as e:</span>
         <span class="c1">#    print(&quot;send_out__ failed with&quot;, e)</span>
         <span class="c1">#print(&quot;send_out__: exit&quot;)</span>
@@ -718,8 +855,10 @@
 
     <span class="c1"># ***  _your_ backend methods ***</span>
 
-<div class="viewcode-block" id="AsyncBackMessageProcess.c__ping"><a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.base.AsyncBackMessageProcess.c__ping">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">c__ping</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lis</span> <span class="o">=</span> <span class="p">[]):</span>
-        <span class="sd">&quot;&quot;&quot;A demo backend coroutine:  triggered when frontend calls the method ``ping`` and sends a reply to frontend</span>
+<div class="viewcode-block" id="AsyncBackMessageProcess.c__ping">
+<a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.base.AsyncBackMessageProcess.c__ping">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">c__ping</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lis</span> <span class="o">=</span> <span class="p">[]):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;A demo backend coroutine:  triggered when frontend calls the method ``ping`` and sends a reply to frontend</span>
 
 <span class="sd">        So, in this coroutine it&#39;s all asyncio, i.e. await&#39;ing and sending tasks.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -727,13 +866,17 @@
         <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">send_out__</span><span class="p">(</span><span class="n">MessageObject</span><span class="p">(</span><span class="s2">&quot;pong&quot;</span><span class="p">,</span> <span class="n">lis</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]))</span></div>
 
 
+
     <span class="k">def</span> <span class="nf">sendMessageToBack</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="n">MessageObject</span><span class="p">):</span>
         <span class="c1"># print(&quot;writing to&quot;, self.front_pipe.write_fd)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">front_pipe</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">message</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="MainContext"><a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.base.MainContext">[docs]</a><span class="k">class</span> <span class="nc">MainContext</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;A convenience class to organize your python main process in the context of multiprocessing</span>
+
+<div class="viewcode-block" id="MainContext">
+<a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.base.MainContext">[docs]</a>
+<span class="k">class</span> <span class="nc">MainContext</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A convenience class to organize your python main process in the context of multiprocessing</span>
 
 <span class="sd">    You should subclass this.  In subclassed ``__init__``, you should always call the</span>
 <span class="sd">    superclass constructor:</span>
@@ -764,9 +907,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">startProcesses</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">startThreads</span><span class="p">()</span>
 
-<div class="viewcode-block" id="MainContext.formatLogger"><a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.base.MainContext.formatLogger">[docs]</a>    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="MainContext.formatLogger">
+<a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.base.MainContext.formatLogger">[docs]</a>
+    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">formatLogger</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">level</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;A helper to setup logger formatter</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;A helper to setup logger formatter</span>
 
 <span class="sd">        Sets loglevel to the automatically created logger ``self.logger`` </span>
 <span class="sd">        (that has the name ``classname``)</span>
@@ -782,27 +927,39 @@
         <span class="k">if</span> <span class="n">level</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">level</span><span class="p">)</span></div>
 
+
     <span class="k">def</span> <span class="nf">setDebug</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
 
-<div class="viewcode-block" id="MainContext.startProcesses"><a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.base.MainContext.startProcesses">[docs]</a>    <span class="k">def</span> <span class="nf">startProcesses</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Mandatory. Create, cache and start your ``MessageProcess`` es here.</span>
+<div class="viewcode-block" id="MainContext.startProcesses">
+<a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.base.MainContext.startProcesses">[docs]</a>
+    <span class="k">def</span> <span class="nf">startProcesses</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Mandatory. Create, cache and start your ``MessageProcess`` es here.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;virtual method&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="MainContext.startThreads"><a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.base.MainContext.startThreads">[docs]</a>    <span class="k">def</span> <span class="nf">startThreads</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Mandatory. Create, cache and start any python multithreads here if you have them.</span>
+
+<div class="viewcode-block" id="MainContext.startThreads">
+<a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.base.MainContext.startThreads">[docs]</a>
+    <span class="k">def</span> <span class="nf">startThreads</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Mandatory. Create, cache and start any python multithreads here if you have them.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;virtual method&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="MainContext.close"><a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.base.MainContext.close">[docs]</a>    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Mandatory. Terminate all multiprocesses and threads.  Should be</span>
+
+<div class="viewcode-block" id="MainContext.close">
+<a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.base.MainContext.close">[docs]</a>
+    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Mandatory. Terminate all multiprocesses and threads.  Should be</span>
 <span class="sd">        called in the ``__call__`` method after exiting the main loop.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;virtual method&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="MainContext.__call__"><a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.base.MainContext.__call__">[docs]</a>    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Mandatory.  Your main process loop.</span>
+
+<div class="viewcode-block" id="MainContext.__call__">
+<a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.base.MainContext.__call__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Mandatory.  Your main process loop.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">loop</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">loop</span><span class="p">:</span>
@@ -813,22 +970,30 @@
                 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;you pressed CTRL-C: will exit asap&quot;</span><span class="p">)</span>
                 <span class="k">break</span></div>
 
-<div class="viewcode-block" id="MainContext.runAsThread"><a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.base.MainContext.runAsThread">[docs]</a>    <span class="k">def</span> <span class="nf">runAsThread</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Run the class as a thread.  Only for testing/debugging purposes</span>
+
+<div class="viewcode-block" id="MainContext.runAsThread">
+<a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.base.MainContext.runAsThread">[docs]</a>
+    <span class="k">def</span> <span class="nf">runAsThread</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Run the class as a thread.  Only for testing/debugging purposes</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="kn">from</span> <span class="nn">threading</span> <span class="kn">import</span> <span class="n">Thread</span><span class="p">,</span> <span class="n">Event</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">thread</span> <span class="o">=</span> <span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="fm">__call__</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s2">&quot;starting as thread&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>  <span class="c1"># goes into background</span></div>
 
-<div class="viewcode-block" id="MainContext.stopThread"><a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.base.MainContext.stopThread">[docs]</a>    <span class="k">def</span> <span class="nf">stopThread</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;If launched with ``runAsThread``, use this method to stop.</span>
+
+<div class="viewcode-block" id="MainContext.stopThread">
+<a class="viewcode-back" href="../../../submodules.html#valkka.multiprocess.base.MainContext.stopThread">[docs]</a>
+    <span class="k">def</span> <span class="nf">stopThread</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;If launched with ``runAsThread``, use this method to stop.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s2">&quot;requesting thread stop&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">aux_pipe_write</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">thread</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s2">&quot;thread stopped&quot;</span><span class="p">)</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s2">&quot;thread stopped&quot;</span><span class="p">)</span></div>
+</div>
+
 
 
 

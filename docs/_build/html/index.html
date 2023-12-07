@@ -1,25 +1,30 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta content="python multiprocessing and ipc package" name="description" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="python multiprocessing and ipc package" name="description" />
 <meta content="python, multiprocessing, ipc" name="keywords" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Valkka Multiprocess &mdash; Valkka Multiprocess  documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <title>Valkka Multiprocess &mdash; Valkka Multiprocess  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/doctools.js"></script>
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Intro" href="intro.html" />
-    <!-- as per https://stackoverflow.com/questions/23211695/modifying-content-width-of-the-sphinx-theme-read-the-docs -->
-    <link href="_static/rtd_override.css" rel="stylesheet" type="text/css">
+<!-- as per https://stackoverflow.com/questions/23211695/modifying-content-width-of-the-sphinx-theme-read-the-docs -->
+<link href="_static/rtd_override.css" rel="stylesheet" type="text/css">
+<script src="https://kit.fontawesome.com/1f90d3565b.js" crossorigin="anonymous"></script>
 
 </head>
 
@@ -29,7 +34,22 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-  <a href="#"><img src="_static/valkka.png" class="logo" alt="Logo"/>
+
+<!--
+  <a href="#" class="icon icon-home"> Valkka Multiprocess
+-->
+
+<!--
+
+NO LOGO
+-->
+
+<!--
+NOTE: we are starting to have "version creep" here..  at the moment, with Sphinx==7.2.6 and sphinx-rtd-theme==1.3.0 the only thing that
+works is this:
+-->
+<a href="#">
+<img src="_static/logo.png" class="logo" style="width: 200px; height: auto; border-radius: 0px 6px 6px 0px;" alt="Logo"/>
 </a>
     <div class="version">
       1.6.1
@@ -37,13 +57,13 @@
 
 
 <!-- font awesome comes with the rtd package.. use like this:-->
-<a href="https://github.com/elsampsa/cute-forms" class="icon icon-github"> CuteForms @ github</a>
-<a href="https://github.com/elsampsa/cute-forms/issues" class="fa fa-bug"> Issue Tracker @ github</a>
-
+<a href="https://github.com/elsampsa/valkka-multiprocess" target="_blank" rel="noopener noreferrer"> <i class="fa-brands fa-github"></i> Valkka Multiprocess @ github</a>
+<a href="https://github.com/elsampsa/valkka-multiprocess/issues" target="_blank" rel="noopener noreferrer"> <i class="fas fa-bug"></i> Issue Tracker @ github</a>
+<a href="https://discord.com/channels/1116100310574837812/1116101478235521205" target="_blank" rel="noopener noreferrer"> <i class="fa-brands fa-discord"></i> Discord </a>
 <!-- don't even think about subclassing searchbox.html .. will never work!-->
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -72,7 +92,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="#" class="icon icon-home"></a></li>
+      <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
       <li class="breadcrumb-item active">Valkka Multiprocess</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
@@ -83,8 +103,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="valkka-multiprocess">
-<h1>Valkka Multiprocess<a class="headerlink" href="#valkka-multiprocess" title="Permalink to this headline">¶</a></h1>
+  <section id="valkka-multiprocess">
+<h1>Valkka Multiprocess<a class="headerlink" href="#valkka-multiprocess" title="Link to this heading"></a></h1>
 <p>Advanced Python Multiprocessing and Inter-Process Communication</p>
 <p>Contents:</p>
 <div class="toctree-wrapper compound">
@@ -118,13 +138,77 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="submodules.html">API documentation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="submodules.html#messageobject">MessageObject</a></li>
-<li class="toctree-l2"><a class="reference internal" href="submodules.html#messageprocess">MessageProcess</a></li>
-<li class="toctree-l2"><a class="reference internal" href="submodules.html#asyncbackmessageprocess">AsyncBackMessageProcess</a></li>
-<li class="toctree-l2"><a class="reference internal" href="submodules.html#maincontext">MainContext</a></li>
-<li class="toctree-l2"><a class="reference internal" href="submodules.html#eventgroup">EventGroup</a></li>
-<li class="toctree-l2"><a class="reference internal" href="submodules.html#syncindex">SyncIndex</a></li>
-<li class="toctree-l2"><a class="reference internal" href="submodules.html#other">Other</a></li>
+<li class="toctree-l2"><a class="reference internal" href="submodules.html#messageobject">MessageObject</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="submodules.html#valkka.multiprocess.base.MessageObject"><code class="docutils literal notranslate"><span class="pre">MessageObject</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="submodules.html#messageprocess">MessageProcess</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="submodules.html#valkka.multiprocess.base.MessageProcess"><code class="docutils literal notranslate"><span class="pre">MessageProcess</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="submodules.html#valkka.multiprocess.base.MessageProcess.c__ping"><code class="docutils literal notranslate"><span class="pre">MessageProcess.c__ping()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="submodules.html#valkka.multiprocess.base.MessageProcess.formatLogger"><code class="docutils literal notranslate"><span class="pre">MessageProcess.formatLogger()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="submodules.html#valkka.multiprocess.base.MessageProcess.getPipe"><code class="docutils literal notranslate"><span class="pre">MessageProcess.getPipe()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="submodules.html#valkka.multiprocess.base.MessageProcess.go"><code class="docutils literal notranslate"><span class="pre">MessageProcess.go()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="submodules.html#valkka.multiprocess.base.MessageProcess.ignoreSIGINT"><code class="docutils literal notranslate"><span class="pre">MessageProcess.ignoreSIGINT()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="submodules.html#valkka.multiprocess.base.MessageProcess.postRun__"><code class="docutils literal notranslate"><span class="pre">MessageProcess.postRun__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="submodules.html#valkka.multiprocess.base.MessageProcess.preRun__"><code class="docutils literal notranslate"><span class="pre">MessageProcess.preRun__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="submodules.html#valkka.multiprocess.base.MessageProcess.readPipes__"><code class="docutils literal notranslate"><span class="pre">MessageProcess.readPipes__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="submodules.html#valkka.multiprocess.base.MessageProcess.requestStop"><code class="docutils literal notranslate"><span class="pre">MessageProcess.requestStop()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="submodules.html#valkka.multiprocess.base.MessageProcess.run"><code class="docutils literal notranslate"><span class="pre">MessageProcess.run()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="submodules.html#valkka.multiprocess.base.MessageProcess.sendMessageToBack"><code class="docutils literal notranslate"><span class="pre">MessageProcess.sendMessageToBack()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="submodules.html#valkka.multiprocess.base.MessageProcess.sendPing"><code class="docutils literal notranslate"><span class="pre">MessageProcess.sendPing()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="submodules.html#valkka.multiprocess.base.MessageProcess.send_out__"><code class="docutils literal notranslate"><span class="pre">MessageProcess.send_out__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="submodules.html#valkka.multiprocess.base.MessageProcess.stop"><code class="docutils literal notranslate"><span class="pre">MessageProcess.stop()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="submodules.html#valkka.multiprocess.base.MessageProcess.waitStop"><code class="docutils literal notranslate"><span class="pre">MessageProcess.waitStop()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="submodules.html#asyncbackmessageprocess">AsyncBackMessageProcess</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="submodules.html#valkka.multiprocess.base.AsyncBackMessageProcess"><code class="docutils literal notranslate"><span class="pre">AsyncBackMessageProcess</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="submodules.html#valkka.multiprocess.base.AsyncBackMessageProcess.asyncPost__"><code class="docutils literal notranslate"><span class="pre">AsyncBackMessageProcess.asyncPost__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="submodules.html#valkka.multiprocess.base.AsyncBackMessageProcess.asyncPre__"><code class="docutils literal notranslate"><span class="pre">AsyncBackMessageProcess.asyncPre__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="submodules.html#valkka.multiprocess.base.AsyncBackMessageProcess.c__ping"><code class="docutils literal notranslate"><span class="pre">AsyncBackMessageProcess.c__ping()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="submodules.html#valkka.multiprocess.base.AsyncBackMessageProcess.getPipe"><code class="docutils literal notranslate"><span class="pre">AsyncBackMessageProcess.getPipe()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="submodules.html#valkka.multiprocess.base.AsyncBackMessageProcess.getReadFd"><code class="docutils literal notranslate"><span class="pre">AsyncBackMessageProcess.getReadFd()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="submodules.html#valkka.multiprocess.base.AsyncBackMessageProcess.getWriteFd"><code class="docutils literal notranslate"><span class="pre">AsyncBackMessageProcess.getWriteFd()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="submodules.html#valkka.multiprocess.base.AsyncBackMessageProcess.send_out__"><code class="docutils literal notranslate"><span class="pre">AsyncBackMessageProcess.send_out__()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="submodules.html#maincontext">MainContext</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="submodules.html#valkka.multiprocess.base.MainContext"><code class="docutils literal notranslate"><span class="pre">MainContext</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="submodules.html#valkka.multiprocess.base.MainContext.__call__"><code class="docutils literal notranslate"><span class="pre">MainContext.__call__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="submodules.html#valkka.multiprocess.base.MainContext.close"><code class="docutils literal notranslate"><span class="pre">MainContext.close()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="submodules.html#valkka.multiprocess.base.MainContext.formatLogger"><code class="docutils literal notranslate"><span class="pre">MainContext.formatLogger()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="submodules.html#valkka.multiprocess.base.MainContext.runAsThread"><code class="docutils literal notranslate"><span class="pre">MainContext.runAsThread()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="submodules.html#valkka.multiprocess.base.MainContext.startProcesses"><code class="docutils literal notranslate"><span class="pre">MainContext.startProcesses()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="submodules.html#valkka.multiprocess.base.MainContext.startThreads"><code class="docutils literal notranslate"><span class="pre">MainContext.startThreads()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="submodules.html#valkka.multiprocess.base.MainContext.stopThread"><code class="docutils literal notranslate"><span class="pre">MainContext.stopThread()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="submodules.html#eventgroup">EventGroup</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="submodules.html#valkka.multiprocess.sync.EventGroup"><code class="docutils literal notranslate"><span class="pre">EventGroup</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="submodules.html#valkka.multiprocess.sync.EventGroup.asIndex"><code class="docutils literal notranslate"><span class="pre">EventGroup.asIndex()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="submodules.html#valkka.multiprocess.sync.EventGroup.fromIndex"><code class="docutils literal notranslate"><span class="pre">EventGroup.fromIndex()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="submodules.html#valkka.multiprocess.sync.EventGroup.release"><code class="docutils literal notranslate"><span class="pre">EventGroup.release()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="submodules.html#valkka.multiprocess.sync.EventGroup.release_ind"><code class="docutils literal notranslate"><span class="pre">EventGroup.release_ind()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="submodules.html#valkka.multiprocess.sync.EventGroup.reserve"><code class="docutils literal notranslate"><span class="pre">EventGroup.reserve()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="submodules.html#valkka.multiprocess.sync.EventGroup.set"><code class="docutils literal notranslate"><span class="pre">EventGroup.set()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="submodules.html#syncindex">SyncIndex</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="submodules.html#valkka.multiprocess.sync.SyncIndex"><code class="docutils literal notranslate"><span class="pre">SyncIndex</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="submodules.html#other">Other</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="submodules.html#valkka.multiprocess.base.safe_select"><code class="docutils literal notranslate"><span class="pre">safe_select()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="article.html">Article</a><ul>
@@ -140,15 +224,15 @@
 <li class="toctree-l1"><a class="reference internal" href="authors.html">Authors</a></li>
 </ul>
 </div>
-</div>
-<div class="section" id="indices-and-tables">
-<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+</section>
+<section id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Link to this heading"></a></h1>
 <ul class="simple">
 <li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
 <li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
 <li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
 </ul>
-</div>
+</section>
 
 
            </div>

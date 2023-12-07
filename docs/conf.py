@@ -81,7 +81,7 @@ version = '1.6.1' # WARNING: modified by setver.bash
 #
 # This is also used if you do content translation via gettext catalogs.
 # Usually you set "language" from the command line for these cases.
-language = None
+language = "en"
 
 # There are two options for replacing |today|: either, you set today to some
 # non-false value, then it is used:
@@ -159,7 +159,7 @@ html_theme_options = {
   # 'analytics_id' : 'XX-XXX-X' # for google analytics tracking, uncomment this
   # 'page_width' : '60%', # make page wider # alabaster
   # 'body_max_width': 'auto', # alabaster
-  "logo_only": True # style: RTD
+  "logo_only": True, # style: RTD
 }
 # some options for the classic theme
 """
@@ -194,6 +194,7 @@ html_theme_options = {
 # The name of an image file (relative to this directory) to place at the top
 # of the sidebar.
 html_logo = 'images/valkka.png'
+# logo = 'images/valkka.png'
 
 # The name of an image file (relative to this directory) to use as a favicon of
 # the docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32
