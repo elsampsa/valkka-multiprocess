@@ -1,12 +1,15 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Part I: Managing a multiprocess &mdash; Valkka Multiprocess  documentation</title>
-      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+
+  
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -16,6 +19,8 @@
         <script src="../_static/documentation_options.js?v=5929fcd5"></script>
         <script src="../_static/doctools.js?v=888ff710"></script>
         <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../_static/copybutton.js?v=f281be69"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -143,7 +148,7 @@ messages from the frontend.</p>
 <p>When a <code class="docutils literal notranslate"><span class="pre">MessageObject</span></code> is sent with the command <code class="docutils literal notranslate"><span class="pre">ping</span></code>, backend looks automagically
 for the method <code class="docutils literal notranslate"><span class="pre">c__ping</span></code> in the backend and executes it:  execution of <code class="docutils literal notranslate"><span class="pre">c__ping</span></code>
 happens in the multiprocessing backend, i.e. in the forked process</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">time</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">from</span> <span class="nn">valkka.multiprocess</span> <span class="kn">import</span> <span class="n">MessageProcess</span><span class="p">,</span> <span class="n">MessageObject</span>
 
 <span class="k">class</span> <span class="nc">MyProcess</span><span class="p">(</span><span class="n">MessageProcess</span><span class="p">):</span>
@@ -159,24 +164,24 @@ happens in the multiprocessing backend, i.e. in the forked process</p>
 </pre></div>
 </div>
 <p>Calling <code class="docutils literal notranslate"><span class="pre">start</span></code>, forks and creates the backend</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">p</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">p</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>Let multiprocessing backend run on it’s own for one second</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Call frontend method with a parameter: it sends seamlessly a message to the backend
 which executes <code class="docutils literal notranslate"><span class="pre">c__ping</span></code> in the backend:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">p</span><span class="o">.</span><span class="n">ping</span><span class="p">(</span><span class="n">parameter</span><span class="o">=</span><span class="s2">&quot;gotcha!&quot;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">p</span><span class="o">.</span><span class="n">ping</span><span class="p">(</span><span class="n">parameter</span><span class="o">=</span><span class="s2">&quot;gotcha!&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Again, let multiprocessing backend run on it’s own a while</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Finally, tell the backend to stop and exit</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">p</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">p</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
 </pre></div>
 </div>
 </section>
@@ -188,7 +193,7 @@ calling a frontend method.</p>
 <p>Many times we need to synchronize between the main python process and the forked
 multiprocess: i.e., the main process needs to wait that the forked process has completed
 doing something.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">time</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">from</span> <span class="nn">valkka.multiprocess</span> <span class="kn">import</span> <span class="n">MessageProcess</span><span class="p">,</span> <span class="n">MessageObject</span><span class="p">,</span> \
     <span class="n">EventGroup</span><span class="p">,</span> <span class="n">SyncIndex</span>
@@ -201,11 +206,11 @@ doing something.</p>
 </pre></div>
 </div>
 <p>here we have created a group of multiprocessing <code class="docutils literal notranslate"><span class="pre">Event</span></code> objects
-<a class="reference external" href="https://docs.python.org/3/library/multiprocessing.html#multiprocessing.Event">(link)</a>.
+<a class="reference external" href="https://docs.python.org/3/library/multiprocessing.html#multiprocessing.Event">(link)</a>
 into the <code class="docutils literal notranslate"><span class="pre">self.eg</span></code> member.</p>
 <p>As the <code class="docutils literal notranslate"><span class="pre">Event</span></code> s are created before fork (i.e. calling <code class="docutils literal notranslate"><span class="pre">start</span></code>), they are visible
 both in the multiprocessing back- and frontend.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">c__ping</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sync_index</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">c__ping</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sync_index</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;c__ping: got parameter </span><span class="si">%s</span><span class="s2"> - will do some&quot;</span><span class="p">,</span> <span class="n">parameter</span><span class="p">)</span>
     <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span> <span class="c1"># do something time consuming..</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;c__ping: ..did that!&quot;</span><span class="p">)</span>
@@ -215,7 +220,7 @@ both in the multiprocessing back- and frontend.</p>
 <p>An index number is communicated to the multiprocessing backend,
 so that the forked process knows which <code class="docutils literal notranslate"><span class="pre">Event</span></code> it needs to set
 in order to sync with the frontend:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="k">def</span> <span class="nf">ping</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameter</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="k">def</span> <span class="nf">ping</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameter</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;ping: callin backend to do some stuff&quot;</span><span class="p">)</span>
         <span class="k">with</span> <span class="n">SyncIndex</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eg</span><span class="p">)</span> <span class="k">as</span> <span class="n">i</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">sendMessageToBack</span><span class="p">(</span><span class="n">MessageObject</span><span class="p">(</span>
@@ -229,17 +234,17 @@ in order to sync with the frontend:</p>
 </pre></div>
 </div>
 <p>A helper method to quick-format the logger for <code class="docutils literal notranslate"><span class="pre">MyProcess</span></code>:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">p</span><span class="o">.</span><span class="n">formatLogger</span><span class="p">()</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">p</span><span class="o">.</span><span class="n">formatLogger</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>Calling <code class="docutils literal notranslate"><span class="pre">start</span></code>, forks and creates the backend</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">p</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">p</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
 <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">p</span><span class="o">.</span><span class="n">ping</span><span class="p">(</span><span class="n">parameter</span><span class="o">=</span><span class="s2">&quot;gotcha!&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Tell the backend to stop and exit</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">p</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">p</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>We get this output:</p>
@@ -249,34 +254,31 @@ MyProcess.my-process - INFO - c__ping: ..did that!
 MyProcess.my-process - INFO - ping: backend seems to be ready
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">..</span> <span class="n">end</span> <span class="n">of</span> <span class="n">inclusion</span> <span class="kn">from</span> <span class="s2">&quot;snippets/ping2.py_&quot;</span>
-</pre></div>
-</div>
 </section>
 <section id="send-and-receive-message">
 <h2>3. Send and receive message<a class="headerlink" href="#send-and-receive-message" title="Link to this heading"></a></h2>
 <p id="example3"><a class="reference download internal" download="" href="../_downloads/4e4bf9c97e08d5b08865e81fd4674222/ping_pong.py"><code class="xref download docutils literal notranslate"><span class="pre">[download</span> <span class="pre">code]</span></code></a></p>
 <p>Next, we’re going to call a backend method and then get some results
 from the backend in the form of a message.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">time</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">from</span> <span class="nn">valkka.multiprocess</span> <span class="kn">import</span> <span class="n">MessageProcess</span><span class="p">,</span> <span class="n">MessageObject</span>
 </pre></div>
 </div>
 <p>We are going to use quite some the select module:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">select</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">select</span>
 </pre></div>
 </div>
 <p>so you might want to read
 <a class="reference external" href="https://docs.python.org/3/howto/sockets.html#non-blocking-sockets">this tutorial</a></p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MyProcess</span><span class="p">(</span><span class="n">MessageProcess</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MyProcess</span><span class="p">(</span><span class="n">MessageProcess</span><span class="p">):</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>We’re sending a message, now from backend to frontend</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="k">def</span> <span class="nf">c__ping</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameter</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<p>We’re sending a message, this time from backend to frontend</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="k">def</span> <span class="nf">c__ping</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameter</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;c__ping: got parameter </span><span class="si">%s</span><span class="s2"> - will do some&quot;</span><span class="p">,</span> <span class="n">parameter</span><span class="p">)</span>
         <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span> <span class="c1"># do something time consuming..</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;c__ping: ..did that!&quot;</span><span class="p">)</span>
@@ -295,27 +297,27 @@ from the backend in the form of a message.</p>
 <span class="n">p</span><span class="o">.</span><span class="n">formatLogger</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>Get the pipe (<code class="docutils literal notranslate"><span class="pre">multiprocessing.Pipe</span></code>) for listening messages from <code class="docutils literal notranslate"><span class="pre">MyProcess</span></code> p.
+<p>Get the pipe (<code class="docutils literal notranslate"><span class="pre">multiprocessing.Pipe</span></code>) for listening messages from <code class="docutils literal notranslate"><span class="pre">MyProcess</span></code> <code class="docutils literal notranslate"><span class="pre">p</span></code>.
 Remember that you should use use pipe communication only for a small amount of data:
 typically just short messages and maybe some tiny (numpy) arrays if you have to.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pipe</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">getPipe</span><span class="p">()</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">pipe</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">getPipe</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>Calling <code class="docutils literal notranslate"><span class="pre">start</span></code>, forks and creates the backend</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">p</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">p</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
 <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">p</span><span class="o">.</span><span class="n">ping</span><span class="p">(</span><span class="n">parameter</span><span class="o">=</span><span class="s2">&quot;gotcha!&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;main: waiting reply from multiprocessing backend&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Use select to wait for the message</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">select</span><span class="o">.</span><span class="n">select</span><span class="p">([</span><span class="n">pipe</span><span class="p">],</span> <span class="p">[],</span> <span class="p">[])</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">select</span><span class="o">.</span><span class="n">select</span><span class="p">([</span><span class="n">pipe</span><span class="p">],</span> <span class="p">[],</span> <span class="p">[])</span>
 <span class="n">msg</span> <span class="o">=</span> <span class="n">pipe</span><span class="o">.</span><span class="n">recv</span><span class="p">()</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;main: got&quot;</span><span class="p">,</span> <span class="n">msg</span><span class="p">(),</span> <span class="s2">&quot;with some&quot;</span><span class="p">,</span> <span class="n">msg</span><span class="p">[</span><span class="s2">&quot;result&quot;</span><span class="p">])</span>
 </pre></div>
 </div>
 <p>Tell the backend to stop and exit</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">p</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">p</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>We get this output:</p>
@@ -324,9 +326,6 @@ main: waiting reply from multiprocessing backend
 MyProcess.my-process - INFO - c__ping: got parameter gotcha! - will do some
 MyProcess.my-process - INFO - c__ping: ..did that!
 main: got pong with some pudding
-</pre></div>
-</div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">..</span> <span class="n">end</span> <span class="n">of</span> <span class="n">inclusion</span> <span class="kn">from</span> <span class="s2">&quot;snippets/ping_pong.py_&quot;</span>
 </pre></div>
 </div>
 </section>
@@ -349,7 +348,7 @@ define the (virtual) methods <code class="docutils literal notranslate"><span cl
 class:  both of them are executed <em>after the fork</em>, i.e. in the backend, but outside
 <code class="docutils literal notranslate"><span class="pre">MessageProcess</span></code> s main execution loops:  they are “startup” and “shutdown” functions
 in the forked process.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">time</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">valkka.multiprocess</span> <span class="kn">import</span> <span class="n">MessageProcess</span><span class="p">,</span> <span class="n">MessageObject</span><span class="p">,</span> \
@@ -360,7 +359,7 @@ in the forked process.</p>
 </pre></div>
 </div>
 <p>Create “server-side” shared memory first in the frontend with the unique name <code class="docutils literal notranslate"><span class="pre">my-shm-1</span></code></p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
     <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">eg</span> <span class="o">=</span> <span class="n">EventGroup</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">shmem_name</span> <span class="o">=</span> <span class="s2">&quot;my-shm-1&quot;</span>
@@ -377,7 +376,7 @@ in the forked process.</p>
 </pre></div>
 </div>
 <p>Close the “server-side” shared memory, for example, at garbage collection of <code class="docutils literal notranslate"><span class="pre">MyProcess</span></code></p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">shmem</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -385,7 +384,7 @@ in the forked process.</p>
 <p><code class="docutils literal notranslate"><span class="pre">preRun__</span></code> is executed in the forked process (backend) before the main
 execution loop kicks in: create “client-side” shared memory in the backend
 with the correct unique name <code class="docutils literal notranslate"><span class="pre">my-shm-1</span></code>.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">preRun__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">preRun__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;preRun__ : &quot;</span><span class="p">)</span>
     <span class="c1"># create backend-side shared memory array:</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">shmem__</span> <span class="o">=</span> <span class="n">shared_memory</span><span class="o">.</span><span class="n">SharedMemory</span><span class="p">(</span>
@@ -398,7 +397,7 @@ with the correct unique name <code class="docutils literal notranslate"><span cl
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">postRun__</span></code> is executed in the forked process (backend) just before the
 process exists and shuts down: close “client-side” shared memory:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">postRun__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">postRun__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;postRun__ : &quot;</span><span class="p">)</span>
     <span class="c1"># release backend-side shared memory array:</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">shmem__</span><span class="o">.</span><span class="n">unlink</span><span class="p">()</span>
@@ -412,7 +411,7 @@ process exists and shuts down: close “client-side” shared memory:</p>
 </pre></div>
 </div>
 <p>Frontend methods: <code class="docutils literal notranslate"><span class="pre">readWrite</span></code></p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="k">def</span> <span class="nf">readWrite</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="k">def</span> <span class="nf">readWrite</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;readWrite : calling backend&quot;</span><span class="p">)</span>
         <span class="k">with</span> <span class="n">SyncIndex</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eg</span><span class="p">)</span> <span class="k">as</span> <span class="n">i</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">sendMessageToBack</span><span class="p">(</span><span class="n">MessageObject</span><span class="p">(</span>
@@ -426,13 +425,13 @@ process exists and shuts down: close “client-side” shared memory:</p>
 </pre></div>
 </div>
 <p>Calling <code class="docutils literal notranslate"><span class="pre">start</span></code>, forks and creates the backend</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">p</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">p</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
 <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">p</span><span class="o">.</span><span class="n">readWrite</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>Tell the backend to stop and exit</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">p</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">p</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>Resulting output:</p>
@@ -442,9 +441,6 @@ MyProcess.my-process - INFO - c__readWrite: will change array values from 1.0 to
 MyProcess.my-process - INFO - c__readWrite: ..did that!
 MyProcess.my-process - INFO - readWrite: array values now 3.0
 MyProcess.my-process - INFO - postRun__ :
-</pre></div>
-</div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">..</span> <span class="n">end</span> <span class="n">of</span> <span class="n">inclusion</span> <span class="kn">from</span> <span class="s2">&quot;snippets/shm1.py_&quot;</span>
 </pre></div>
 </div>
 <p>Some additional observations are in place:</p>
@@ -467,7 +463,7 @@ process (“backend”) instantiates it’s “client-side” / mirror image of 
 <p>After this, the resource (in this case shared memory) can be used to interchange
 data between front- and backend.</p>
 <p>Let’s demonstrate all this by instantiating shared memory “on-demand”:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">time</span><span class="o">,</span> <span class="nn">math</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">time</span><span class="o">,</span> <span class="nn">math</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">valkka.multiprocess</span> <span class="kn">import</span> <span class="n">MessageProcess</span><span class="p">,</span> <span class="n">MessageObject</span><span class="p">,</span> \
@@ -478,13 +474,13 @@ data between front- and backend.</p>
 </pre></div>
 </div>
 <p>Create “server-side” shared memory first in the frontend with the unique name <code class="docutils literal notranslate"><span class="pre">my-shm-1</span></code></p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
     <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">eg</span> <span class="o">=</span> <span class="n">EventGroup</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Backend methods: create, modify and close shared memory at the forked process</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">c__create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">c__create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">dtype</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">dtype</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">shape</span><span class="p">:</span> <span class="nb">tuple</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">sync_index</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
@@ -514,7 +510,7 @@ data between front- and backend.</p>
 </div>
 <p>Frontend methods: create and close shared memory in the main python process and tell backend
 to do the same.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">shape</span><span class="p">:</span> <span class="nb">tuple</span> <span class="o">=</span> <span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">)):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">shape</span><span class="p">:</span> <span class="nb">tuple</span> <span class="o">=</span> <span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">)):</span>
     <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;my-shm-1&quot;</span>
     <span class="n">dtype</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float16</span>
     <span class="n">n_bytes</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span><span class="o">.</span><span class="n">tobytes</span><span class="p">())</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
@@ -557,7 +553,7 @@ to do the same.</p>
 </pre></div>
 </div>
 <p>Run the process:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">p</span> <span class="o">=</span> <span class="n">MyProcess</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;my-process&quot;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">p</span> <span class="o">=</span> <span class="n">MyProcess</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;my-process&quot;</span><span class="p">)</span>
 <span class="n">p</span><span class="o">.</span><span class="n">formatLogger</span><span class="p">()</span>
 <span class="n">p</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
 <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
@@ -578,9 +574,6 @@ main: array values now 3.0
 MyProcess.my-process - INFO - c__close: client side shmem unlinked
 MyProcess.my-process - INFO - close: closing server side shmem
 main: bye!
-</pre></div>
-</div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">..</span> <span class="n">end</span> <span class="n">of</span> <span class="n">inclusion</span> <span class="kn">from</span> <span class="s2">&quot;snippets/shm2.py_&quot;</span>
 </pre></div>
 </div>
 </section>
@@ -637,7 +630,7 @@ you’re probably doing something wrong.</p>
 <section id="implementation">
 <span id="manager-imp"></span><h2>7. Implementation<a class="headerlink" href="#implementation" title="Link to this heading"></a></h2>
 <p><a class="reference download internal" download="" href="../_downloads/4c252ca533db548b340dfddea458fc69/main1.py"><code class="xref download docutils literal notranslate"><span class="pre">[download</span> <span class="pre">code]</span></code></a></p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">time</span><span class="o">,</span> <span class="nn">sys</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">time</span><span class="o">,</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">randint</span>
@@ -648,7 +641,7 @@ you’re probably doing something wrong.</p>
 </div>
 <p>First define the worker process that will do some calculation on a shared numpy array.</p>
 <p>This is similar to examples <a class="reference internal" href="#example3"><span class="std std-ref">3</span></a> and <a class="reference internal" href="#example4"><span class="std std-ref">4</span></a>:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">WorkerProcess</span><span class="p">(</span><span class="n">MessageProcess</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">WorkerProcess</span><span class="p">(</span><span class="n">MessageProcess</span><span class="p">):</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
@@ -712,7 +705,7 @@ base class:   You only need to (re)define <code class="docutils literal notransl
 <code class="docutils literal notranslate"><span class="pre">startThreads()</span></code>, <code class="docutils literal notranslate"><span class="pre">close()</span></code> and <code class="docutils literal notranslate"><span class="pre">__call__</span></code> methods.</p>
 <p><code class="docutils literal notranslate"><span class="pre">super().__init__()</span></code> inits the logger and calls first <code class="docutils literal notranslate"><span class="pre">startProcesses</span></code>
 and then <code class="docutils literal notranslate"><span class="pre">startThreads</span></code> (i.e. forks before thread):</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Manager</span><span class="p">(</span><span class="n">MainContext</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Manager</span><span class="p">(</span><span class="n">MainContext</span><span class="p">):</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_workers</span> <span class="o">=</span> <span class="mi">10</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n_workers</span> <span class="o">=</span> <span class="n">n_workers</span>
@@ -729,7 +722,7 @@ in method <code class="docutils literal notranslate"><span class="pre">__call__<
 <p>All pipes we’re going to listen, are also cached into <code class="docutils literal notranslate"><span class="pre">self.read_pipes</span></code>.  That
 list should also always include <code class="docutils literal notranslate"><span class="pre">self.aux_pipe_read</span></code> (which is created in
 the base class <code class="docutils literal notranslate"><span class="pre">super().__init__()</span></code>):</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">startProcesses</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">startProcesses</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;startProcesses:&quot;</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">cache</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1"># all multiprocesses</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">avail_cache</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1"># available multiprocesses for work</span>
@@ -756,13 +749,13 @@ caught <em>only</em> by the main process, and processed accordingly (i.e. when
 receiving <code class="docutils literal notranslate"><span class="pre">SIGINT</span></code> main process should shutdown the multiprocesses
 in a clean way).</p>
 <p><code class="docutils literal notranslate"><span class="pre">startThreads</span></code> (mandatory), creates and starts threads (if any):</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">startThreads</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">startThreads</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;startThreads:&quot;</span><span class="p">)</span>
     <span class="k">pass</span> <span class="c1"># no threads in this app</span>
 </pre></div>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">close</span></code> (mandatory) stops all multiprocesses and threads in parallel:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;close: stopping processes&quot;</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="p">:</span>
         <span class="n">p</span><span class="o">.</span><span class="n">requestStop</span><span class="p">()</span>
@@ -775,7 +768,7 @@ in a clean way).</p>
 <p>In <code class="docutils literal notranslate"><span class="pre">__call__</span></code> (mandatory) we have the main process startup and loop.</p>
 <p>First, we tell three multiprocesses from the cache to do some work
 and then start the execution loop:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="n">p1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">avail_cache</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
     <span class="n">p2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">avail_cache</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
     <span class="n">p3</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">avail_cache</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
@@ -825,7 +818,7 @@ and the multiprocesses.</p>
 in libValkka) and listened here at the Python side.  This creates nice opportunities
 for interfacing i/o devices into this multiprocessing scheme.</p>
 <p>Messages coming from the worker processes are handled like this:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">handleMessage__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">:</span> <span class="n">WorkerProcess</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="n">MessageObject</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">handleMessage__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">:</span> <span class="n">WorkerProcess</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="n">MessageObject</span><span class="p">):</span>
     <span class="c1"># read the sharedmem:</span>
     <span class="n">vals</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">getArray</span><span class="p">()[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;handleMessage__ : subprocess </span><span class="si">%s</span><span class="s2"> returned </span><span class="si">%s</span><span class="s2"> with values </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
@@ -849,7 +842,7 @@ process, it’s a good idea to create dedicated <code class="docutils literal no
 and <code class="docutils literal notranslate"><span class="pre">handleMessage__</span></code> methods for each one of them to keep the code readable.</p>
 <p>Behold: this is your apps main entry point.</p>
 <p>When running interactively, just press CTRL-C to exit.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
     <span class="n">Manager</span><span class="o">.</span><span class="n">formatLogger</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span> <span class="c1"># of course in a real app, in some other way</span>
     <span class="n">WorkerProcess</span><span class="o">.</span><span class="n">formatLogger</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span> <span class="c1"># of course in a real app, in some other way</span>
     <span class="n">manager</span> <span class="o">=</span> <span class="n">Manager</span><span class="p">(</span><span class="n">n_workers</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
@@ -860,7 +853,7 @@ and <code class="docutils literal notranslate"><span class="pre">handleMessage__
 main code, you can interact with it in any way you want, say, create files it sees, or simulate the environment
 where it is running somehow.</p>
 <p>Here the only “interaction” we do, is just to sleep for 10 secs before terminating it.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">test</span><span class="p">():</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">test</span><span class="p">():</span>
     <span class="n">Manager</span><span class="o">.</span><span class="n">formatLogger</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
     <span class="n">WorkerProcess</span><span class="o">.</span><span class="n">formatLogger</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
     <span class="n">manager</span> <span class="o">=</span> <span class="n">Manager</span><span class="p">(</span><span class="n">n_workers</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
@@ -875,8 +868,8 @@ where it is running somehow.</p>
 </pre></div>
 </div>
 <p>Please do run this file interactively either with command line arg
-“main” or “test” to run <code class="docutils literal notranslate"><span class="pre">main()</span></code> or <a href="#id3"><span class="problematic" id="id4">``</span></a>test()``above:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+“main” or “test” to run <code class="docutils literal notranslate"><span class="pre">main()</span></code> or <code class="docutils literal notranslate"><span class="pre">test()</span></code> above:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;please give &#39;main&#39; or &#39;test&#39;&quot;</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;main&quot;</span><span class="p">:</span>

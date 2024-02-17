@@ -1,5 +1,5 @@
 
-:: 
+.. code:: python
 
     import time, sys
     import numpy as np
@@ -14,7 +14,7 @@ First define the worker process that will do some calculation on a shared numpy 
 
 This is similar to examples :ref:`3 <example3>` and :ref:`4 <example4>`:
 
-:: 
+.. code:: python
 
     class WorkerProcess(MessageProcess):
     
@@ -84,7 +84,7 @@ base class:   You only need to (re)define ``__init__()``, ``startProcesses()``,
 ``super().__init__()`` inits the logger and calls first ``startProcesses``
 and then ``startThreads`` (i.e. forks before thread):
 
-:: 
+.. code:: python
 
     class Manager(MainContext):
     
@@ -106,7 +106,7 @@ All pipes we're going to listen, are also cached into ``self.read_pipes``.  That
 list should also always include ``self.aux_pipe_read`` (which is created in
 the base class ``super().__init__()``):
 
-:: 
+.. code:: python
 
         def startProcesses(self):
             self.logger.debug("startProcesses:")
@@ -137,7 +137,7 @@ in a clean way).
 
 ``startThreads`` (mandatory), creates and starts threads (if any):
 
-:: 
+.. code:: python
 
         def startThreads(self):
             self.logger.debug("startThreads:")
@@ -146,7 +146,7 @@ in a clean way).
 
 ``close`` (mandatory) stops all multiprocesses and threads in parallel:
 
-:: 
+.. code:: python
 
         def close(self):
             self.logger.debug("close: stopping processes")
@@ -163,7 +163,7 @@ In ``__call__`` (mandatory) we have the main process startup and loop.
 First, we tell three multiprocesses from the cache to do some work
 and then start the execution loop:
 
-:: 
+.. code:: python
 
         def __call__(self):
             p1 = self.avail_cache.pop(0)
@@ -219,7 +219,7 @@ for interfacing i/o devices into this multiprocessing scheme.
 
 Messages coming from the worker processes are handled like this:
 
-:: 
+.. code:: python
 
         def handleMessage__(self, p: WorkerProcess, msg: MessageObject):
             # read the sharedmem:
@@ -245,16 +245,11 @@ If you have many different kinds of multiprocesses running under your main
 process, it's a good idea to create dedicated ``MessageObject`` classes
 and ``handleMessage__`` methods for each one of them to keep the code readable.
 
-:: 
-
-            
-    
-
 Behold: this is your apps main entry point.
 
 When running interactively, just press CTRL-C to exit.
 
-:: 
+.. code:: python
 
     def main():
         Manager.formatLogger(logging.DEBUG) # of course in a real app, in some other way
@@ -269,7 +264,7 @@ where it is running somehow.
 
 Here the only "interaction" we do, is just to sleep for 10 secs before terminating it.
 
-:: 
+.. code:: python
 
     def test():
         Manager.formatLogger(logging.DEBUG)
@@ -286,9 +281,9 @@ Here the only "interaction" we do, is just to sleep for 10 secs before terminati
     
 
 Please do run this file interactively either with command line arg
-"main" or "test" to run ``main()`` or ``test()``above:
+"main" or "test" to run ``main()`` or ``test()`` above:
 
-:: 
+.. code:: python
 
     if __name__ == "__main__":
         if len(sys.argv) < 2:

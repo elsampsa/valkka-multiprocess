@@ -1,5 +1,5 @@
 
-:: 
+.. code:: python
 
     import time, math
     import logging
@@ -12,7 +12,7 @@
 
 Create "server-side" shared memory first in the frontend with the unique name ``my-shm-1``
 
-:: 
+.. code:: python
 
         def __init__(self, name):
             super().__init__(name)
@@ -21,7 +21,7 @@ Create "server-side" shared memory first in the frontend with the unique name ``
 
 Backend methods: create, modify and close shared memory at the forked process
 
-:: 
+.. code:: python
 
         def c__create(self, name: str = None, 
                 dtype: np.dtype = None, 
@@ -54,7 +54,7 @@ Backend methods: create, modify and close shared memory at the forked process
 Frontend methods: create and close shared memory in the main python process and tell backend
 to do the same.
 
-:: 
+.. code:: python
 
         def create(self, shape: tuple = (100, 100)):
             name = "my-shm-1"
@@ -100,7 +100,7 @@ to do the same.
 
 Run the process:
 
-:: 
+.. code:: python
 
     p = MyProcess(name="my-process")
     p.formatLogger()
@@ -127,6 +127,3 @@ Resulting output:
     MyProcess.my-process - INFO - close: closing server side shmem
     main: bye!
     
-
-:: 
-

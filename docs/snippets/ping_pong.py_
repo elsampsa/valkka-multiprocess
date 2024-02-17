@@ -1,5 +1,5 @@
 
-:: 
+.. code:: python
 
     import time
     import logging
@@ -7,14 +7,14 @@
 
 We are going to use quite some the select module:
 
-:: 
+.. code:: python
 
     import select
 
 so you might want to read 
 `this tutorial <https://docs.python.org/3/howto/sockets.html#non-blocking-sockets>`_
 
-:: 
+.. code:: python
 
     
     class MyProcess(MessageProcess):
@@ -23,9 +23,9 @@ so you might want to read
             super().__init__(name)
     
 
-We're sending a message, now from backend to frontend
+We're sending a message, this time from backend to frontend
 
-:: 
+.. code:: python
 
         def c__ping(self, parameter=None):
             self.logger.info("c__ping: got parameter %s - will do some", parameter)
@@ -45,17 +45,17 @@ We're sending a message, now from backend to frontend
     p = MyProcess(name="my-process")
     p.formatLogger()
 
-Get the pipe (``multiprocessing.Pipe``) for listening messages from ``MyProcess`` p.
+Get the pipe (``multiprocessing.Pipe``) for listening messages from ``MyProcess`` ``p``.
 Remember that you should use use pipe communication only for a small amount of data:
 typically just short messages and maybe some tiny (numpy) arrays if you have to.
 
-:: 
+.. code:: python
 
     pipe = p.getPipe()
 
 Calling ``start``, forks and creates the backend
 
-:: 
+.. code:: python
 
     p.start()
     time.sleep(1)
@@ -64,7 +64,7 @@ Calling ``start``, forks and creates the backend
 
 Use select to wait for the message
 
-:: 
+.. code:: python
 
     select.select([pipe], [], [])
     msg = pipe.recv()
@@ -72,7 +72,7 @@ Use select to wait for the message
 
 Tell the backend to stop and exit
 
-:: 
+.. code:: python
 
     p.stop()
 
@@ -87,6 +87,3 @@ We get this output:
     MyProcess.my-process - INFO - c__ping: ..did that!
     main: got pong with some pudding
     
-
-:: 
-

@@ -1,5 +1,5 @@
 
-:: 
+.. code:: python
 
     import time
     import logging
@@ -12,7 +12,7 @@
 
 Create "server-side" shared memory first in the frontend with the unique name ``my-shm-1``
 
-:: 
+.. code:: python
 
         def __init__(self, name):
             super().__init__(name)
@@ -32,7 +32,7 @@ Create "server-side" shared memory first in the frontend with the unique name ``
 
 Close the "server-side" shared memory, for example, at garbage collection of ``MyProcess``
 
-:: 
+.. code:: python
 
         def __del__(self):
             self.shmem.close()
@@ -44,7 +44,7 @@ Backend methods are: ``preRun__``, ``postRun__`` and ``c__readWrite``.
 execution loop kicks in: create "client-side" shared memory in the backend 
 with the correct unique name ``my-shm-1``.
 
-:: 
+.. code:: python
 
         def preRun__(self):
             self.logger.info("preRun__ : ")
@@ -60,7 +60,7 @@ with the correct unique name ``my-shm-1``.
 ``postRun__`` is executed in the forked process (backend) just before the
 process exists and shuts down: close "client-side" shared memory:
 
-:: 
+.. code:: python
 
         def postRun__(self):
             self.logger.info("postRun__ : ")
@@ -77,7 +77,7 @@ process exists and shuts down: close "client-side" shared memory:
 
 Frontend methods: ``readWrite``
 
-:: 
+.. code:: python
 
         def readWrite(self):
             self.logger.info("readWrite : calling backend")
@@ -93,7 +93,7 @@ Frontend methods: ``readWrite``
 
 Calling ``start``, forks and creates the backend
 
-:: 
+.. code:: python
 
     p.start()
     time.sleep(1)
@@ -101,7 +101,7 @@ Calling ``start``, forks and creates the backend
 
 Tell the backend to stop and exit
 
-:: 
+.. code:: python
 
     p.stop()
 
@@ -116,8 +116,4 @@ Resulting output:
     MyProcess.my-process - INFO - c__readWrite: ..did that!
     MyProcess.my-process - INFO - readWrite: array values now 3.0
     MyProcess.my-process - INFO - postRun__ :
-    
-
-:: 
-
     

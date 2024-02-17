@@ -1,5 +1,5 @@
 
-:: 
+.. code:: python
 
     import time
     from valkka.multiprocess import MessageProcess, MessageObject
@@ -17,31 +17,31 @@
 
 Calling ``start``, forks and creates the backend
 
-:: 
+.. code:: python
 
     p.start()
 
 Let multiprocessing backend run on it's own for one second
 
-:: 
+.. code:: python
 
     time.sleep(1)
 
 Call frontend method with a parameter: it sends seamlessly a message to the backend
 which executes ``c__ping`` in the backend:
 
-:: 
+.. code:: python
 
     p.ping(parameter="gotcha!")
 
 Again, let multiprocessing backend run on it's own a while
 
-:: 
+.. code:: python
 
     time.sleep(1)
 
 Finally, tell the backend to stop and exit
 
-:: 
+.. code:: python
 
     p.stop()
